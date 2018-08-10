@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}About{% endblock %}
+{% block style %}
+    body {
+        background:linear-gradient(rgba(255,255,255,.8), rgba(255,255,255,.8)), url({% static 'images/aboutbg.jpg' %}) no-repeat center center fixed ;
+        background-size:cover;
+    }
+    .about-container {
+        width: 95%;
+    }
+{% endblock %}
+{% block content %}
+       
+	<div class="container text-center about-container">
+	    <h1 class="about-heading">About Us</h1><hr class="style13">
+		<img src="{% static 'images/ico/icon.png' %}"><hr class="style13">
+		<h2><b>Welcome to Reader Earth</b><h2>
+		<h3 style="color:rgb(70,70,70)">We make Renting/Purchasing and Reading E-books easy and interactive.<br><b>Reader Earth</b> is currently the largest growing e-book marketplace with over widest assortment of<br><b>Diversified E-books</b><br> with<br><b>Many Many Categories</b> spanning all your interests.<br>
+		It originated as a Dream to provide e-books on renting basis so that people could read what they want with the minimum amount of money spent.This ,once dreamt, journey is a reality now in the name of <br><b>Reader Earth</b>.</h3>
+	<div>
+
+{% endblock %}

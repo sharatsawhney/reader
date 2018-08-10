@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Reader Earth is India's largest E-book marketplace with e-books in all categories ;that allows the renting and purchasing of e-books.">
+    <meta name="author" content="Reader Earth-Renting E-books">
+    <title>{% block title %}Home{% endblock %} | Reader Earth:Rent Ebooks at an affordable rate</title>
+    <link href="{% static 'cs/bootstrap.min.css' %}" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="{% static 'cs/main.css' %}" rel="stylesheet">
+    
+    <style type="text/css">
+    	
+{% block style %}
+{% endblock %}
+    </style>
+    
+</head>
+
+<body>   
+    <nav class="navbar">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand" href="/"><img src="{% static 'images/logo.png' %}" height="30px"><span class="brand-span">ReaderEarth</span></a>
+	    </div>
+
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	      <ul class="nav navbar-nav navbar-right">
+	        <li {% block activeh %}{% endblock %}><a href="/">Home</a></li>
+	        <li {% block activee %}{% endblock %}><a href="/search/?q=bookActive">Ebooks</a></li>
+	        <li {% block activeco %}{% endblock %}><a href="/contact/">Contact</a></li>
+	        {% if user.is_authenticated %}
+	        <li {% block activew %}{% endblock %}><a href="/wishlist/">Wishlist</a></li>
+	        <li {% block activeca %}{% endblock %}><a href="/cart/">Cart</a></li>
+	        <li {% block actived %}{% endblock %}><a href="/dashboard/">Dashboard</a></li>
+	        <li class="nav-logout"><a href="/logout/" class="logout-btn">LOGOUT</a></li>
+	        {% else %}
+            <li><a data-toggle="modal" data-target="#loginModal" href="">Login/Register</a></li>
+			{% endif %}
+	      </ul>
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
+	
+	<div class="modal fade" id="loginModal" role="dialog">
+	    <div class="modal-dialog">
+	    
+	      <!-- Modal content-->
+	      <div class="modal-data">
+	      	<div class="row">
+	      		<div class="col-sm-5">
+	      			<div class="heading">Login</div>
+	      			<div class="sub-heading">Get access to thousands<br>of ebooks.</div>
+	      			<img src="{% static 'images/login.png' %}">
+	      		</div>
+	      		<div class="col-sm-7">
+	      			<button type="button" class="close" data-dismiss="modal">&times;</button>
+	      			<div class="heading">LOGIN</div>
+	      			<form method="post">
+	      			  {% csrf_token %}
+	      				<input type="text" name="login-username" class="login-username" id="login-username" placeholder="Username">
+	      				<input type="password" name="login-password" class="login-password" id="login-password" placeholder="Password">
+	      				<h4 class="login-reply"></h4>
+	      				<button type="submit" class="btn btn-default login-submit submit">SUBMIT</button><br>
+	      				<button type="button" class="btn btn-default loginchangebtn other" data-toggle="modal" data-target="#registerModal">Create an Account</button><br>
+	      				<a href="/password_reset/" class="forgot">Forgot my Password?</a>
+	      			</form>
+	      		</div>
+	      	</div>
+	      </div>
+	      
+	    </div>
+    </div>
+	
+	<div class="modal fade" id="registerModal" role="dialog">
+	    <div class="modal-dialog">
+	    
+	      <!-- Modal content-->
+	      <div class="modal-data">
+	      	<div class="row">
+	      		<div class="col-sm-5">
+	      			<div class="heading">Register</div>
+	      			<div class="sub-heading">Get access to thousands<br>of ebooks.</div>
+	      			<img src="{% static 'images/login.png' %}">
+	      		</div>
+	      		<div class="col-sm-7">
+	      			<button type="button" class="close" data-dismiss="modal">&times;</button>
+	      			<div class="heading">REGISTER</div>
+	      			<form method="post">
+	      			  {% csrf_token %}
+	      			    <input type="email" name="register-email" class="register-email" id="register-email" placeholder="Email">
+	      				<input type="text" name="register-username" class="register-username" id="register-username" placeholder="Username">
+	      				<input type="password" name="register-password" class="register-password" id="register-password" placeholder="Password">
+	      				<h4 class="register-reply"></h4>
+	      				<button type="submit" class="btn btn-default register-submit submit">SUBMIT</button><br>
+	      				<button type="button" class="btn btn-default registerchangebtn other" data-toggle="modal" data-target="#loginModal">Already have an Account</button>
+	      			</form>
+	      		</div>
+            </div>
+	      	<div class="loader"></div>
+
+	      </div>
+	      
+	    </div>
+    </div>
+
+    {% block content %}
+    {% endblock %}
+
+	<div class="footer">
+		<div class="row">
+			<div class="col-sm-4 footer-1">
+				<img src="{% static 'images/logo.png' %}"><span class="title">ReaderEarth</span><br>
+				<span class="title-2">@ReaderEarth</span><br>
+				<span class="inform"><a>FAQ</a> / <a>Terms Of Use</a> / <a>Privacy Policy</a></span>
+			</div>
+			<div class="col-sm-4 footer-2">
+				<div class="topic">Links</div>
+				<div class="row">
+					<div class="col-sm-6">
+						<h4>Customer Service</h4>
+						<ul>
+							<li><a href="/contact/">Contact Us</a></li>
+							<li><a>FAQs</a></li>
+						</ul>
+					</div>
+					<div class="col-sm-6">
+						<h4>Company</h4>
+						<ul>
+							<li><a>About Us</a></li>
+							<li><a href="/contact/">Careers</a></li>
+					    </ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-4 footer-3">
+				<div class="topic">Follow Us</div>
+                <a href="https://www.facebook.com/ReaderEarth.2018/"><i class="fa fa-facebook first-child" aria-hidden="true" style="color: white"></i></a>
+                <a><i class="fa fa-twitter" aria-hidden="true" style="color: white"></i></a>
+                <a><i class="fa fa-linkedin" aria-hidden="true" style="color: white"></i></a><br>
+                <i class="fa fa-envelope mail-i" aria-hidden="true" style="color: white"></i>
+                <span class="mail">contact@readerearth.com</span>
+			</div>
+		</div>
+	</div>
+
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+
+      $(".loginchangebtn").click(function(){
+	    $('#login-modal').modal('hide');
+	  });
+     $(".registerchangebtn").click(function(){
+        $('#register-modal').modal('hide');
+     });
+	 
+	/* setInterval(function(){
+		$.get("repeat.php", function(data){
+			var repeatdata = data.toString();
+			
+			var wq = repeatdata.slice(0,repeatdata.indexOf(","));
+			var cq = repeatdata.slice(repeatdata.indexOf(",")+1);
+			
+			
+			$(".wq").html(wq);
+			$(".cq").html(cq);
+			
+		});
+	},100);*/
+	
+	$('.ssubmit').click(function(e){
+		e.preventDefault();
+		var subemail = $(".subemail").val();
+		if(subemail==""){
+			$(".sub-reply").html("Please enter an Email Id!")
+		}else{
+			$.ajax({
+				url: '/subscribe/',
+				type:'POST',
+				data:
+				{
+					'subemail': subemail,
+                    'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{
+					if(data.indexOf('True') != -1){
+                        $(".sub-reply").html("You have been successfully subscribed!")
+					}
+					else{
+						$(".sub-reply").html("You are already subscribed!")
+					}
+					
+				},
+				error: function(xhr,status,error){
+					alert('There is some issue! Please try again later!');
+				}            
+			});
+		}
+    });
+    $(".login-submit").click(function(e){
+        e.preventDefault();
+        var username = $(".login-username").val();
+        var password = $(".login-password").val();
+        if(username=="" || password==""){
+        	$(".login-reply").html("Please Fill the Details!");
+        }else{
+        	$.ajax({
+				url: '/check_login/',
+				type:'POST',
+				data:
+				{
+					'username': username,
+					'password': password,
+                    'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{
+					if(data == 'Login Successful'){
+                        $("#login-modal").hide();
+                        location.reload();
+					}else{
+                        $(".login-reply").html(data)
+					}
+				}          
+			});
+        }
+    });
+    $(".loader").hide();
+    $(".register-submit").click(function(e){
+        e.preventDefault();
+        $(".loader").show();
+        var email = $(".register-email").val();
+        var username = $(".register-username").val();
+        var password = $(".register-password").val();
+        if(username=="" || password=="" || email==""){
+        	$(".register-reply").html("Please Fill the Details!");
+        }else{
+        	$.ajax({
+				url: '/register/',
+				type:'POST',
+				data:
+				{
+					'email': email,
+					'username': username,
+					'password': password,
+                    'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{
+                    $(".register-reply").html(data)
+					$(".loader").hide();
+				}          
+			});
+        }
+    });
+
+    $(".cart-btn").click(function(){
+        if($(".logout-btn").html() == "LOGOUT"){
+            var pathname = window.location.pathname;
+            var number1 = pathname.substr(pathname.indexOf("/detail/") + 8);
+            var ebooknumber = number1.substr(0,number1.indexOf("/"));
+            $.ajax({
+				url: '/add_cart/',
+				type:'POST',
+				data:
+				{
+					'ebooknumber': ebooknumber,
+					'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{
+                    $(".cart-reply").html(data);
+					
+				},
+				error: function(xhr,status,error){
+				alert(xhr.responseText);
+			    }             
+			});
+        }else{
+        	$(".cart-reply").html("You must login to continue!");
+        }
+    });
+
+    $(".durationcartselect").on('change',function(){
+        var duration = this.value;
+        var productid = $(this).attr('data-id');
+        var ebookid = $(".hiddenid[data-id=" + productid + "]").html();
+        $.ajax({
+					url: '/change_duration/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebookid,
+						'duration': duration,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".price-span[data-id=" + productid + "]").html(data['nprice']);
+	                    $(".totalprice").html("Rs. " + data['tprice']);
+	                    $(".ordertotal").html("Rs. " + data['tprice']);
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    });
+    
+    var dataId = 1;
+    while($(".cart-left .product span:nth-child(3) select[data-id=" + dataId + "]").length > 0){
+    	var buy = $(".cart-left .product span:nth-child(3) select[data-id=" + dataId + "] option").html();
+        var productid = dataId;
+        if(buy == 'Buy'){
+        	$(".cart-left .product span:nth-child(4) select[data-id=" + productid + "]").attr('disabled','disabled');
+        	$(".cart-left .product span:nth-child(4) select[data-id=" + productid + "]").css('opacity','0.5');
+        }
+        dataId = dataId + 1;
+    }
+    $(".itemsCart").html(dataId-1);
+    
+
+    $(".buycartselect").on('change',function(){
+        var buy = this.value;
+        var productid = $(this).attr('data-id');
+        var ebookid = $(".hiddenid[data-id=" + productid + "]").html();
+        if(buy == 'Buy'){
+        	$(".cart-left .product span:nth-child(4) select[data-id=" + productid + "]").attr('disabled','disabled');
+        	$(".cart-left .product span:nth-child(4) select[data-id=" + productid + "]").css('opacity','0.5');
+        }else{
+        	$(".cart-left .product span:nth-child(4) select[data-id=" + productid + "]").removeAttr('disabled');
+        	$(".cart-left .product span:nth-child(4) select[data-id=" + productid + "]").css('opacity','1.0');
+        }
+        $.ajax({
+					url: '/change_buy/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebookid,
+						'buy': buy,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".price-span[data-id=" + productid + "]").html(data['nprice']);
+	                    $(".totalprice").html("&#8377; " + data['tprice']);
+	                    $(".ordertotal").html("&#8377; " + data['tprice']);
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    });
+
+    $(".deletecart").click(function(){
+        var productid = $(this).attr('data-id');
+        var ebookid = $(".hiddenid[data-id=" + productid + "]").html();
+        $.ajax({
+					url: '/delete_cart/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebookid,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    if(data == 'Success'){
+	                    	location.reload();
+	                    }
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    });
+
+    $(".wremove").click(function(){
+        var productid = $(this).attr('data-id');
+        var ebookid = $(".hiddenidw[data-id=" + productid + "]").html();
+        $.ajax({
+					url: '/delete_wishlist/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebookid,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    if(data == 'Success'){
+	                    	location.reload();
+	                    }
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    });
+
+    $(".mtc").click(function(){
+        var productid = $(this).attr('data-id');
+        var ebookid = $(".hiddenidw[data-id=" + productid + "]").html();
+        $.ajax({
+					url: '/mtc/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebookid,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    if(data == 'Success'){
+	                    	location.reload();
+	                    }
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    });
+
+    $(".towishlist").click(function(){
+        var productid = $(this).attr('data-id');
+        var ebookid = $(".hiddenid[data-id=" + productid + "]").html();
+        $.ajax({
+					url: '/mtw/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebookid,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    if(data == 'Success'){
+	                    	location.reload();
+	                    }
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    });
+
+    $(".detailHeart").click(function(){
+        if($(".logout-btn").html() == "LOGOUT"){
+            var pathname = window.location.pathname;
+            var number1 = pathname.substr(pathname.indexOf("/detail/") + 8);
+            var ebooknumber = number1.substr(0,number1.indexOf("/"));
+            $.ajax({
+				url: '/atw/',
+				type:'POST',
+				data:
+				{
+					'ebooknumber': ebooknumber,
+					'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{
+                    $(".cart-reply").html(data);
+                    $('.detailHeart i').css('color','#FF0000')
+					
+				},
+				error: function(xhr,status,error){
+				alert(xhr.responseText);
+			    }             
+			});
+        }else{
+        	$(".cart-reply").html("You must login to continue!");
+        }
+    });
+
+    if($(document.body)[0].scrollHeight < $(window).height()){
+    	$(".footer").css('position','absolute');
+    	$(".footer").css('bottom','0px');
+    }
+    $(".wl-cards .card .container").css('height','120px');
+    $(".wl-cards .card").mouseover(function(){
+        $(this).find('.container').css('height','auto');
+    })
+    $(".wl-cards .card").mouseleave(function(){
+        $(this).find('.container').css('height','120px');
+    })
+
+    var dataId = 1;
+    var dataArray = [];
+    while($(".dash-right .card .container .title[data-id=" + dataId + "]").length > 0){
+        var lineHeight = $(".dash-right .card .container .title[data-id=" + dataId + "]").css('line-height');
+        var height = $(".dash-right .card .container .title[data-id=" + dataId + "]").css('height');
+        var lines = parseFloat(height)/parseFloat(lineHeight);
+        dataArray.push(lines);
+        dataId = dataId + 1;
+    }
+    var maxArray = Math.max.apply(Math,dataArray);
+    $(".dash-right .card .container .title").css('height',maxArray + 'em');
+
+
+    var dataId = 1;
+    var dataArray = [];
+    while($(".dash-right .card .container .author[data-id=" + dataId + "]").length > 0){
+        var lineHeight = $(".dash-right .card .container .author[data-id=" + dataId + "]").css('line-height');
+        var height = $(".dash-right .card .container .author[data-id=" + dataId + "]").css('height');
+        var lines = parseFloat(height)/parseFloat(lineHeight);
+        dataArray.push(lines);
+        dataId = dataId + 1;
+    }
+    var maxArray = Math.max.apply(Math,dataArray);
+    $(".dash-right .card .container .author").css('height',maxArray + 'em');
+
+
+    var dataId = 1;
+    var dataArray = [];
+    while($(".dash-right .card .container .publisher[data-id=" + dataId + "]").length > 0){
+        var lineHeight = $(".dash-right .card .container .publisher[data-id=" + dataId + "]").css('line-height');
+        var height = $(".dash-right .card .container .publisher[data-id=" + dataId + "]").css('height');
+        var lines = parseFloat(height)/parseFloat(lineHeight);
+        dataArray.push(lines);
+        dataId = dataId + 1;
+    }
+    var maxArray = Math.max.apply(Math,dataArray);
+    $(".dash-right .card .container .publisher").css('height',maxArray + 'em');
+
+
+    $(".loginchangebtn").click(function(){
+    	$("#loginModal").modal('hide');
+    })
+    $(".registerchangebtn").click(function(){
+    	$("#registerModal").modal('hide');
+    })
+
+
+
+
+    var dataId = 1;
+    while($(".wl-cards .card .wishlistNewPrice[data-id=" + dataId + "]").length > 0){
+    	var newPrice = $(".wl-cards .card .wishlistNewPrice[data-id=" + dataId + "]").html();
+        var oldPrice = (parseFloat(newPrice)/0.8).toFixed(1);
+        $(".wl-cards .card .wishlistOldPrice[data-id=" + dataId + "]").html(oldPrice);
+
+        dataId = dataId + 1;
+    }
+
+	var newPrice = $(".detail-2 .detailNewPrice").html();
+    var oldPrice = (parseFloat(newPrice)/0.8).toFixed(1);
+    $(".detail-2 .detailOldPrice").html(oldPrice);
+    
+    $(".hiddenPub").val($(".pubName").html());
+
+    var urlString = window.location.href;
+    var urlText = urlString.substr(urlString.indexOf("?upload"));
+    if(urlText=='?upload=success'){
+    	$(".publisherUploadReply").html('The Ebooks were uploaded successfully! Your Ebooks will be live soon!');
+    }
+        
+    if($(".remainArray").length > 0 ){
+	    var remainArray = $(".remainArray").html();
+	    var leftArray = remainArray.slice(1,remainArray.length-1)
+	    var array = JSON.parse("[" + leftArray + "]");
+	    for(var i=1;i<=array.length;i++){
+	    	$(".dash-right .ebooks .card .overlay[data-id=" + i + "]").html(array[i-1] + " days");
+	    };
+    }
+
+    
+    $(".dash-left .dl-rent").click(function(){
+    	$(".dash-right .dashes").show();
+    	$(".dash-right .bdashes").hide();
+    	$(this).addClass("active");
+    	$(".dash-left .dl-buy").removeClass('active');
+    	$(".dash-left .dl-all").removeClass('active');
+    });
+    $(".dash-left .dl-buy").click(function(){
+    	$(".dash-right .dashes").hide();
+    	$(".dash-right .bdashes").show();
+    	$(this).addClass("active");
+    	$(".dash-left .dl-rent").removeClass('active');
+    	$(".dash-left .dl-all").removeClass('active');
+    });
+    $(".dash-left .dl-all").click(function(){
+    	$(".dash-right .dashes").show();
+    	$(".dash-right .bdashes").show();
+    	$(this).addClass("active");
+    	$(".dash-left .dl-buy").removeClass('active');
+    	$(".dash-left .dl-rent").removeClass('active');
+    });
+
+    </script>
+    
+</body>
+</html>
+
+

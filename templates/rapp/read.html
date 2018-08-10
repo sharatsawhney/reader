@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head>
+<title>Reader - ReaderEarth</title>
+<link rel="stylesheet" type="text/css" href="{% static 'cs/bootstrap4.min.css' %}">
+<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="{% static 'cs/main.css' %}" rel="stylesheet">
+<link href="{% static 'cs/reader.css' %}" rel="stylesheet">
+
+<style type="text/css">
+* {
+    outline:none;
+	border:none;
+	font-family:Courier, monospace;
+}
+body{
+	background-color:#F2F2F2;
+	font-style: italic;
+}
+#magazine .turn-page{
+	background-size:100% 100%;
+}
+
+#paper {
+	color:#FFF;
+	font-size:20px;
+	margin-left: 2%;
+}
+#margin {
+	margin-left:12px;
+	margin-bottom:20px;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none; 
+	color: black;
+}
+#textnotes {
+	width:95%;
+	height: 500px !important;
+	overflow:hidden;
+	background-color:#FFF;
+	color:#222;
+	font-family:Courier, monospace;
+	font-weight:normal;
+	font-size:24px;
+	resize:none;
+	line-height:22.9px;
+	padding-left:45px;
+	padding-right:10px;
+	padding-top:0px;
+	padding-bottom:34px;
+	background-image:url(/static/lines.png), url(/static/paper.png);
+	background-size: 100% 4.5%;
+	background-repeat:repeat-y, repeat;
+	-webkit-border-radius:12px;
+	border-radius:12px;
+	-webkit-box-shadow: 0px 2px 14px #000;
+	box-shadow: 0px 2px 14px #000;
+	border-top:1px solid #FFF;
+	border-bottom:1px solid #FFF;
+}
+#titlenotes {
+	background-color: transparent;
+	border-bottom:3px solid black;
+	color:black;
+	font-size:20px;
+	font-family:Courier, monospace;
+	height:28px;
+	font-weight:bold;
+	width:220px;
+}
+#savenotes {
+	cursor:pointer;
+	margin-top:10px;
+	float:right;
+	margin-right: 50px;
+	height:40px;
+	padding-left:24px;
+	padding-right:24px;
+	font-family:Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size:20px;
+	color:#FFF;
+	-webkit-border-radius:8px;
+	border-radius:8px;
+	background-color: #53A7E3;
+}
+#savenotes:active {
+	zoom: 1;
+	filter: alpha(opacity=80);
+	opacity: 0.8;
+}
+#savenotes:focus {
+	zoom: 1;
+	filter: alpha(opacity=80);
+	opacity: 0.8;
+}
+#wrapper {
+	position: absolute;
+	background-color: white;
+	width:28%;
+	height:100%;
+	margin-top: -7px;
+	overflow-y: auto;
+}
+
+#readoption{
+	background-color: white;
+	height: 60px;
+	width: 100%;
+	border: 2px solid #53A7E3;
+	padding: auto;
+}
+#readoption button{
+	margin-top: 10px;
+	font-size: 12px;
+	background-color: #53A7E3;
+	border: none;
+	border-radius: 0px;
+}
+#readoption .active{
+	border: 1px solid blue;
+}
+#readoption button:first-child{
+	margin-left: 20px;
+}
+#oldpaper .panel{
+	width: 95%
+}
+#musiclist ul li audio{
+	width: 100%;
+}
+.rsdiv{
+	background-size: 100% 100%;
+	height:500px;
+	width:100%;
+	margin: auto;
+}
+.rs-nav{
+	background-color: #F6F9FE;
+	height: 70px;
+	width: 100%;
+	text-align: center;
+	padding-top: 20px;
+}
+.rs-nav a{
+   color: black;
+   font-style: italic;
+   margin-left: 20px;
+}
+</style>
+</head>
+<body>
+<!--
+<nav class="navbar navbar-inverse navbar-fixed-top special-navbar" style="height:60px" >
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/"><img src="images/ico/icon.png" alt="logo" height="60px" style="margin-top:-10px"></a>
+        </div>
+		
+        <div class="collapse navbar-collapse navbar-right">
+            <ul class="nav navbar-nav">
+            	<div id="controls" style="margin-right: 200px;">
+					<label for="page-number">Page:</label> <input type="text" size="3" id="page-number"> of <span id="number-pages"></span>
+				</div>
+                <li id="nighttoggle"><i class="fa fa-lightbulb-o fa-3x"></i></li>
+         
+            </ul>
+			<ul class="nav navbar-nav compress-nav">
+				<li><a href="/logout/" class="logout-btn">Logout</a></li>
+				
+                <li><a data-toggle="modal" data-target="#login-modal" href="">Login/Register</a></li>
+				
+				
+			</ul>						
+        </div>
+    </div>
+</nav>
+-->
+{% if check == True %}
+<div id="wrapper">
+    <div id="readoption">
+        <button class="btn btn-primary active nnotesbtn">Make New Notes</button>
+        <button class="btn btn-primary onotesbtn">Old Notes</button>
+        <button class="btn btn-primary lmusicbtn">Listen</button>
+    </div>
+	<div id="paper">
+        {% csrf_token %}
+		<div id="margin">Title: <input id="titlenotes" type="text" name="title"></div>
+		<textarea placeholder="Save Your Notes here!" id="textnotes" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none;"></textarea>  
+		<br>
+		<button id="savenotes">Save</button>
+	</div>
+	<div id="oldpaper">
+	    <div class="panel-group" id="accordion">
+	    	{% if notes != False %}
+	    	{% for note in notes %}
+	    	<div class="card">
+			    <div class="card-header">
+			      <h5 class="mb-0">
+			        <a data-toggle="collapse" data-parent="#accordion" href="#note{{note.title}}">
+			          {{ note.title }}
+			        </a>
+			      </h5>
+			    </div>
+			    <div id="note{{note.title}}" class=" collapse" data-parent="#accordion">
+			      <div class="card-body">
+			        <textarea placeholder="Enter something funny." id="textnotes" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 160px; ">{{ note.text}}</textarea>  
+			      </div>
+			    </div>
+			</div>
+	    	{% endfor %}
+	    	{% endif %}
+	    </div>
+		
+	</div>
+
+	<div id="musiclist">
+		 <ul class="list-group">
+		    <li class="list-group-item">Study Music-1 <audio controls controlsList='nodownload'>
+			  <source src="/static/audi/1.mp3" type="audio/mpeg">
+			Your browser does not support the audio element.
+			</audio></li>
+		    <li class="list-group-item">Study Music-2 <audio controls controlsList='nodownload'>
+			  <source src="/static/audi/2.mp3" type="audio/mpeg">
+			Your browser does not support the audio element.
+			</audio></li>
+		  </ul>
+	</div>
+
+</div>
+
+		
+
+<div class="reader">
+	<div class="main-pane">
+		<div id="magazine">
+	       
+        </div>
+	</div>
+	<div class="bottom-pane">
+		<input type="range" min="" max="{{ pages }}" value="1" class="slider" id="pageRange" class="slider"  name="pageRange">
+		<output for="pageRange" onforminput="value = pageRange.valueAsNumber;"></output>
+	</div>
+</div>
+
+<div class="rs-nav">
+    <a href="/">Home</a>
+    <a href="/dashboard/">Dashboard</a>
+</div>
+<div class="reader-small">
+	
+</div>
+{% else %}
+<h2>Please Rent/Purchase to Read this E-book!</h2>
+{% endif %}
+
+<p style="display: none;" id="hiddenpages">{{ pages }}</p>
+<p style="display: none;" id="hiddenid">{{ id }}</p>
+<p style="display: none" id="hiddenlastpage">{{ lastpage }}
+</p>
+<input type="text" size="3" id="page-number" style="display:none">
+<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap4.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/turn.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/reader.js' %}">
+</script>
+
+</body>
+</html>

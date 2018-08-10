@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block style %}
+	body{
+        background-color: white !important;
+    }
+    .navbar{
+        border-bottom: none;
+        z-index: 1;
+    }
+
+{% endblock %}
+{% block activeh %}class="active"{% endblock %}
+{% block content %}
+    <div id="homeSlider" class="carousel slide" data-ride="carousel">
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner">
+
+          <div class="item active">
+            <img src="{% static 'images/slider1.jpg' %}" alt="Ebooks" style="width:100%;">
+            <div class="carousel-caption">
+              <h3>Ebooks for Everyone</h3>
+              <p>Whether your taste is Novels, Academics or Self-Help.<br>We have it all.</p>
+            </div>
+          </div>
+
+          <div class="item">
+            <img src="{% static 'images/slider2.jpg' %}" alt="Ebooks" style="width:100%;">
+            <div class="carousel-caption">
+              <h3>Renting Ebooks has never been easier.</h3>
+              <p>Get all range of e-books on your tips.Rent it or purchase it.<br>We do it all!</p>
+            </div>
+          </div>
+        
+          <div class="item">
+            <img src="{% static 'images/slider3.jpg' %}" alt="Ebooks" style="width:100%;">
+            <div class="carousel-caption">
+              <h3>A Remarkable Reading Experience</h3>
+              <p>Get a personalized reading interface that is cultivated for all your needs.<br>Betta,You would love it!</p>
+            </div>
+          </div>
+      
+        </div>
+    </div>
+    
+    <div class="feat-cat">
+        <div class="heading">Featured Categories</div>
+        <hr>
+        <div class="sub-heading">ReaderEarth offers you a complete range of Ebooks and Books diversified from <br>
+        Novels, Biographies to Academic and Educational.
+        </div>
+        <div class="feat-items">
+            <div class="fir-1">
+                <div class="feat-item">
+                    <a href="/search/?q=Engineering">
+                        <img src="{% static 'images/engineering.png' %}">
+                        <span>Engineering</span>
+                    </a>
+                </div>
+                <div class="feat-item">
+                    <a href="/search/?q=Medical">
+                        <img src="{% static 'images/medical.png' %}">
+                        <span>Medical</span>
+                    </a>
+                </div>
+                <div class="feat-item">
+                    <a href="/search/?q=Novels">
+                        <img src="{% static 'images/novel.png' %}">
+                        <span>Novels</span>
+                    </a>
+                </div>
+            </div>
+            <div class="fir-2">
+                <div class="feat-item">
+                    <a href="/search/?q=Biographies">
+                        <img src="{% static 'images/biography.png' %}">
+                        <span>Biographies</span>
+                    </a>
+                </div>
+                <div class="feat-item">
+                    <a href="/search/?q=Self-Development">
+                        <img src="{% static 'images/self.png' %}">
+                        <span>Self-Development</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="store">
+        <div class="heading">Our Store</div>
+        <a href="/search/?q=bookActive"><div class="link">Go To Store</div></a>
+        <img src="{% static 'images/store.jpg' %}">
+    </div>
+
+    <div class="homeAddress container">
+        <div class="row">
+            <div class="col-sm-4 map">
+                
+            </div>
+            <div class="col-sm-4 address">
+                <div class="addr">
+                    <div class="heading">Address</div>
+                    <div class="detail">Indian Institute of Technology, Roorkee<br>Roorkee, Uttarakhand, 247667</div>
+                </div>
+                <div class="contact">
+                    <div class="heading">Contact Us</div>
+                    <div class="detail">contact@readerearth.com<br>+91-7417203739</div>
+                </div>
+            </div>
+            <div class="col-sm-3 subscribe">
+                <div class="heading">Subscribe</div>
+                <form>
+                    {% csrf_token %}
+                    <input type="email" name="email" class="email-footer subemail" placeholder="E-mail">
+                    <button type="button" class="ssubmit">Submit</button>
+                    <h3 class="sub-reply"></h3>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+	

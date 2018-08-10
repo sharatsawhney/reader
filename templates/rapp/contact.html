@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Contact{% endblock %}
+{% block style %}
+	
+{% endblock %}
+{% block activeco %}class="active"{% endblock %}    
+{% block content %}
+
+    <div class="contact container-fluid">
+		<div class="row">
+			<div class="col-sm-9">
+				<div class="heading">Contact Us</div>
+				<form method="post">
+					{% csrf_token %}
+					<input type="text" name="name" placeholder="Name" required>
+					<input type="email" name="email" placeholder="Email" required>
+					<input type="text" name="number" placeholder="Contact Number" required>
+					<input type="text" name="message" placeholder="Message(Optional)"><br>
+					<button type="submit" name ="submit1">Send</button>
+				</form>
+			</div>
+			<div class="col-sm-3">
+				<div class="heading">Customer Care</div>
+				<div class="numbers">
+					<ul>
+						<li><i class="fa fa-phone" aria-hidden="true"></i>+91-7417203739</li>
+						<li><i class="fa fa-phone" aria-hidden="true"></i>+91-9870953662</li>
+						<li><i class="fa fa-phone" aria-hidden="true"></i>+91-9557761700</li>
+						<li><i class="fa fa-phone" aria-hidden="true"></i>+91-9870923355</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>	
+
+{% endblock %}

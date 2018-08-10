@@ -1,0 +1,127 @@
+{% extends 'base_shop.html' %}
+{% load staticfiles %}
+{% block title %}Shop{% endblock %}
+
+{% block style %}
+      
+ 
+{% endblock %}
+{% block content %}	
+    
+    <div class="ebook-container ">
+		<div class="filter-pane">
+			<div class="fp-1">
+				<form method="get" action="/search/">
+			        <input name="q" type="text">
+			        <button type="submit">Search</button>
+			    </form>
+				<h2>Filters</h2>
+                  
+			</div>
+			<div class="fp-2">
+				<h3>Categories</h3>
+				<ul>
+					<form method="post">
+					{% csrf_token %}
+					<li><i class="fas fa-chevron-left"></i><span class="span-engg"><button type="submit" name="Engineering"> Engineering</button></span></li>
+				    </form>
+				    <form method="post">
+					{% csrf_token %}
+					<li><i class="fas fa-chevron-left"></i><span class="span-med"><button type="submit" name="Medical"> Medical</button></span></li>
+				    </form>
+				    <form method="post">
+					{% csrf_token %}
+					<li><i class="fas fa-chevron-left"></i><span class="span-nov"><button type="submit" name="Novels"> Novels</button></span></li>
+				    </form>
+				    <form method="post">
+					{% csrf_token %}
+					<li><i class="fas fa-chevron-left"></i><span class="span-stor"><button type="submit" name="Stories"> Stories</button></span></li>
+				    </form>
+				    <form method="post">
+					{% csrf_token %}
+					<li><i class="fas fa-chevron-left"></i><span class="span-bio"><button type="submit" name="Biographies"> Biographies</button></span></li>
+				    </form>
+				    <form method="post">
+					{% csrf_token %}
+					<li><i class="fas fa-chevron-left"></i><span class="span-selfd"><button type="submit" name="Self-Development"> Self-Development</button></span></li>
+				    </form>
+				</ul>
+			</div>
+
+			<div ng-app="rzSlider">
+	    	<div ng-controller="MainCtrl" class="wrapper">
+			<div class="fp-3">
+				<h3>Price</h3>
+				
+	    		<article>
+	    		 <div class="slider-hump"></div>
+	    		 <rzslider rz-slider-model="minRangeSlider1.minValue" rz-slider-high="minRangeSlider1.maxValue" rz-slider-options="minRangeSlider1.options"></rzslider>
+	            <input type="number" ng-model="minRangeSlider1.minValue" />
+	            <span class="to">to</span>
+	            <input type="number" ng-model="minRangeSlider1.maxValue" />
+	          
+	            </article>
+			  
+			</div>
+
+			<div class="fp-4">
+				<h3>Pages</h3>
+				
+	    		<article>
+	    		 <div class="slider-hump"></div>
+	    		 <rzslider rz-slider-model="minRangeSlider2.minValue" rz-slider-high="minRangeSlider2.maxValue" rz-slider-options="minRangeSlider2.options"></rzslider>
+	            <input type="number" ng-model="minRangeSlider2.minValue" />
+	            <span>to</span>
+	            <input type="number" ng-model="minRangeSlider2.maxValue" />
+			          
+			      
+			</div>
+		    </div>
+	        </div>
+
+	        <div class="fp-5">
+	        	<h3>Publisher</h3>
+	        	<input type="text" id="publisherSearch" onkeyup="publisherSearch()" placeholder="&#xf002; Search.." title="Type in a name">
+
+	        	<ul id="publisherList">
+	        	  {% for pub in pubs %}
+				  <li><a>{{ pub }}</a></li>
+				  {% endfor %}
+				</ul>
+	        </div>
+		</div>
+		<div class="main-pane">
+			<div class="mp-1">
+				<p class="linker"><a href="/">Home</a><span>></span><a href="/shop/">Ebooks</a></p>
+				<p class="title"><span class="heading">Ebooks</span><span>(Showing 1-40 ebooks of 588 ebooks)</span></p>
+				<p class="sort">
+					<span>Sort by</span>
+					<span class="active">Price-Low to High</span>
+					<span>Price-High to Low</span>
+					<span>Newest First</span>
+				</p>
+			</div>
+            <div class="mp-2">
+            	<div class="row no-gutter">
+            		{% for ebook in ebooks %}
+            		<div class="col-sm-3">
+            			<div class="card">
+						  <img src="https://s3.ap-south-1.amazonaws.com/readerearth/media/{{ ebook.img }}" alt="Ebook">
+						  <div class="container">
+						    <p class="title" data-id={{ forloop.counter }}><b>{{ ebook.name }}</b></p> 
+						    <p class="author" data-id={{ forloop.counter }}><b>- {{ ebook.author }}</b></p> 
+						    <p class="publisher" data-id={{ forloop.counter }}>{{ebook.language}}, {{ ebook.publisher }}</p>
+						    <span class="nprice"><b>&#x20b9; {{ ebook.price }}</b></span>
+						    <span class="oprice">&#x20b9; 249</span>
+						    <span class="saving">40% Off</span>
+						  </div>
+						</div>
+            		</div>
+            		{% endfor %}
+            		
+            	</div>
+            </div>
+		</div>
+	</div>
+
+{% endblock %}

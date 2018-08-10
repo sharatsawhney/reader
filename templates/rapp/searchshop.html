@@ -1,0 +1,160 @@
+{% extends 'base_shop.html' %}
+{% load staticfiles %}
+{% block title %}Shop{% endblock %}
+
+{% block style %}
+      
+ 
+{% endblock %}
+{% block content %}	
+    
+    <div class="ebook-container ">
+		<div class="filter-pane">
+			<div class="fp-0">
+				<form method="get" action="/search/">
+			        
+			        <span class="searchInput">{{ form.q }}</span>
+			        <div style="display:none" class="formlprice">{{ form.low_price }}</div>
+                    <div style="display:none" class="formhprice">{{ form.high_price }}</div>
+                    <div style="display:none" class="formlpages"> {{ form.low_pages }}</div>
+                    <div style="display:none" class="formhpages">{{ form.high_pages }}</div>
+			        <button type="submit">Search</button>
+			    </form>
+			</div>
+			<div class="fp-1">
+				<h2>Filters</h2>
+			</div>
+			<div class="fp-2">
+				<h3>Categories</h3>
+				<ul>
+					<form method="post">
+					{% csrf_token %}
+					<li><i class="fas fa-chevron-left"></i><span class="span-engg"><a href="/search/?q=Engineering"> Engineering</a></span></li>
+				    </form>
+				    <form method="post">
+					{% csrf_token %}
+					<li><i class="fas fa-chevron-left"></i><span class="span-med"><a href="/search/?q=Medical"> Medical</a></span></li>
+				    </form>
+				    <form method="post">
+					{% csrf_token %}
+					<li><i class="fas fa-chevron-left"></i><span class="span-nov"><a href="/search/?q=Novels"> Novels</a></span></li>
+				    </form>
+				    <form method="post">
+					{% csrf_token %}
+					<li><i class="fas fa-chevron-left"></i><span class="span-stor"><a href="/search/?q=Stories"> Stories</a></span></li>
+				    </form>
+				    <form method="post">
+					{% csrf_token %}
+					<li><i class="fas fa-chevron-left"></i><span class="span-bio"><a href="/search/?q=Biographies"> Biographies</a></span></li>
+				    </form>
+				    <form method="post">
+					{% csrf_token %}
+					<li><i class="fas fa-chevron-left"></i><span class="span-selfd"><a href="/search/?q=Self-Development"> Self-Development</a></span></li>
+				    </form>
+				</ul>
+			</div>
+
+			<div ng-app="rzSlider">
+	    	<div ng-controller="MainCtrl" class="wrapper">
+			<div class="fp-3">
+				<h3>Price</h3>
+				
+	    		<article>
+	    		 <div class="slider-hump"></div>
+	    		 <rzslider rz-slider-model="minRangeSlider1.minValue" rz-slider-high="minRangeSlider1.maxValue" rz-slider-options="minRangeSlider1.options"></rzslider>
+	            <input type="number" class="lpriceinput" ng-model="minRangeSlider1.minValue" />
+	            <span class="to">to</span>
+	            <input type="number" class="hpriceinput" ng-model="minRangeSlider1.maxValue" />
+	          
+	            </article>
+			  
+			</div>
+
+			<div class="fp-4">
+				<h3>Pages</h3>
+				
+	    		<article>
+	    		 <div class="slider-hump"></div>
+	    		 <rzslider rz-slider-model="minRangeSlider2.minValue" rz-slider-high="minRangeSlider2.maxValue" rz-slider-options="minRangeSlider2.options"></rzslider>
+	            <input type="number" class="lpagesinput" ng-model="minRangeSlider2.minValue" />
+	            <input type="number" class="hpagesinput" ng-model="minRangeSlider2.maxValue" />
+
+			          
+			      
+			</div>
+		    </div>
+	        </div>
+
+	        <div class="fp-5">
+	        	<h3>Publisher</h3>
+	        	<input type="text" id="publisherSearch" onkeyup="publisherSearch()" placeholder="&#xf002; Search.." title="Type in a name">
+
+	        	<ul id="publisherList">
+	        	  {% for pub in pubs %}
+				  <li><a href="/search/?q={{pub}}">{{ pub }}</a></li>
+				  {% endfor %}
+				</ul>
+	        </div>
+		</div>
+		<div class="main-pane">
+			<div class="mp-1">
+				<p class="linker"><a href="/">Home</a><span>></span><a href="/shop/">Ebooks</a></p>
+				<p class="title"><span class="heading">Ebooks</span><span>(Showing <span class="lowerLimitPages"></span>-<span class="upperLimitPages"></span> ebooks of <span class="totalBooks">{{ totalBooks }}</span> ebooks)</span></p>
+				<!--<p class="sort">
+					<span>Sort by</span>
+					<span class="active">Price-Low to High</span>
+					<span>Price-High to Low</span>
+					<span>Newest First</span>
+				</p>-->
+			</div>
+            <div class="mp-2">
+            	<div class="row no-gutter">
+            	  {% if query %}
+            		{% for book in books %}
+            		<div class="col-sm-3">
+            			<div class="card">
+            			  <a href="/detail/{{book.ebookid}}/">
+						  <img src="https://s3.ap-south-1.amazonaws.com/readerearth/media/{{ book.img }}" alt="Ebook">
+						  <div class="container">
+						    <p class="title" data-id={{ forloop.counter }}><b>{{ book.name }}</b></p> 
+						    <p class="author" data-id={{ forloop.counter }}><b>- {{ book.author }}</b></p> 
+						    <p class="publisher" data-id={{ forloop.counter }}>{{ book.language }}, {{ book.publisher }}</p>
+						    <span class="nprice"><b>&#x20b9; {{ book.price }}</b></span>
+						    <span class="oprice">&#x20b9; 249</span>
+						    <span class="saving">40% Off</span>
+						  </div>
+						  </a>
+						</div>
+            		</div>
+            		{% empty %}
+            		    <h2 style="margin-left: 40px;">No results found!</h2>
+            		{% endfor %}
+            	  {% endif %}
+            		
+            	</div>
+            </div>
+
+            <div class="pagination">
+			    <span class="step-links">
+			        {% if books.has_previous %}
+			            <a href="" class="prevLink">Previous</a>
+			        {% endif %}
+
+			        <span class="current">
+			            Page <span class="currentPageNumber">{{ books.number }}</span> of {{ books.paginator.num_pages }}
+			        </span>
+
+			        {% if books.has_next %}
+			            <a href="" class="nextLink">Next</a>
+			        {% endif %}
+			    </span>
+			</div>
+		</div>
+	</div>
+	<p style="display:none" class="lprice">{{lprice}}</p>
+	<p style="display:none" class="hprice">{{hprice}}</p>
+	<p style="display:none" class="lpages">{{lpages}}</p>
+	<p style="display:none" class="hpages">{{hpages}}</p>
+	<p style="display: none">{{ page }}</p>
+
+{% endblock %}

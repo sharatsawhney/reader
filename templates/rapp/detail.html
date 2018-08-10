@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Shop{% endblock %}
+{% block style %}
+{% endblock %}
+{% block content %}
+	<div class="container-fluid detail-container">
+	    <div class="row">
+			<div class="col-sm-4 detail-1">
+				<div class="img-div">
+					<img src="https://s3.ap-south-1.amazonaws.com/readerearth/media/{{ ebook.img }}">
+					<span class="detailHeart">{% if heart == True %}<i class="fa fa-heart" aria-hidden="true" style="color:#FF0000"></i>{% else %}<i class="fa fa-heart" aria-hidden="true"></i>{% endif %}</span>
+				</div>
+			</div>
+			<div class="col-sm-7 detail-2">
+			  <div class="row">
+			  	<div class="col-sm-7">
+			  		<h2>{{ ebook.name }}</h2>
+	                <div class="prices"><span class="nprice">&#8377; <span class="detailNewPrice">{{ ebook.price}}</span></span><span class="oprice">&#8377; <span class="detailOldPrice"></span></span><span class="saving">20% Off</span></div>
+					<div class="author"><span>Author</span><span>{{ ebook.author }}</span></div>
+					<div class="highlights">
+						<span class="heading">Highlights</span>
+						<span class="items">
+							<ul>
+								<li><span>Language: {{ ebook.language }}</span></li>
+								<li><span>Publisher: {{ ebook.publisher }}</span></li>
+								<li><span>Pages: {{ ebook.pages }}</span></li>
+							</ul>
+						</span>
+					</div>
+				  	</div>
+			  	<div class="col-sm-5">
+			  		<div class="duration">
+						<h3>Rent For:</h3>
+						<select class="durationselect">
+						    <option value="Select Duration" disabled selected>Select Duration</option>
+						    {% for i in ebook.dayopt %}
+						    <option value="{{ i }}">{{ i }}</option>
+						    {% endfor %}
+						</select>
+						<div class="rentbtn"><b>RENT NOW</b></div>
+					</div>
+			  	</div>
+			  </div>
+			    
+				<div class="desc row">
+					<span class="col-sm-2">Description</span>
+					<span class="col-sm-9">{{ ebook.description }}</span>
+				</div>
+				
+				<h4 class="cart-reply"></h4>
+				{% csrf_token %}
+				<div class="cart-btn"><b>ADD TO CART</b></div>
+				<div class="buy-btn"><b>PURCHASE NOW</b></div>
+			</div>
+		</div>
+	</div>
+	
+{% endblock %}

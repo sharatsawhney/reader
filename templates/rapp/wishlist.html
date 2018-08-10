@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Wishlist{% endblock %}
+{% block style %}
+	
+{% endblock %}
+{% block activew %}class="active"{% endblock %}    
+{% block content %}
+	
+	<div class="wl-container">
+		<div class="wl-title">
+			<h2><b>WISHLIST</b><i class="fa fa-heart" style="font-size:28px;color:red;margin-left: 10px"></i></h2>
+		</div>
+		<div class="wl-cards">
+			<div class="row no-gutter">
+				{% for item in list %}
+            		<div class="col-sm-5ths">
+            			<div class="card">
+						  <img src="https://s3.ap-south-1.amazonaws.com/readerearth/media/{{ item.ebook.img }}" alt="Ebook">
+						  <i class="fa fa-heart" style="font-size:22px;color:red;position: relative;bottom: 75px;left: 5px"></i>
+						  <div class="container">
+						    <p class="title"><b>{{ item.ebook.name }}</b></p> 
+						    <p class="author"><b>- {{ item.ebook.author }}</b></p> 
+						    <p class="publisher">{{item.ebook.language}}, {{ item.ebook.publisher }}</p>
+						    <span class="nprice"><b>&#x20b9; <span class="wishlistNewPrice" data-id={{ forloop.counter}}>{{ item.ebook.price }}</b></span>
+						    <span class="oprice">&#x20b9; <span class="wishlistOldPrice" data-id={{forloop.counter}}></span></span>
+						    <span class="saving">20% Off</span>
+						    <form method="post">
+								<h6 style="display:none" class="hiddenidw" data-id={{ forloop.counter }}>{{ item.ebook.id }}</h6>
+								{% csrf_token %}
+								<input type="button" class="btn mtc wl-atc" data-id={{ forloop.counter }} style="margin-left:25%;margin-bottom:10px" value="Add to Cart" name="wsubmit">
+								{% csrf_token %}
+								<input type="button" data-id={{ forloop.counter }} class="btn wremove wl-remove" style="margin-left:30%;margin-bottom: 10px;" name="wishlistdelete" value="Remove">
+							</form>
+						  </div>
+						</div>
+            		</div>
+            		{% endfor %}
+            		
+            	</div>
+		</div>
+	</div>
+	
+{% endblock %}

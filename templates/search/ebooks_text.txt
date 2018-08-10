@@ -1,0 +1,12 @@
+{{ object.name}}
+{{ object.author }}
+{{ object.language }}
+{{ object.publisher }}
+{{ object.price }}
+{{ object.pages }}
+{{ object.category }}
+{{ object.description }}
+{{ object.img }}
+{{ object.priority }}
+{{ object.ebookid }}
+{{ object.bookActive }}
