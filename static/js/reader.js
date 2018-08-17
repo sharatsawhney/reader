@@ -166,8 +166,8 @@ for(var i=1;i<=pages;i++){
     		i = "0" + i;
     	}
     }
-	$("#magazine").append("<div style='background-image:url(/static/" + id + "/" + id + "-" + i + ".jpg);'></div>");
-	$(".reader-small").append("<div style='background-image:url(/static/" + id + "/" + id + "-" + i + ".jpg)' class='rsdiv'></div>");
+	$("#magazine").append("<div style='background-image:url(https://s3.ap-south-1.amazonaws.com/readerearth/static/" + id + "/" + id + "-" + i + ".jpg);'></div>");
+	$(".reader-small").append("<div style='background-image:url(https://s3.ap-south-1.amazonaws.com/readerearth/static/" + id + "/" + id + "-" + i + ".jpg)' class='rsdiv'></div>");
 }
 
 $("#nighttoggle").click(function(){

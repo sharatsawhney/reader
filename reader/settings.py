@@ -23,13 +23,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'klpi31sklyv#l#eo2w4l0*$l9b)%q!cy5hg2dld#%_!pm6)yi2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG =False
 
 ALLOWED_HOSTS = [
     'reader-env.xanjtppaay.ap-south-1.elasticbeanstalk.com',
     'localhost',
     'www.readerearth.com',
-    'readerearth.com']
+    'readerearth.com',
+    '142.93.120.13']
 
 
 # Application definition
