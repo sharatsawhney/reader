@@ -41,6 +41,7 @@ urlpatterns = [
     url(r'^reader/(?P<id>\d+)/index.html',views.reader,name='reader'),
     url(r'^change/',RedirectView.as_view(url='/home/sharatsawhney/pdf/theeffort/',permanent=True)),
     url(r'^read/(?P<id>\d+)/$',views.read,name='read'),
+    url(r'^sample/(?P<id>\d+)/$',views.sample,name='sample'),
     url(r'^add_notes/$',views.add_notes,name='add_notes'),
     url(r'^save_page/$',views.save_page,name='save_page'),
     url(r'^searchi/$',views.searchi,name='searchi'),

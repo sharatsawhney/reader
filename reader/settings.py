@@ -30,7 +30,8 @@ ALLOWED_HOSTS = [
     'localhost',
     'www.readerearth.com',
     'readerearth.com',
-    '142.93.120.13']
+    '142.93.120.13',
+    '127.0.0.1']
 
 
 # Application definition

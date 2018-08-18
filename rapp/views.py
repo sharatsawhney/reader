@@ -818,9 +818,28 @@ def read(request,id):
     checklen = len(Dashboard.objects.filter(user=request.user,ebook=book,active=True))
     if checklen >0:
         check = True
+    elif int(id) == 4:
+        check = True
     else:
         check = False
     return render(request,'rapp/read.html',{'pages':pages,'id':id,'notes':notes,'lastpage':lastpage,'check':check})
+
+
+def sample(request,id):
+    book = Ebooks.objects.filter(id=id)[0]
+    pages = round(0.08*book.pages)
+    if len(Notes.objects.filter(user=request.user)) >0:
+        notes = Notes.objects.filter(user=request.user)
+    else:
+        notes = False
+    if len(Lastpage.objects.filter(user=request.user,ebook=book))>0:
+        if (datetime.now(timezone.utc) - Lastpage.objects.filter(user=request.user,ebook=book)[0].time).total_seconds() <10:
+            lastpage = Lastpage.objects.filter(user=request.user,ebook=book)[0].page
+        else:
+            lastpage = False
+    else:
+        lastpage = False
+    return render(request,'rapp/sample.html',{'pages':pages,'id':id,'notes':notes,'lastpage':lastpage})
 
 
 def add_notes(request):

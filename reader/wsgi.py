@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/1.11/howto/deployment/wsgi/
 import os
 import sys
 
-sys.path.append("/root/env1/lib/python3.5/site-packages")
+sys.path.append("/home/sharat/env1/lib/python3.5/site-packages")
 from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "reader.settings")

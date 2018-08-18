@@ -78,6 +78,7 @@ class Ebooks(models.Model):
         ('bookInactive','bookInactive'),
     )
     bookActive = models.CharField(max_length=20,choices= ACTIVE_CHOICES,default='bookActive')
+    isbn = models.CharField(max_length=14,default='')
 
     def __str__(self):
         return self.name

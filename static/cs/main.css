@@ -1279,7 +1279,7 @@ html{
 .contact .col-sm-3 .numbers{
 	background-color: white;
 	color: black;
-	height: 200px;
+	height: 300px;
 	margin-top: 5px;
 }
 .contact .col-sm-3 .numbers ul{
@@ -1294,8 +1294,18 @@ html{
 	color: #9F9F9F;
 
 }
+.contact .col-sm-3 .numbers ul li small{
+	margin-left: 30px;
+
+}
 .contact .col-sm-3 .numbers ul li i{
 	margin-right: 10px;
+}
+.contact .col-sm-3 .numbers ul li .fa-envelope{
+	margin-left: -20px;
+}
+.contact .col-sm-3 .numbers ul li span{
+	font-size: 16px;
 }
 /* Contact Ends */
 
@@ -1425,6 +1435,21 @@ html{
     padding-bottom: 7px;
     text-align: center;
     border: 1px solid #53A7E3;
+}
+.detail-2 .freesamplebtn{
+	background-color:#53A7E3;
+    width: 100%;
+    border-radius: 4px;
+    color: white;
+    margin-top: 20px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    text-align: center;
+    border: 1px solid #53A7E3;
+    cursor: default;
+}
+.detail-2 .freesamplebtn a{
+	color: white;
 }
 .detail-2 .cart-btn{
 	margin: auto;
@@ -2790,8 +2815,18 @@ html{
 		margin-left: -10px;
 
 	}
+	.contact .col-sm-3 .numbers ul li .fa-envelope{
+	    margin-left: -20px;
+	}
+	.contact .col-sm-3 .numbers ul li span{
+		font-size: 11px;
+	}
 }
-
+@media screen and (min-width: 1100px){
+	.contact .col-sm-3 .numbers{
+		height: auto;
+	}
+}
 /* wl-atc and wl-remove */
 @media screen and (max-width: 1100px) and (min-width: 768px){
 	.wl-atc{

@@ -8,10 +8,44 @@
         border-bottom: none;
         z-index: 1;
     }
+    .index-alert .ssubmit{
+        background-color: #53A7E3;
+        border: none;
+        color: white;
+        font-size: 16px;
+        border-radius: 5px;
+        padding: 5px;
+    }
+    .index-alert .subemail{
+        width: 40%;
+        height: 30px;
+        background-color: #FDF8E2;
+        border: none;
+        border-bottom: 1px solid #D2D2D2;
+    }
+    .index-alert .demo-reader-link{
+        background-color: #53A7E3;
+        border: none;
+        color: white;
+        font-size: 16px;
+        border-radius: 5px;
+        padding: 10px;
+    }
 
 {% endblock %}
 {% block activeh %}class="active"{% endblock %}
 {% block content %}
+    <div class="alert alert-warning alert-dismissable index-alert" style="position: absolute;z-index:1;top: 200px;">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  <strong>Dear User, we are extremely sorry to inform you that the website and its content is under continuous development and you may not be able to avail our services perfectly.We will soon launch the Best version of Reading Experience you could imagine. Till then, stay tuned! You can also subscribe for Launching and other notifications!</strong>
+                  <form style="text-align: center">
+                    {% csrf_token %}
+                    <input type="email" name="email" class="email-footer subemail" placeholder="E-mail">
+                    <button type="button" class="ssubmit">Notify me </button>
+                    <h3 class="sub-reply"></h3>
+                    <strong>Also, we would love to have you explore our Reader </strong><a href="/read/4" class="demo-reader-link">Demo Reader</a>
+                </form>
+                </div>
     <div id="homeSlider" class="carousel slide" data-ride="carousel">
         <!-- Wrapper for slides -->
         <div class="carousel-inner">
@@ -95,9 +129,9 @@
 
     <div class="homeAddress container">
         <div class="row">
-            <div class="col-sm-4 map">
+            <!--<div class="col-sm-4 map">
                 
-            </div>
+            </div>-->
             <div class="col-sm-4 address">
                 <div class="addr">
                     <div class="heading">Address</div>
