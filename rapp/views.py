@@ -849,7 +849,7 @@ def sample(request,id):
             lastpage = False
     else:
         lastpage = False
-    return render(request,'rapp/sample.html',{'pages':pages,'id':id,'notes':notes,'lastpage':lastpage})
+    return render(request,'rapp/sample.html',{'pages':pagesfull,'id':id,'notes':notes,'lastpage':lastpage,'pagesaccess':pages})
 
 
 def add_notes(request):

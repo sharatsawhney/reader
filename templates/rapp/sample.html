@@ -259,7 +259,7 @@ body{
         </div>
 	</div>
 	<div class="bottom-pane">
-		<input type="range" min="" max="{{ pages }}" value="1" class="slider" id="pageRange" class="slider"  name="pageRange">
+		<input type="range" min="" max="{{ pagesaccess }}" value="1" class="slider" id="pageRange" class="slider"  name="pageRange">
 		<output for="pageRange" onforminput="value = pageRange.valueAsNumber;"></output>
 	</div>
 </div>
@@ -274,6 +274,7 @@ body{
 
 
 <p style="display: none;" id="hiddenpages">{{ pages }}</p>
+<p style="display: none;" id="hiddenpagesaccess">{{ pagesaccess }}</p>
 <p style="display: none;" id="hiddenid">{{ id }}</p>
 <p style="display: none" id="hiddenlastpage">{{ lastpage }}
 </p>
