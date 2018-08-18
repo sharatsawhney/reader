@@ -827,7 +827,17 @@ def read(request,id):
 
 def sample(request,id):
     book = Ebooks.objects.filter(id=id)[0]
-    pages = round(0.08*book.pages)
+    pagesfull = book.pages
+    if pagesfull <= 300:
+        pages = round(0.08*pagesfull)
+    elif 300 < pagesfull <= 600:
+        pages = round(0.07*pagesfull)
+    elif 600 < pagesfull <= 900:
+        pages = round(0.06*pagesfull)
+    elif 900 < pagesfull <= 1200:
+        pages = round(0.05*pagesfull)
+    else:
+        pages =round(0.04*pagesfull)
     if len(Notes.objects.filter(user=request.user)) >0:
         notes = Notes.objects.filter(user=request.user)
     else:
