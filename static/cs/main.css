@@ -17,6 +17,30 @@ html{
   top: 40%;
   left: 10%;
 }
+.loader2 {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+}
+.loader3 {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  position: fixed;
+  top: 25%;
+  left: 15%;
+}
 
 /* Safari */
 @-webkit-keyframes spin {
@@ -335,6 +359,22 @@ html{
 }
 .mp-2 .row .col-sm-3:nth-child(4n+1){
     margin-left: 15px;
+}
+.mp-2 input{
+	border: none;
+	border-bottom: 2px solid #D2D2D2;
+	width: 80%;
+}
+.mp-2 .bookrequestsubmit{
+	background-color: #53A7E3;
+	margin-left: 20%;
+	border: none;
+	color: white;
+	margin-top: 10px;
+	font-size: 20px;
+	border-radius: 5px;
+	width: 80%;
+	padding: 5px;
 }
 .pagination{
 	text-align: center;
@@ -1030,18 +1070,26 @@ html{
 }
 .homeAddress .subscribe .heading{
 	color: #666666;
-	margin-left: 60px;
+	margin-left: 40px;
     font-size: 40px;
 }
-.homeAddress .subscribe input{
+.homeAddress .feedback .heading{
+	color: #666666;
+    font-size: 35px;
+}
+.homeAddress .subscribe input,.homeAddress .feedback input{
 	margin-top: 15px;
 	border: none;
 	border-bottom: 1px solid #D2D2D2;
-	width: 120%;
+	width: 100%;
 }
-.homeAddress .subscribe button{
+.homeAddress .feedback textarea{
+	margin-top: 15px;
+	width: 100%;
+}
+.homeAddress .subscribe button,.homeAddress .feedback button{
 	background-color: #53A7E3;
-	margin-left: 20%;
+	margin-left: 10%;
 	border: none;
 	color: white;
 	margin-top: 30px;
@@ -1816,6 +1864,15 @@ html{
 	    width: 90%;
 	    margin-left: 15px;
 	}
+	.mp-2 h2,h3{
+		font-size: 14px;
+	}
+	.mp-2 input{
+		width: 70%;
+	}
+	.mp-2 .bookrequestsubmit{
+		width: 70%;
+	}
 }
 @media screen and (max-width: 576px){
 	.dash-right .card{
@@ -1987,6 +2044,15 @@ html{
 	.mp-2 .row .col-sm-3{
 	    width: 85%;
 	    margin-left: 15px;
+	}
+	.mp-2 h2,h3{
+	    font-size: 14px;
+    }
+    .mp-2 input{
+		width: 60%;
+	}
+	.mp-2 .bookrequestsubmit{
+		width: 60%;
 	}
 }
 @media screen and (max-width:1100px) {
@@ -2229,15 +2295,23 @@ html{
 		margin-left: 10px;
 	}
 
-	.homeAddress .subscribe .heading{
+	.homeAddress .subscribe .heading,.homeAddress .feedback .heading{
 		margin-top: 40px;
 		margin-left: 10px;
 	}
-	.homeAddress .subscribe input{
+	.homeAddress .subscribe input,.homeAddress .feedback input{
 		margin-left: 10px;
 		width: 100%;
 	}
-	.homeAddress .subscribe button{
+	.homeAddress .feedback textarea{
+		margin-left: 10px;
+		width: 100%;
+	}
+	.homeAddress .feedback .feedback-reply{
+		margin-left: 10px;
+		width: 100%;
+	}
+	.homeAddress .subscribe button,.homeAddress .feedback button{
 		margin-left: 10px;
 		width: 100%;
 	}
@@ -2322,15 +2396,23 @@ html{
 		margin-left: 10px;
 	}
 
-	.homeAddress .subscribe .heading{
+	.homeAddress .subscribe .heading,.homeAddress .feedback .heading{
 		margin-top: 40px;
 		margin-left: 10px;
 	}
-	.homeAddress .subscribe input{
+	.homeAddress .subscribe input,.homeAddress .feedback input{
 		margin-left: 10px;
 		width: 100%;
 	}
-	.homeAddress .subscribe button{
+	.homeAddress .feedback textarea{
+		margin-left: 10px;
+		width: 100%;
+	}
+	.homeAddress .feedback .feedback-reply{
+		margin-left: 10px;
+		width: 100%;
+	}
+	.homeAddress .subscribe button,.homeAddress .feedback button{
 		margin-left: 10px;
 		width: 100%;
 	}
@@ -2419,13 +2501,27 @@ html{
 		margin-top: 0px;
 		margin-left: 10px;
 	}
+	.homeAddress .feedback .heading{
+		margin-top: 0px;
+		font-size: 22px;
+	}
 	.homeAddress .subscribe input{
 		margin-left: 10px;
 		margin-top: -10%;
 	}
+	.homeAddress .feedback input{
+		width: 100%;
+	}
+	.homeAddress .feedback textarea{
+		width: 100%;
+	}
 	.homeAddress .subscribe button{
 		margin-left: 10px;
 		width: 100%;
+	}
+	.homeAddress .feedback button{
+		width: 100%;
+		margin-left: 0%;
 	}
 }
 @media screen and (max-width: 1260px) and (min-width: 1150px){
@@ -2604,6 +2700,9 @@ html{
 	}
 	.loader{
 		left: 30%;
+	}
+	.loader3{
+		left: 35%;
 	}
 }
 

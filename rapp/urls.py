@@ -48,6 +48,8 @@ urlpatterns = [
     url(r'^search/', MySearchView.as_view(), name='search_view'),
     url(r'^publisher',views.publisher,name='publisher'),
     url(r'^secure/',views.secure,name='secure'),
+    url(r'^bookrequest/',views.bookrequest,name='bookrequest'),
+    url(r'^feedback/',views.feedback,name='feedback'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG is True:

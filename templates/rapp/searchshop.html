@@ -128,6 +128,13 @@
             		</div>
             		{% empty %}
             		    <h2 style="margin-left: 40px;">No results found!</h2>
+            		    <h2 style="margin-left: 40px;">You can Put a Book Request and we will soon get that E-Book for you!</h2>
+            		    <input type="text" name="bookrequest" class="bookrequest" style="margin-left: 40px;" placeholder="BOOK NAME"><br><br>
+            		    <input type="email" name="bookrequestemail" class="bookrequestemail" style="margin-left: 40px;" placeholder="YOUR EMAIL"><br>
+            		    {% csrf_token %}
+            		    <button class="bookrequestsubmit" style="margin-left: 40px;">Request</button>
+            		    <h3 style="margin-left: 40px;" class="bookrequestreply"></h3>
+            		    <div class="loader2"></div>
             		{% endfor %}
             	  {% endif %}
             		

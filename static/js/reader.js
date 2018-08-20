@@ -185,48 +185,107 @@ $("#nighttoggle").click(function(){
 
 
 
-$("#savenotes").click(function(){
-	var title = $("#titlenotes").val();
-	var text = $("#textnotes").val();
-	var pageNumber = $("#pageRange").val();
-	$.ajax({
-			url: '/add_notes/',
-			type:'POST',
-			data:
-			{
-				'title': title,
-				'text': text,
-				'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
-			},
-			success: function(data)
-			{
-			   $.ajax({
-					url: '/save_page/',
+$(".newtextnotes").on('input',function(){
+	$("#newnotessave").html('Saving Changes...')
+	setTimeout(function(){ 
+        var title = $("#titlenotes").val();
+		var text = $(".newtextnotes").val();
+		var pageNumber = $("#pageRange").val();
+		if(title!='' && text!=''){
+			$.ajax({
+					url: '/add_notes/',
 					type:'POST',
 					data:
 					{
-						'ebookid': id,
-						'page': pageNumber,
+						'title': title,
+						'text': text,
 						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
 					},
 					success: function(data)
 					{
-					   $("#titlenotes").val();
-			           $("#textnotes").val();
-                       location.reload();
-		               
+					   $("#oldpaper").html(data);
+					   $.ajax({
+							url: '/save_page/',
+							type:'POST',
+							data:
+							{
+								'ebookid': id,
+								'page': pageNumber,
+								'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+							},
+							success: function(data)
+							{                   
+							    $("#newnotessave").html('Changes Saved!')
+
+							},
+							error: function(xhr,status,error){
+							alert(xhr.responseText);
+						    }             
+						});
 					},
 					error: function(xhr,status,error){
 					alert(xhr.responseText);
 				    }             
 				});
-			},
-			error: function(xhr,status,error){
-			alert(xhr.responseText);
-		    }             
-		});
-
+	    }
+	 }, 500);
 })
+
+$(".othertextnotes").on('input',function(){
+	var elem = $(this);
+	elem.parent().parent().parent().find(".othernotessave").html('Saving Changes...')
+	setTimeout(function(){ 
+		var classlist = elem.attr('class').split(' ');
+		if(classlist[0] != 'othertextnotes'){
+			var mainclass = classlist[0];
+		}else{
+			var mainclass = classlist[1];
+		}
+		var mainclassid = mainclass.substr(14);
+		var titleid = $("#othertitlenotes" + mainclassid).html();
+        var title = titleid;
+		var text = elem.val();
+		var pageNumber = $("#pageRange").val();
+		if(title!='' && text!=''){
+			$.ajax({
+					url: '/add_notes/',
+					type:'POST',
+					data:
+					{
+						'title': title,
+						'text': text,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+					   $.ajax({
+							url: '/save_page/',
+							type:'POST',
+							data:
+							{
+								'ebookid': id,
+								'page': pageNumber,
+								'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+							},
+							success: function(data)
+							{
+							   elem.parent().parent().parent().find(".othernotessave").html('Changes Saved!')
+				               
+							},
+							error: function(xhr,status,error){
+							alert(xhr.responseText);
+						    }             
+						});
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+	    }
+	 }, 500);
+})
+
+
 
 $("#oldpaper").hide();
 $("#musiclist").hide();

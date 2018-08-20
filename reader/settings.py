@@ -141,7 +141,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-
+AUTHENTICATION_BACKENDS = ['rapp.authenticate.EmailBackend']
 
 STATIC_PATH = os.path.join(BASE_DIR,'static')
 

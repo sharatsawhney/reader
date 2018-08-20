@@ -132,6 +132,17 @@
             <!--<div class="col-sm-4 map">
                 
             </div>-->
+            <div class="col-sm-4 feedback">
+                <div class="heading">Feedback/Comments Form</div>
+                <form>
+                    {% csrf_token %}
+                    <input type="email" name="email" class="email-feedback feedemail" placeholder="E-mail"><br>
+                    <textarea name="message" class="feedmessage" placeholder="Feel Free to Write down your Feedback and Comments!" rows="5"></textarea>
+                    <button type="button" class="feedbacksubmit">Submit</button>
+                    <h3 class="feedback-reply"></h3>
+                    <div class="loader3"></div>
+                </form>
+            </div>
             <div class="col-sm-4 address">
                 <div class="addr">
                     <div class="heading">Address</div>

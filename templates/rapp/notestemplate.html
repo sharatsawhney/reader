@@ -1,0 +1,74 @@
+<div class="panel-group" id="accordion">
+	{% if notes != False %}
+	{% for note in notes %}
+	<div class="card">
+	    <div class="card-header">
+	      <h5 class="mb-0">
+	        <a data-toggle="collapse" data-parent="#accordion" href="#note{{note.id}}" id="othertitlenotes{{note.id}}">{{ note.title }}</a>
+	        <span class="othernotessave" style="color: black;font-size: 12px"></span>
+	      </h5>
+	    </div>
+	    <div id="note{{note.id}}" class=" collapse" data-parent="#accordion">
+	      <div class="card-body">
+	        <textarea placeholder="Enter something funny." id="textnotes" class="othertextnotes{{note.id}} othertextnotes" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 160px; ">{{ note.text}}</textarea>  
+	      </div>
+	    </div>
+	</div>
+	{% endfor %}
+	{% endif %}
+</div>
+<script type="text/javascript">
+	$(".othertextnotes").on('input',function(){
+		var elem = $(this);
+		elem.parent().parent().parent().find(".othernotessave").html('Saving Changes...')
+		setTimeout(function(){ 
+			var classlist = elem.attr('class').split(' ');
+			if(classlist[0] != 'othertextnotes'){
+				var mainclass = classlist[0];
+			}else{
+				var mainclass = classlist[1];
+			}
+			var mainclassid = mainclass.substr(14);
+			var titleid = $("#othertitlenotes" + mainclassid).html();
+	        var title = titleid;
+			var text = elem.val();
+			var pageNumber = $("#pageRange").val();
+			if(title!='' && text!=''){
+				$.ajax({
+						url: '/add_notes/',
+						type:'POST',
+						data:
+						{
+							'title': title,
+							'text': text,
+							'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+						},
+						success: function(data)
+						{
+						   $.ajax({
+								url: '/save_page/',
+								type:'POST',
+								data:
+								{
+									'ebookid': id,
+									'page': pageNumber,
+									'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+								},
+								success: function(data)
+								{
+								   elem.parent().parent().parent().find(".othernotessave").html('Changes Saved!')
+					               
+								},
+								error: function(xhr,status,error){
+								alert(xhr.responseText);
+							    }             
+							});
+						},
+						error: function(xhr,status,error){
+						alert(xhr.responseText);
+					    }             
+					});
+		    }
+		 }, 500);
+	})
+</script>

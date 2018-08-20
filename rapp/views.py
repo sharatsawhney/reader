@@ -89,10 +89,10 @@ def register(request):
 
 def user_login(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
+        email = request.POST.get('username')
         password = request.POST.get('password')
 
-        user = authenticate(username=username, password=password)
+        user = authenticate(email=email, password=password)
 
         if user:
             login(request, user)
@@ -130,7 +130,7 @@ def contact(request):
             msg.attach_alternative(html_content,"text/html")
             msg.send()
 
-        
+
 
     return render(request,'rapp/contact.html', {})
 
@@ -315,7 +315,7 @@ def shop(request):
         elif 'Medical' in request.POST:
             med = Ebooks.objects.filter(category__cat='Medical')
             return render(request,'rapp/shop.html',{'ebooks':med,'pubs':pubs})
-        
+
         elif 'Novels' in request.POST:
             nov = Ebooks.objects.filter(category__cat='Novels')
             return render(request,'rapp/shop.html',{'ebooks':nov,'pubs':pubs})
@@ -469,7 +469,7 @@ def change_buy(request):
         ebook = Ebooks.objects.filter(id=ebookid)[0]
         trans = Usercart.objects.filter(user=request.user,ebook=ebook)[0]
         trans.buyrent = buy
-        
+
         trans.save()
         products = Usercart.objects.filter(user=request.user)
         tprice = 0
@@ -792,7 +792,7 @@ def dashboard(request):
         else:
             remain.append(round(transformer(dash.duration)-effective,1))
     bdashes = Dashboard.objects.filter(user=request.user,duration='Buy')
-    
+
     return render(request,'rapp/dashboard.html',{'dashes':dashes,'remain':remain,'bdashes':bdashes})
 
 
@@ -804,20 +804,31 @@ def reader(request,id):
 def read(request,id):
     book = Ebooks.objects.filter(id=id)[0]
     pages = book.pages
-    if len(Notes.objects.filter(user=request.user)) >0:
-        notes = Notes.objects.filter(user=request.user)
+    if request.user.is_authenticated:
+        if len(Notes.objects.filter(user=request.user)) >0:
+            notes = Notes.objects.filter(user=request.user)
+        else:
+            notes = False
     else:
         notes = False
-    if len(Lastpage.objects.filter(user=request.user,ebook=book))>0:
-        if (datetime.now(timezone.utc) - Lastpage.objects.filter(user=request.user,ebook=book)[0].time).total_seconds() <10:
-            lastpage = Lastpage.objects.filter(user=request.user,ebook=book)[0].page
+    if request.user.is_authenticated:
+        if len(Lastpage.objects.filter(user=request.user,ebook=book))>0:
+            if (datetime.now(timezone.utc) - Lastpage.objects.filter(user=request.user,ebook=book)[0].time).total_seconds() <10:
+                lastpage = Lastpage.objects.filter(user=request.user,ebook=book)[0].page
+            else:
+                lastpage = False
         else:
             lastpage = False
     else:
         lastpage = False
-    checklen = len(Dashboard.objects.filter(user=request.user,ebook=book,active=True))
-    if checklen >0:
-        check = True
+    if request.user.is_authenticated:
+        checklen = len(Dashboard.objects.filter(user=request.user,ebook=book,active=True))
+        if checklen >0:
+            check = True
+        elif int(id) == 4:
+            check = True
+        else:
+            check = False
     elif int(id) == 4:
         check = True
     else:
@@ -838,13 +849,19 @@ def sample(request,id):
         pages = round(0.05*pagesfull)
     else:
         pages =round(0.04*pagesfull)
-    if len(Notes.objects.filter(user=request.user)) >0:
-        notes = Notes.objects.filter(user=request.user)
+    if request.user.is_authenticated():
+        if len(Notes.objects.filter(user=request.user)) >0:
+            notes = Notes.objects.filter(user=request.user)
+        else:
+            notes = False
     else:
         notes = False
-    if len(Lastpage.objects.filter(user=request.user,ebook=book))>0:
-        if (datetime.now(timezone.utc) - Lastpage.objects.filter(user=request.user,ebook=book)[0].time).total_seconds() <10:
-            lastpage = Lastpage.objects.filter(user=request.user,ebook=book)[0].page
+    if request.user.is_authenticated:
+        if len(Lastpage.objects.filter(user=request.user,ebook=book))>0:
+            if (datetime.now(timezone.utc) - Lastpage.objects.filter(user=request.user,ebook=book)[0].time).total_seconds() <10:
+                lastpage = Lastpage.objects.filter(user=request.user,ebook=book)[0].page
+            else:
+                lastpage = False
         else:
             lastpage = False
     else:
@@ -856,8 +873,28 @@ def add_notes(request):
     if request.method == 'POST':
         title = request.POST['title']
         text = request.POST['text']
-        notes = Notes.objects.get_or_create(user=request.user,title=title,text=text)
-        return HttpResponse('Success');
+        if request.user.is_authenticated:
+            notes = Notes.objects.filter(user=request.user,title=title)
+            if notes.exists():
+                obj = notes[0]
+                obj.text = text
+                obj.save()
+            else:
+                Notes.objects.create(user=request.user,title=title,text=text)
+            allnotes = Notes.objects.filter(user=request.user)
+            html = render_to_string('rapp/notestemplate.html',{'notes':allnotes})
+        else:
+            user = User.objects.filter(email='trialuser@gmail.com')[0]
+            notes = Notes.objects.filter(user=user, title=title)
+            if notes.exists():
+                obj = notes[0]
+                obj.text = text
+                obj.save()
+            else:
+                Notes.objects.create(user=user, title=title, text=text)
+            allnotes = Notes.objects.filter(user=user)
+            html = render_to_string('rapp/notestemplate.html', {'notes': allnotes})
+        return HttpResponse(html)
 
 
 def save_page(request):
@@ -865,8 +902,9 @@ def save_page(request):
         ebookid = request.POST['ebookid']
         page = request.POST['page']
         ebook = Ebooks.objects.filter(id=ebookid)[0]
-        delete = Lastpage.objects.filter(user=request.user,ebook=ebook).delete()
-        addpage = Lastpage.objects.get_or_create(user=request.user,ebook=ebook,page=page)
+        if request.user.is_authenticated:
+            delete = Lastpage.objects.filter(user=request.user,ebook=ebook).delete()
+            addpage = Lastpage.objects.get_or_create(user=request.user,ebook=ebook,page=page)
         return HttpResponse('Success')
 
 
@@ -879,7 +917,7 @@ class MySearchView(SearchView):
     """My custom search view."""
     template_name = 'rapp/searchshop.html'
     form_class = PriceRangeSearchForm
-    
+
     def get_queryset(self):
         queryset = super(MySearchView, self).get_queryset()
         pqueryset = queryset.order_by('-priority')
@@ -898,7 +936,7 @@ class MySearchView(SearchView):
         #return pqueryset
         return items'''
         #sqs = SearchQuerySet().load_all().auto_query('English').order_by('-priority')[:3]
-    
+
         return pqueryset
 
     def get_context_data(self, *args, **kwargs):
@@ -1001,18 +1039,50 @@ def secure(request):
         language = request.POST['language']
         description = request.POST['description']
         priority = request.POST['priority']
-        
+
         publisherf = Publishers.objects.get_or_create(name=publisher)
         publisher_name = Publishers.objects.filter(name=publisher)[0]
         authorf = Authors.objects.get_or_create(name=author,publisher_name=publisher_name)
         author_name = Authors.objects.filter(name=author,publisher_name=publisher_name)[0]
         categoryf = Category.objects.filter(cat=category)[0]
         ebook = Ebooks.objects.get_or_create(name=name,author=author_name,publisher=publisher_name,price=price,pages=pages,category=categoryf,img=image,language=language,description=description,priority=priority)
-        
+
     listbooks = Ebooks.objects.all()
     arr = []
-    for books in listbooks:  
+    for books in listbooks:
         arr.append(books.id)
     latestid = max(arr) + 10
 
     return render(request,'rapp/secure.html',{'latestid':latestid,'usercheck':usercheck})
+
+
+def bookrequest(request):
+    if request.method == 'POST':
+        message = request.POST['bookname']
+        email = request.POST['email']
+        html_content = '<br>Email: ' + email + '<br>Book Name: ' + message
+        msg = EmailMultiAlternatives(
+            'Book Request - Reader Earth',
+            'Details:',
+            to=['contact@readerearth.com',]
+        )
+        msg.attach_alternative(html_content,"text/html")
+        msg.send()
+
+        return HttpResponse('You request has been received! We will soon Notify you with the Arrival of E-book!')
+
+
+def feedback(request):
+    if request.method == 'POST':
+        message = request.POST['message']
+        email = request.POST['email']
+        html_content = '<br>Email: ' + email + '<br>Feedback/Comments: ' + message
+        msg = EmailMultiAlternatives(
+            'Feedback/Comments - Reader Earth',
+            'Details:',
+            to=['contact@readerearth.com',]
+        )
+        msg.attach_alternative(html_content,"text/html")
+        msg.send()
+
+        return HttpResponse('Thanks for Your Worthy Feedback/Comments! We would love to hear more from you!')
