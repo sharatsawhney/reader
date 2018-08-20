@@ -810,7 +810,11 @@ def read(request,id):
         else:
             notes = False
     else:
-        notes = False
+        user = User.objects.filter(email='trialuser@gmail.com')[0]
+        if len(Notes.objects.filter(user=user)) >0:
+            notes = Notes.objects.filter(user=user)
+        else:
+            notes = False
     if request.user.is_authenticated:
         if len(Lastpage.objects.filter(user=request.user,ebook=book))>0:
             if (datetime.now(timezone.utc) - Lastpage.objects.filter(user=request.user,ebook=book)[0].time).total_seconds() <10:
@@ -855,7 +859,11 @@ def sample(request,id):
         else:
             notes = False
     else:
-        notes = False
+        user = User.objects.filter(email='trialuser@gmail.com')[0]
+        if len(Notes.objects.filter(user=user)) >0:
+            notes = Notes.objects.filter(user=user)
+        else:
+            notes = False
     if request.user.is_authenticated:
         if len(Lastpage.objects.filter(user=request.user,ebook=book))>0:
             if (datetime.now(timezone.utc) - Lastpage.objects.filter(user=request.user,ebook=book)[0].time).total_seconds() <10:
@@ -866,6 +874,7 @@ def sample(request,id):
             lastpage = False
     else:
         lastpage = False
+
     return render(request,'rapp/sample.html',{'pages':pagesfull,'id':id,'notes':notes,'lastpage':lastpage,'pagesaccess':pages})
 
 

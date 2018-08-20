@@ -207,9 +207,9 @@ body{
 	<div id="paper">
         {% csrf_token %}
 		<div id="margin">Title: <input id="titlenotes" type="text" name="title"></div>
-		<textarea placeholder="Save Your Notes here!" id="textnotes" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none;"></textarea>  
+		<textarea placeholder="Save Your Notes here!" id="textnotes" class="newtextnotes" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none;"></textarea>  
 		<br>
-		<button id="savenotes">Save</button>
+		<p id="newnotessave" style="color: black;font-size: 12px">Notes shall be saved automatically!</p>
 	</div>
 	<div id="oldpaper">
 	    <div class="panel-group" id="accordion">
@@ -218,14 +218,13 @@ body{
 	    	<div class="card">
 			    <div class="card-header">
 			      <h5 class="mb-0">
-			        <a data-toggle="collapse" data-parent="#accordion" href="#note{{note.title}}">
-			          {{ note.title }}
-			        </a>
+			        <a data-toggle="collapse" data-parent="#accordion" href="#note{{note.id}}" id="othertitlenotes{{note.id}}">{{ note.title }}</a>
+			        <span class="othernotessave" style="color: black;font-size: 12px"></span>
 			      </h5>
 			    </div>
-			    <div id="note{{note.title}}" class=" collapse" data-parent="#accordion">
+			    <div id="note{{note.id}}" class=" collapse" data-parent="#accordion">
 			      <div class="card-body">
-			        <textarea placeholder="Enter something funny." id="textnotes" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 160px; ">{{ note.text}}</textarea>  
+			        <textarea placeholder="Enter something funny." id="textnotes" class="othertextnotes{{note.id}} othertextnotes" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 160px; ">{{ note.text}}</textarea>  
 			      </div>
 			    </div>
 			</div>
@@ -259,7 +258,7 @@ body{
         </div>
 	</div>
 	<div class="bottom-pane">
-		<input type="range" min="" max="{{ pagesaccess }}" value="1" class="slider" id="pageRange" class="slider"  name="pageRange">
+		<input type="range" min="" max="{{ pages }}" value="1" class="slider" id="pageRange" class="slider"  name="pageRange">
 		<output for="pageRange" onforminput="value = pageRange.valueAsNumber;"></output>
 	</div>
 </div>
@@ -271,7 +270,6 @@ body{
 <div class="reader-small">
 	
 </div>
-
 
 <p style="display: none;" id="hiddenpages">{{ pages }}</p>
 <p style="display: none;" id="hiddenpagesaccess">{{ pagesaccess }}</p>
