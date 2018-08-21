@@ -53,6 +53,7 @@ urlpatterns = [
     url(r'^allower/',views.allower,name='allower'),
     url(r'^pubactivate/(?P<email>.*)/(?P<password>.*)/',views.pubactivate,name='pubactivate'),
     url(r'^pubactivate/$',views.pubactivate,name='pubactivate'),
+    url(r'^googlesignin/$',views.googlesignin,name='googlesignin'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG is True:
