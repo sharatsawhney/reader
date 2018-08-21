@@ -567,12 +567,13 @@
         var benname = $(".pubactivatebenname").val();
         var account = $(".pubactivateaccount").val();
         var ifsc = $(".pubactivateifsc").val();
+        var number = $(".pubactivatenumber").val();
         var pass = $(".pubactivatepass").val();
         var cnfpass = $(".pubactivatecnfpass").val();
         var emailpath = window.location.pathname;
         var endpoint = emailpath.split('/',3).join('/').length;
         var email =emailpath.substring(13,parseInt(endpoint));
-        if(benname!='' && account!='' && ifsc!='' && pass!='' && cnfpass!='' && pass == cnfpass && email!=''){
+        if(benname!='' && account!='' && ifsc!='' && number!='' && pass!='' && cnfpass!='' && pass == cnfpass && email!=''){
 	        $.ajax({
 						url: '/pubactivate/',
 						type:'POST',
@@ -581,6 +582,7 @@
 							'benname': benname,
 							'account':account,
 							'ifsc':ifsc,
+							'number':number,
 							'pass':pass,
 							'email':email,
 							'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()

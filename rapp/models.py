@@ -91,6 +91,7 @@ class UserP(models.Model):
     benname = models.CharField(max_length=255,blank=True)
     account = models.CharField(max_length=255,blank=True)
     ifsc = models.CharField(max_length=255,blank=True)
+    number = models.CharField(max_length=255,blank=True)
 
     def __str__(self):
         return self.user.username
@@ -213,3 +214,10 @@ class Uploaded(models.Model):
 
     def __str__(self):
         return str(self.file)
+
+
+class Gmailid(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name

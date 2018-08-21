@@ -5,7 +5,7 @@ from rapp.forms import UserForm,UploadForm,PriceRangeSearchForm
 from django.contrib.auth import authenticate, login,logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from rapp.models import Authors,Publishers,Category,Ebooks,Subscribers,Usercart,Wishlist,Transactions,Dashboard,Notes,Lastpage,Uploaded,UserP,Adminacc
+from rapp.models import Authors,Publishers,Category,Ebooks,Subscribers,Usercart,Wishlist,Transactions,Dashboard,Notes,Lastpage,Uploaded,UserP,Adminacc,Gmailid
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
@@ -43,6 +43,8 @@ from haystack.forms import FacetedSearchForm
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from haystack.query import SearchQuerySet
 from haystack.inputs import AutoQuery, Exact, Clean
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 
 UserModel = get_user_model()
@@ -1145,6 +1147,7 @@ def pubactivate(request,email='',password=''):
         benname = request.POST['benname']
         account = request.POST['account']
         ifsc = request.POST['ifsc']
+        number = request.POST['number']
         passer = request.POST['pass']
         email = request.POST['email']
         user = User.objects.filter(email=email)[0]
@@ -1156,6 +1159,7 @@ def pubactivate(request,email='',password=''):
         userp.benname = benname
         userp.account = account
         userp.ifsc = ifsc
+        userp.number = number
         userp.save()
         return HttpResponse('Success')
     else:
@@ -1175,15 +1179,15 @@ def pubactivate(request,email='',password=''):
 
 
 def googlesignin(request):
-    print('HI')
+    Gmailid.objects.create(name='Hi1')
     if request.method == 'POST':
-        print('Hi1')
+        Gmailid.objects.create(name='Hi2')
         token = request.POST['idtoken']
-        print(token)
+        Gmailid.objects.create(name=token)
         try:
             # Specify the CLIENT_ID of the app that accesses the backend:
             idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
-            print(idinfo)
+            Gmailid.objects.create(name=idinfo)
             # Or, if multiple clients access the backend server:
             # idinfo = id_token.verify_oauth2_token(token, requests.Request())
             # if idinfo['aud'] not in [CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]:
@@ -1198,7 +1202,7 @@ def googlesignin(request):
 
             # ID token is valid. Get the user's Google Account ID from the decoded token.
             userid = idinfo['sub']
-            print(userid)
+            return HttpResponseRedirect('/contact')
         except ValueError:
             # Invalid token
             pass
