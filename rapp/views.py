@@ -5,7 +5,7 @@ from rapp.forms import UserForm,UploadForm,PriceRangeSearchForm
 from django.contrib.auth import authenticate, login,logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from rapp.models import Authors,Publishers,Category,Ebooks,Subscribers,Usercart,Wishlist,Transactions,Dashboard,Notes,Lastpage,Uploaded,UserP
+from rapp.models import Authors,Publishers,Category,Ebooks,Subscribers,Usercart,Wishlist,Transactions,Dashboard,Notes,Lastpage,Uploaded,UserP,Adminacc
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
@@ -1095,3 +1095,80 @@ def feedback(request):
         msg.send()
 
         return HttpResponse('Thanks for Your Worthy Feedback/Comments! We would love to hear more from you!')
+
+
+def allower(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        publisher = request.POST['publisher']
+        username = request.POST['publisher']
+        password = User.objects.make_random_password()
+        if email!='' and username!='':
+            if len(User.objects.filter(email=email)) == 0:
+                user = User.objects.create_user(username,email,password)
+                user.is_active = False
+                user.save()
+                pub = Publishers.objects.create(name=publisher)
+                userp = UserP.objects.create(user=user, pub=False, publisher=pub)
+                text_content = "Publisher Account Activation Email"
+                subject = "Readerearth Account Activation"
+                template_name = "rapp/pub_active_email.html"
+                from_email = 'contact@readerearth.com'
+                recipients = [email,]
+                activate_url = 'https://www.readerearth.com/pubactivate/'+email+'/'+password+'/'
+                context = {
+                    'user': user,
+                    'activate_url': activate_url
+                }
+                html_content = render_to_string(template_name,context)
+                email = EmailMultiAlternatives(subject, text_content, from_email, recipients)
+                email.attach_alternative(html_content, "text/html")
+                email.send()
+                return HttpResponse('Mail Sent!')
+            else:
+                return HttpResponse('This Email id has already been taken!')
+    else:
+        if request.user.is_authenticated:
+            admin = Adminacc.objects.filter(user=request.user)
+            if len(admin) > 0:
+                admin = admin[0]
+                allow = True
+            else:
+                allow = False
+        else:
+            allow = False
+        return render(request, 'rapp/allower.html', {'allow':allow})
+
+
+def pubactivate(request,email='',password=''):
+    if request.method == 'POST':
+        benname = request.POST['benname']
+        account = request.POST['account']
+        ifsc = request.POST['ifsc']
+        passer = request.POST['pass']
+        email = request.POST['email']
+        user = User.objects.filter(email=email)[0]
+        user.set_password(passer)
+        user.is_active = True
+        user.save()
+        userp = UserP.objects.filter(user=user)[0]
+        userp.pub = True
+        userp.benname = benname
+        userp.account = account
+        userp.ifsc = ifsc
+        userp.save()
+        return HttpResponse('Success')
+    else:
+        user = User.objects.filter(email=email)
+        if user.exists():
+            user = user[0]
+            if user.check_password(password) == True:
+                if user.is_active == False:
+                    allow = True
+                else:
+                    allow = False
+            else:
+                allow = False
+        else:
+            allow = False
+        return render(request,'rapp/pubactivate.html',{'allow':allow})

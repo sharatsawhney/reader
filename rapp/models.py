@@ -88,6 +88,16 @@ class UserP(models.Model):
     user = models.OneToOneField(User,on_delete=models.DO_NOTHING)
     pub = models.BooleanField(default=False)
     publisher = models.ForeignKey('Publishers',on_delete=models.DO_NOTHING,default='')
+    benname = models.CharField(max_length=255,blank=True)
+    account = models.CharField(max_length=255,blank=True)
+    ifsc = models.CharField(max_length=255,blank=True)
+
+    def __str__(self):
+        return self.user.username
+
+
+class Adminacc(models.Model):
+    user = models.OneToOneField(User,on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return self.user.username

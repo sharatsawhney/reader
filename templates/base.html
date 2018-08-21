@@ -84,6 +84,7 @@
 	      				<input type="password" name="login-password" class="login-password" id="login-password" placeholder="Password">
 	      				<h4 class="login-reply"></h4>
 	      				<button type="submit" class="btn btn-default login-submit submit">SUBMIT</button><br>
+	      				<div class="g-signin2" data-onsuccess="onSignIn"></div>
 	      				<button type="button" class="btn btn-default loginchangebtn other" data-toggle="modal" data-target="#registerModal">Create an Account</button><br>
 	      				<a href="/password_reset/" class="forgot">Forgot my Password?</a>
 	      			</form>
@@ -533,6 +534,75 @@
         }
     });
 
+    $(".loader4").hide()
+    $(".allowerbtn").click(function(){
+        var publisher = $(".allowerpublisher").val();
+        var email = $(".alloweremail").val();
+        if(publisher!='' && email!=''){
+        	$(".loader4").show();
+	        $.ajax({
+						url: '/allower/',
+						type:'POST',
+						data:
+						{
+							'email': email,
+							'publisher':publisher,
+							'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+						},
+						success: function(data)
+						{
+		                    $(".loader4").hide();
+		                    $(".allowerreply").html(data)
+		                    $("input").val('');
+							
+						},
+						error: function(xhr,status,error){
+						alert(xhr.responseText);
+					    }             
+					});
+	    }
+    });
+
+    $(".pubactivatebtn").click(function(){
+        var benname = $(".pubactivatebenname").val();
+        var account = $(".pubactivateaccount").val();
+        var ifsc = $(".pubactivateifsc").val();
+        var pass = $(".pubactivatepass").val();
+        var cnfpass = $(".pubactivatecnfpass").val();
+        var emailpath = window.location.pathname;
+        var endpoint = emailpath.split('/',3).join('/').length;
+        var email =emailpath.substring(13,parseInt(endpoint));
+        if(benname!='' && account!='' && ifsc!='' && pass!='' && cnfpass!='' && pass == cnfpass && email!=''){
+	        $.ajax({
+						url: '/pubactivate/',
+						type:'POST',
+						data:
+						{
+							'benname': benname,
+							'account':account,
+							'ifsc':ifsc,
+							'pass':pass,
+							'email':email,
+							'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+						},
+						success: function(data)
+						{
+		                    $(".pubactivatereply").html('You have successfully been Registered With Us! Please <a href="/">Login</a> to continue');
+		                    $("input").val('');
+							
+						},
+						error: function(xhr,status,error){
+						alert(xhr.responseText);
+					    }             
+					});
+	    }else if(pass != cnfpass){
+	    	$(".pubactivatereply").html('Your Passwords do not match! Please try again!');
+	    }else{
+	    	$(".pubactivatereply").html('Please fill all the Details!');
+	    }
+    });
+
+
     if($(document.body)[0].scrollHeight < $(window).height()){
     	$(".footer").css('position','absolute');
     	$(".footer").css('bottom','0px');
@@ -646,7 +716,15 @@
     	$(".dash-left .dl-buy").removeClass('active');
     	$(".dash-left .dl-rent").removeClass('active');
     });
+    
 
+    function onSignIn(googleUser) {
+	  var profile = googleUser.getBasicProfile();
+	  console('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+	  console.log('Name: ' + profile.getName());
+	  console.log('Image URL: ' + profile.getImageUrl());
+	  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+	}
     </script>
     
     

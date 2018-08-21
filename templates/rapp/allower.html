@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Allower{% endblock %}
+{% block style %}
+
+{% endblock %}  
+{% block content %}
+{% if allow == True %}
+<div class="container">
+	<div class="form-group">
+	    <label>Publisher Name:</label>
+	    <input type="text" name="publisher" placeholder="Publisher" class="allowerpublisher form-control">
+	</div>
+	<div class="form-group">
+	    <label>Email:</label>
+	    <input type="email" name="email" placeholder="Email" class="alloweremail form-control">
+	</div>
+	{% csrf_token %}
+	<button class="allowerbtn btn btn-default">Allow</button>
+	<h3 class="allowerreply"></h3>
+</div>
+<div class="loader4"></div>
+<br><br>
+{% else %}
+<h2>You are not entitled to access this Page!</h2>
+{% endif %}
+{% endblock %}

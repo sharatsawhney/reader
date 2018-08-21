@@ -50,6 +50,9 @@ urlpatterns = [
     url(r'^secure/',views.secure,name='secure'),
     url(r'^bookrequest/',views.bookrequest,name='bookrequest'),
     url(r'^feedback/',views.feedback,name='feedback'),
+    url(r'^allower/',views.allower,name='allower'),
+    url(r'^pubactivate/(?P<email>.*)/(?P<password>.*)/',views.pubactivate,name='pubactivate'),
+    url(r'^pubactivate/$',views.pubactivate,name='pubactivate'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG is True:
