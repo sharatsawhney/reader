@@ -1043,6 +1043,7 @@ def secure(request):
         name = request.POST['name']
         author = request.POST['author']
         publisher = request.POST['publisher']
+        isbn = request.POST['isbn']
         price = request.POST['price']
         pages = request.POST['pages']
         category = request.POST['category']
@@ -1051,20 +1052,27 @@ def secure(request):
         description = request.POST['description']
         priority = request.POST['priority']
 
-        publisherf = Publishers.objects.get_or_create(name=publisher)
         publisher_name = Publishers.objects.filter(name=publisher)[0]
         authorf = Authors.objects.get_or_create(name=author,publisher_name=publisher_name)
         author_name = Authors.objects.filter(name=author,publisher_name=publisher_name)[0]
         categoryf = Category.objects.filter(cat=category)[0]
-        ebook = Ebooks.objects.get_or_create(name=name,author=author_name,publisher=publisher_name,price=price,pages=pages,category=categoryf,img=image,language=language,description=description,priority=priority)
+        if category == ('Engineering' or 'Medical'):
+            ebook = Ebooks.objects.get_or_create(name=name,author=author_name,publisher=publisher_name,price=price,pages=pages,category=categoryf,img=image,dayopt='3 days,7 days,14 days,21 days,1 month,1.5 months,2 months,3 months,4 months,5 months,6 months,12 months',language=language,description=description,priority=priority,isbn=isbn)
+            book = ebook[0]
+            latestid = book.id
+        else:
+            ebook = Ebooks.objects.get_or_create(name=name, author=author_name, publisher=publisher_name, price=price,
+                                                 pages=pages, category=categoryf, img=image,
+                                                 dayopt='3 days,7 days,14 days,21 days,1 month,1.5 months,2 months',
+                                                 language=language, description=description, priority=priority,
+                                                 isbn=isbn)
+            book = ebook[0]
+            latestid = book.id
+    else:
+        latestid = ''
+    publishers = Publishers.objects.all()
 
-    listbooks = Ebooks.objects.all()
-    arr = []
-    for books in listbooks:
-        arr.append(books.id)
-    latestid = max(arr) + 10
-
-    return render(request,'rapp/secure.html',{'latestid':latestid,'usercheck':usercheck})
+    return render(request,'rapp/secure.html',{'latestid':latestid,'usercheck':usercheck,'publishers':publishers})
 
 
 def bookrequest(request):
@@ -1179,30 +1187,27 @@ def pubactivate(request,email='',password=''):
 
 
 def googlesignin(request):
-    Gmailid.objects.create(name='Hi1')
     if request.method == 'POST':
-        Gmailid.objects.create(name='Hi2')
-        token = request.POST['idtoken']
-        Gmailid.objects.create(name=token)
+        token = request.POST['id_token']
         try:
-            # Specify the CLIENT_ID of the app that accesses the backend:
-            idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
-            Gmailid.objects.create(name=idinfo)
-            # Or, if multiple clients access the backend server:
-            # idinfo = id_token.verify_oauth2_token(token, requests.Request())
-            # if idinfo['aud'] not in [CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]:
-            #     raise ValueError('Could not verify audience.')
+            idinfo = id_token.verify_oauth2_token(token, requests.Request(), '18205974359-scm2ogghtt91dkgfb9id3lpprfnvd3f4.apps.googleusercontent.com')
 
             if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
                 raise ValueError('Wrong issuer.')
 
-            # If auth request is from a G Suite domain:
-            # if idinfo['hd'] != GSUITE_DOMAIN_NAME:
-            #     raise ValueError('Wrong hosted domain.')
+            email = idinfo['email']
+            name = idinfo['name']
+            user = User.objects.filter(email=email)
+            if user.exists():
+                user = user[0]
+                login(request,user)
+                return HttpResponse('Success')
 
-            # ID token is valid. Get the user's Google Account ID from the decoded token.
-            userid = idinfo['sub']
-            return HttpResponseRedirect('/contact')
+            else:
+                password = User.objects.make_random_password()
+                user = User.objects.create_user(name,email,password)
+                Gmailid.objects.create(user=user)
+                login(request,user)
+                return HttpResponse('Success')
         except ValueError:
-            # Invalid token
             pass

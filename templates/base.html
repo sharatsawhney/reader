@@ -26,7 +26,11 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <meta name="google-signin-client_id" content="18205974359-scm2ogghtt91dkgfb9id3lpprfnvd3f4.apps.googleusercontent.com">
     <style type="text/css">
-    	
+    	.g-signin2{
+            margin-left:30%;
+            margin-top: 10px;
+            margin-bottom: -10px;
+    	}
 {% block style %}
 {% endblock %}
     </style>
@@ -55,7 +59,7 @@
 	        <li {% block activew %}{% endblock %}><a href="/wishlist/">Wishlist</a></li>
 	        <li {% block activeca %}{% endblock %}><a href="/cart/">Cart</a></li>
 	        <li {% block actived %}{% endblock %}><a href="/dashboard/">Dashboard</a></li>
-	        <li class="nav-logout"><a href="/logout/" class="logout-btn">LOGOUT</a></li>
+	        <li class="nav-logout"><a href="/logout/" onclick="signOut();" class="logout-btn">LOGOUT</a></li>
 	        {% else %}
             <li><a data-toggle="modal" data-target="#loginModal" href="">Login/Register</a></li>
 			{% endif %}
@@ -126,7 +130,11 @@
 	      
 	    </div>
     </div>
-
+    {% if user.is_authenticated %}
+        <p style="display: none" class="authcheck">True</p>
+    {% else %}
+        <p style="display: none" class="authcheck">False</p>
+    {% endif %}
     {% block content %}
     {% endblock %}
 
@@ -721,15 +729,36 @@
     
 
     function onSignIn(googleUser) {
-	  var id_token = googleUser.getAuthResponse().id_token;
-	  var xhr = new XMLHttpRequest();
-	  xhr.open('POST', 'https://readerearth.com/googlesignin');
-	  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	  xhr.onload = function() {
-		  console.log('Signed in as: ' + xhr.responseText);
-		};
-	  xhr.send('idtoken=' + id_token);
+	    var id_token = googleUser.getAuthResponse().id_token;
+	    if($(".authcheck").html() == 'False'){
+		    $.ajax({
+							url: '/googlesignin/',
+							type:'POST',
+							data:
+							{
+								'id_token': id_token,
+								'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+							},
+							success: function(data)
+							{
+			                    if(data=='Success'){
+			                    	location.reload();
+			                    }
+								
+							},
+							error: function(xhr,status,error){
+							alert(xhr.responseText);
+						    }             
+						});
+		}
 	}
+
+	function signOut() {
+	    var auth2 = gapi.auth2.getAuthInstance();
+	    auth2.signOut().then(function () {
+	      console.log('User signed out.');
+	    });
+	  }
     </script>
     
     
