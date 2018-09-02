@@ -31,6 +31,7 @@ ALLOWED_HOSTS = [
     'www.readerearth.com',
     'readerearth.com',
     '142.93.120.13',
+    '159.89.163.148',
     '127.0.0.1']
 
 
@@ -146,7 +147,7 @@ AUTHENTICATION_BACKENDS = ['rapp.authenticate.EmailBackend']
 STATIC_PATH = os.path.join(BASE_DIR,'static')
 
 STATIC_URL = '/static/'
-
+STATIC_ROOT = '/static/'
 STATICFILES_DIRS = (
     STATIC_PATH,
 )

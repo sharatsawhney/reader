@@ -835,7 +835,7 @@ def read(request,id):
             check = True
         else:
             check = False
-    elif int(id) == 4:
+    elif int(id) == 1:
         check = True
     else:
         check = False
