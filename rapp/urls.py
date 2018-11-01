@@ -54,8 +54,9 @@ urlpatterns = [
     url(r'^pubactivate/(?P<email>.*)/(?P<password>.*)/',views.pubactivate,name='pubactivate'),
     url(r'^pubactivate/$',views.pubactivate,name='pubactivate'),
     url(r'^googlesignin/$',views.googlesignin,name='googlesignin'),
+    url(r'^addbookmark/$',views.addbookmark,name='addbookmark'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG is True:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

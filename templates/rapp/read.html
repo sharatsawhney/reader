@@ -2,290 +2,1453 @@
 {% load staticfiles %}
 <html>
 <head>
-<title>Reader - ReaderEarth</title>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-124179480-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reader</title>
 
-  gtag('config', 'UA-124179480-1');
-</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+  <script src="{% static 'js/epub.js' %}"></script>
 
-<link rel="stylesheet" type="text/css" href="{% static 'cs/bootstrap4.min.css' %}">
-<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
-<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-<link href="{% static 'cs/main.css' %}" rel="stylesheet">
-<link href="{% static 'cs/reader.css' %}" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{% static 'cs/examples.css' %}">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" href="http://kenwheeler.github.io/slick/slick/slick-theme.css"/>
 
-<style type="text/css">
-* {
-    outline:none;
-	border:none;
-	font-family:Courier, monospace;
-}
-body{
-	background-color:#F2F2F2;
-	font-style: italic;
-}
-#magazine .turn-page{
-	background-size:100% 100%;
-}
+  <style type="text/css">
+    body {
+      background-color: white;
+      font-family:Arial, Helvetica, sans-serif;
+    }
+    #viewer{
+      width:90% !important;
+      margin-top: 90px !important;
+      height: 570px !important;
+      z-index: 0 !important;
+    }
+    .epubjs-container{
+      border: none !important;
+    }
+    #rangeSlider{
+      width: 76%;
+      position: fixed;
+      bottom: 45px;
+      left: 4%;
+    }
+    #rangeSlider{
+        -webkit-appearance: none;
+        height: 4px;
+        border-radius: 5px;
+        outline: none;
+    }
 
-#paper {
-	color:#FFF;
-	font-size:20px;
-	margin-left: 2%;
-}
-#margin {
-	margin-left:12px;
-	margin-bottom:20px;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	-o-user-select: none;
-	user-select: none; 
-	color: black;
-}
-#textnotes {
-	width:95%;
-	height: 500px !important;
-	overflow:hidden;
-	background-color:#FFF;
-	color:#222;
-	font-family:Courier, monospace;
-	font-weight:normal;
-	font-size:24px;
-	resize:none;
-	line-height:22.9px;
-	padding-left:45px;
-	padding-right:10px;
-	padding-top:0px;
-	padding-bottom:34px;
-	background-image:url(/static/lines.png), url(/static/paper.png);
-	background-size: 100% 4.5%;
-	background-repeat:repeat-y, repeat;
-	-webkit-border-radius:12px;
-	border-radius:12px;
-	-webkit-box-shadow: 0px 2px 14px #000;
-	box-shadow: 0px 2px 14px #000;
-	border-top:1px solid #FFF;
-	border-bottom:1px solid #FFF;
-}
-#titlenotes {
-	background-color: transparent;
-	border-bottom:3px solid black;
-	color:black;
-	font-size:20px;
-	font-family:Courier, monospace;
-	height:28px;
-	font-weight:bold;
-	width:220px;
-}
-#savenotes {
-	cursor:pointer;
-	margin-top:10px;
-	float:right;
-	margin-right: 50px;
-	height:40px;
-	padding-left:24px;
-	padding-right:24px;
-	font-family:Arial, Helvetica, sans-serif;
-	font-weight:bold;
-	font-size:20px;
-	color:#FFF;
-	-webkit-border-radius:8px;
-	border-radius:8px;
-	background-color: #53A7E3;
-}
-#savenotes:active {
-	zoom: 1;
-	filter: alpha(opacity=80);
-	opacity: 0.8;
-}
-#savenotes:focus {
-	zoom: 1;
-	filter: alpha(opacity=80);
-	opacity: 0.8;
-}
-#wrapper {
-	position: absolute;
-	background-color: white;
-	width:28%;
-	height:100%;
-	margin-top: -7px;
-	overflow-y: auto;
-}
+    #rangeSlider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: rgb(242,242,242);
+        cursor: pointer;
+        border: 1px solid rgb(153,153,153);
+    }
 
-#readoption{
-	background-color: white;
-	height: 60px;
-	width: 100%;
-	border: 2px solid #53A7E3;
-	padding: auto;
-}
-#readoption button{
-	margin-top: 10px;
-	font-size: 12px;
-	background-color: #53A7E3;
-	border: none;
-	border-radius: 0px;
-}
-#readoption .active{
-	border: 1px solid blue;
-}
-#readoption button:first-child{
-	margin-left: 20px;
-}
-#oldpaper .panel{
-	width: 95%
-}
-#musiclist ul li audio{
-	width: 100%;
-}
-.rsdiv{
-	background-size: 100% 100%;
-	height:500px;
-	width:100%;
-	margin: auto;
-}
-.rs-nav{
-	background-color: #F6F9FE;
-	height: 70px;
-	width: 100%;
-	text-align: center;
-	padding-top: 20px;
-}
-.rs-nav a{
-   color: black;
-   font-style: italic;
-   margin-left: 20px;
-}
-</style>
+    #rangeSlider::-moz-range-thumb {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: rgb(242,242,242);
+        cursor: pointer;
+        border: 1px solid rgb(153,153,153);
+    }
+    #reader-lnav{
+      position: fixed;
+      bottom: 42px;
+      left: 81%;
+    }
+    #reader-lnav2{
+      position: fixed;
+      bottom: 18px;
+      left: 71%;
+      font-size: 12.5px;
+    }
+    #reader-buyopt{
+      color: #7e71c9;
+      font-weight: bold;
+      margin-right: 20px;
+    }
+    #reader-ulimopt{
+      color: red;
+      font-weight: bold;
+    }
+    #reader-current-percentage{
+      font-size: 12px;
+    }
+    #reader-current-location{
+      font-size: 14px;
+    }
+    #reader-total-locations{
+      font-size: 14px;
+    }
+    .left-decor{
+      color: rgb(128,128,128);
+      font-size: 16px;
+    }
+    .right-decor{
+      color: rgb(128,128,128);
+      font-size: 16px;
+    }
+    #reader-nmode-svg{
+      width: 20px;
+      float:right;
+      margin-left: 10px;
+    }
+    #reader-fullscreen-svg{
+      width: 20px;
+      float:right;
+      margin-left: 10px;
+    }
+    .search-results {
+      display: block !important;
+      color: black !important;
+      font-size: 40px;
+    }
+    .reader-unav-right{
+      position: relative;
+      top: -5px;
+    }
+    #reader-search{
+      border: 1px solid rgb(204,204,204);
+      float: right;
+      border-radius: 20px;
+      padding: 4px 15px 4px 15px;
+      color: rgb(179,179,179);
+      position: relative;
+      top: -4px;
+    }
+    #reader-search-input{
+      border: none;
+      outline: none;
+    }
+    .reader-menu-svg{
+      width: 16px;
+      float: right;
+      margin-left: 15px;
+    }
+    #reader-bookmark-svg{
+      width: 17px;
+      margin-right: 20px;
+    }
+    #reader-music-svg{
+      width: 17px;
+    }
+    #reader-text-svg{
+      width: 24px;
+    }
+    #reader-notes-svg{
+      width: 13px;
+    }
+    #reader-submenu-svg{
+      width: 22px;
+    }
+    #exit-reader{
+      color: #7E71C9;
+      position: relative;
+      top: 5px;
+      margin-left: 10px;
+      text-decoration: none;
+    }
+    #title-reader{
+      color: #000000;
+      position: relative;
+      top: 4px;
+      margin-left: 20px;
+    }
+    #author-reader{
+      color: rgb(102,102,102);
+      position: relative;
+      top: 4px;
+    }
+    .reader-fullscreen-heading{
+      margin-top: 10px;
+      text-align: center;
+      display: none;
+    }
+    .reader-do{
+      width: 220px;
+      height: 350px;
+      border-radius: 2px;
+      border: 1px solid white;
+      background-color: white;
+      box-shadow: 0px 0px 8px rgb(128,128,128);
+      -webkit-box-shadow: 0px 0px 8px rgb(128,128,128);
+      position: absolute;
+      top: 35px;
+      right: 30px;
+      z-index: 1;
+    }
+    .reader-do-title{
+      font-size: 18px;
+      margin-left: 13px;
+      font-weight: normal;
+      margin-top: 10px;
+    }
+    .reader-do-title i{
+      font-size: 15px;
+      float: right;
+      margin-right: 10px;
+      color: rgb(128,128,128);
+    }
+    .reader-do-subtitle{
+      font-size: 16px;
+      margin-left: 13px;
+      font-weight: normal;
+      margin-top: 20px;
+    }
+    .reader-do-view{
+      font-size: 15px;
+      margin-left: 13px;
+      font-weight: normal;
+      margin-top: -5px;
+    }
+    .reader-do-view #reader-ftbtn{
+        border: none;
+        background-color: black;
+        border-radius: 3px 0px 0px 3px;
+        height: 25px;
+        color: white;
+        width: 90px;
+        outline: none;
+    }
+    .reader-do-view #reader-orgbtn{
+        border: none;
+        background-color: #7e71c9;
+        border-radius: 0px 3px 3px 0px;
+        height: 25px;
+        color: white;
+        width: 90px;
+        margin-left: -4px;
+        outline: none;
+    }
+    .reader-do-size{
+      font-size: 15px;
+      margin-left: 13px;
+      font-weight: normal;
+      margin-top: -5px;
+    }
+    .reader-do-size #reader-zoompbtn{
+        border: 2px solid rgb(153,153,153);
+        background-color: white;
+        border-radius: 3px;
+        height: 25px;
+        color: rgb(153,153,153);
+        width: 35px;
+        outline: none;
+    }
+    .reader-do-size #reader-zoommbtn{
+        border: 2px solid rgb(153,153,153);
+        background-color: white;
+        border-radius: 3px;
+        height: 25px;
+        color: rgb(153,153,153);
+        width: 35px;
+        outline: none;
+    }
+    .reader-do-family{
+      font-size: 15px;
+      margin-left: 13px;
+      font-weight: normal;
+      margin-top: -5px;
+      position: relative;
+    }
+    .reader-do-family #reader-fontfamily{
+      background-color: white;
+      outline: none;
+      border: 1px solid rgb(102,102,102);
+      border-radius: 3px;
+      width: 180px;
+      height: 25px;
+      color: rgb(102,102,102);
+      appearance: none;
+      -webkit-appearance: none;
+      padding: 0px 0px 0px 10px;
+    }
+    .reader-do-family:after {
+      position: absolute;
+      content: "";
+      top: 4px;
+      right:40px;
+      width: 0; 
+      height: 0; 
+      border: solid rgb(128,128,128);
+      border-width: 0 2px 2px 0;
+      display: inline-block;
+      padding: 4px;
+      transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+    }
+    .reader-do-layout{
+      font-size: 15px;
+      margin-left: 13px;
+      font-weight: normal;
+      margin-top: -5px;
+      position: relative;
+    }
+    .reader-1page-svg{
+      width: 25px;
+      border: 2px solid rgb(153,153,153);
+      border-radius: 2px;
+      padding: 6px;
+      position: absolute;
+      left: 0px;
+      height: 20px;
+    }
+    .reader-2page-svg{
+      width: 25px;
+      border: 2px solid rgb(153,153,153);
+      border-radius: 2px;
+      padding: 6px;
+      position: absolute;
+      left: 45px;
+      height: 20px;
+    }
+    .reader-search-results{
+      width: 300px;
+      max-height: 400px;
+      height: auto;
+      overflow-y:auto;
+      overflow-x: hidden;
+      border-radius: 2px;
+      border: 1px solid white;
+      background-color: white;
+      box-shadow: 0px 0px 8px rgb(128,128,128);
+      -webkit-box-shadow: 0px 0px 8px rgb(128,128,128);
+      position: absolute;
+      top: 35px;
+      right: 30px;
+      z-index: 1;
+    }
+    .reader-search-results h3{
+      font-size: 18px;
+      margin-left: 20px;
+      font-weight: normal;
+      margin-top: 10px;
+    }
+    .reader-search-results h3 i{
+      font-size: 15px;
+      float: right;
+      margin-right: 14%;
+      color: rgb(128,128,128);
+    }
+    .reader-search-results-main{
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+    .reader-search-item{
+      display: block;
+      width: 100%;
+      position: relative;
+      border-bottom: 2px solid rgb(230,230,230);
+      font-size: 12px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+    .reader-search-item:hover{
+      background-color: rgb(243,243,243);
+      cursor: pointer;
+    }
+    .reader-search-item-content{
+      width: 70%;
+    }
+    .reader-search-item-location{
+      position: absolute;
+      width: 20%;
+      left: 88%;
+      top: 10px;
+
+    }
+    .reader-search-highlight{
+      color: #7e71c9;
+    }
+    .reader-content-menu{
+      width: 310px;
+      border-radius: 2px;
+      border: 1px solid white;
+      background-color: white;
+      box-shadow: 0px 0px 8px rgb(128,128,128);
+      -webkit-box-shadow: 0px 0px 8px rgb(128,128,128);
+      position: absolute;
+      top: 35px;
+      right: 25px;
+      z-index: 1;
+    }
+    .reader-content-menu h3{
+      font-size: 18px;
+      margin-left: 13px;
+      font-weight: normal;
+      margin-top: 10px;
+    }
+    .reader-content-menu h3 i{
+      font-size: 15px;
+      float: right;
+      margin-right: 10px;
+      color: rgb(128,128,128);
+    }
+    #toc::-webkit-scrollbar {
+        width: 6px;
+    }
+     
+    #toc::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
+    }
+     
+    #toc::-webkit-scrollbar-thumb {
+      background-color: rgb(179,179,179);
+      outline: 1px solid rgb(179,179,179);
+    }
+    #toc{
+      margin-left: 13px;
+      font-size: 12px;
+      overflow:auto;
+      overflow-x: scroll;
+      max-height: 350px;
+      height: auto;
+      word-wrap: break-word;
+    }
+    .reader-toc-items{
+      list-style-type: none;
+      margin-left: -30px;
+      margin-bottom: 3px;
+      padding-bottom: 3px;
+      border-bottom: 1px solid rgb(204,204,204);
+      width: 260px;
+    }
+    .reader-toc-links{
+      text-decoration: none;
+      color: rgb(77,77,77);
+    }
+    #reader-content-divider{
+      
+    }
+    #reader-content-contentsbtn{
+      background-color: white;
+      border: none;
+      border-bottom: 2px solid #7e71c9;
+      color: #7e71c9;
+      text-align: center;
+      width: 50%;
+      outline: none;
+      font-size: 15px;
+    }
+    #reader-content-bookmarksbtn{
+      background-color: white;
+      border: none;
+      border-bottom: 2px solid rgb(204,204,204);
+      color: black;
+      text-align: center;
+      width: 49.7%;
+      outline: none;
+      margin-left:-4px;
+      font-size: 15px;
+    }
+    .reader-notes-menu{
+      width: 310px;
+      border-radius: 2px;
+      border: 1px solid white;
+      background-color: white;
+      box-shadow: 0px 0px 8px rgb(128,128,128);
+      -webkit-box-shadow: 0px 0px 8px rgb(128,128,128);
+      position: absolute;
+      top: 35px;
+      right: 25px;
+      z-index: 1;
+    }
+    .reader-notes-menu h3{
+      font-size: 18px;
+      margin-left:30px;
+      font-weight: normal;
+      margin-top: 15px;
+    }
+    .reader-notes-menu h3 i{
+      font-size: 15px;
+      float: right;
+      margin-right:30px;
+      color: rgb(128,128,128);
+      margin-top: 3px;
+    }
+    .reader-music-menu{
+      width: 370px;
+      border-radius: 2px;
+      border: 1px solid white;
+      background-color: white;
+      box-shadow: 0px 0px 8px rgb(128,128,128);
+      -webkit-box-shadow: 0px 0px 8px rgb(128,128,128);
+      position: absolute;
+      top: 35px;
+      right: 25px;
+      z-index: 1;
+    }
+    .reader-music-menu h3{
+      font-size: 18px;
+      margin-left:30px;
+      font-weight: normal;
+      margin-top: 15px;
+    }
+    .reader-music-menu h3 i{
+      font-size: 15px;
+      float: right;
+      margin-right:30px;
+      color: rgb(128,128,128);
+      margin-top: 3px;
+    }
+    #reader-music-homebtn{
+      background-color: white;
+      border: none;
+      border-bottom: 2px solid #7e71c9;
+      color: #7e71c9;
+      text-align: center;
+      width: 33.33%;
+      outline: none;
+      font-size: 15px;
+    }
+    #reader-music-playlistbtn{
+      background-color: white;
+      border: none;
+      border-bottom: 2px solid rgb(204,204,204);
+      color: black;
+      text-align: center;
+      width: 33.33%;
+      outline: none;
+      margin-left:-5px;
+      font-size: 15px;
+    }
+    #reader-music-uploadbtn{
+      background-color: white;
+      border: none;
+      border-bottom: 2px solid rgb(204,204,204);
+      color: black;
+      text-align: center;
+      width: 33.0%;
+      outline: none;
+      margin-left:-5px;
+      font-size: 15px;
+    }
+    #reader-music-header1{
+      text-align: center;
+      font-weight: normal;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    #reader-music-header2{
+      text-align: center;
+      font-weight: normal;
+      margin-top: 0px;
+      font-size: 14px;
+    }
+    #reader-music-header3{
+      text-align: center;
+      font-weight: normal;
+      margin-top: 0px;
+      font-size: 14px;
+    }
+    .reader-music-item-box{
+      margin-right: 20px;
+      position: relative;
+      z-index: 5;
+      outline: none;
+    }
+    .reader-music-recommended{
+      height: 130px;
+    }
+    .reader-music-popular{
+      height: 130px;
+    }
+    .reader-music-item-box:nth-child(1){
+      margin-left: 10px;
+    }
+    .reader-music-item-pic{
+      background-color: #E5E5E5;
+      border-radius: 5px;
+      height: 80px;
+    }
+    .reader-music-item-box h5{
+      margin-top: 7px;
+      margin-left: 8px;
+      margin-right: 8px;
+      font-size:10px;
+    }
+    #reader-music-home{
+      padding-left: 20px;
+      padding-right: 20px;
+      height: 350px;
+      overflow-y: auto;
+    }
+    #reader-music-home::-webkit-scrollbar {
+        width: 6px;
+    }
+     
+    #reader-music-home::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
+    }
+     
+    #reader-music-home::-webkit-scrollbar-thumb {
+      background-color: rgb(179,179,179);
+      outline: 1px solid rgb(179,179,179);
+    }
+    .slick-prev{
+      position: absolute;
+      top: 38px;
+      right: 0px !important;
+      z-index: 10;
+      margin-left: 25px;
+    }
+    .slick-prev:before{
+      font-family: "Font Awesome 5 Free";
+      content: "\f104";
+      font-weight: 900;
+      color:rgb(77,77,77);
+      font-size: 20px;
+      border-radius: 50%;
+      background-color:white;
+      padding: 2px 8px 3px 6px;
+      width: 15px;
+      height: 15px;
+      box-shadow: 0px 0px 4px grey;
+      z-index: 10;
+    }
+    .slick-next{
+      position: absolute;
+      top: 38px;
+      right: 2px;
+    }
+    .slick-next:before{
+      font-family: "Font Awesome 5 Free";
+      content: "\f105";
+      font-weight: 900;
+      color: rgb(77,77,77);
+      font-size: 20px;
+      border-radius: 50%;
+      background-color:white;
+      padding: 2px 6px 3px 8px;
+      width: 15px;
+      height: 15px;
+      box-shadow: 0px 0px 4px grey;
+      z-index: 10;
+    }
+  </style>
 </head>
 <body>
-<!--
-<nav class="navbar navbar-inverse navbar-fixed-top special-navbar" style="height:60px" >
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/"><img src="images/ico/icon.png" alt="logo" height="60px" style="margin-top:-10px"></a>
-        </div>
-		
-        <div class="collapse navbar-collapse navbar-right">
-            <ul class="nav navbar-nav">
-            	<div id="controls" style="margin-right: 200px;">
-					<label for="page-number">Page:</label> <input type="text" size="3" id="page-number"> of <span id="number-pages"></span>
-				</div>
-                <li id="nighttoggle"><i class="fa fa-lightbulb-o fa-3x"></i></li>
-         
-            </ul>
-			<ul class="nav navbar-nav compress-nav">
-				<li><a href="/logout/" class="logout-btn">Logout</a></li>
-				
-                <li><a data-toggle="modal" data-target="#login-modal" href="">Login/Register</a></li>
-				
-				
-			</ul>						
-        </div>
+  <!-- <div id="title"></div> -->
+  <div class="reader-fullscreen-heading">
+    <span id="title-reader">Playing It my way,My Autobiography- </span>
+    <span id="author-reader">Sachin Tendulkar</span>
+  </div>
+  <div class="reader-unav">
+    <div class="reader-unav-left"></div>
+      <a href="" id="exit-reader"><i class="fa fa-angle-double-left" aria-hidden="true"></i>
+  EXIT</a>
+      <span id="title-reader">Playing It my way,My Autobiography- </span>
+      <span id="author-reader">Sachin Tendulkar</span>
     </div>
-</nav>
--->
-{% if check == True %}
-<div id="wrapper">
-    <div id="readoption">
-        <button class="btn btn-primary active nnotesbtn">Make New Notes</button>
-        <button class="btn btn-primary onotesbtn">Old Notes</button>
-        <button class="btn btn-primary lmusicbtn">Listen</button>
-    </div>
-	<div id="paper">
-        {% csrf_token %}
-		<div id="margin">Title: <input id="titlenotes" type="text" name="title"></div>
-		<textarea placeholder="Save Your Notes here!" id="textnotes" class="newtextnotes" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none;"></textarea>  
-		<br>
-		<p id="newnotessave" style="color: black;font-size: 12px">Notes shall be saved automatically!</p>
-	</div>
-	<div id="oldpaper">
-	    <div class="panel-group" id="accordion">
-	    	{% if notes != False %}
-	    	{% for note in notes %}
-	    	<div class="card">
-			    <div class="card-header">
-			      <h5 class="mb-0">
-			        <a data-toggle="collapse" data-parent="#accordion" href="#note{{note.id}}" id="othertitlenotes{{note.id}}">{{ note.title }}</a>
-			        <span class="othernotessave" style="color: black;font-size: 12px"></span>
-			      </h5>
-			    </div>
-			    <div id="note{{note.id}}" class=" collapse" data-parent="#accordion">
-			      <div class="card-body">
-			        <textarea placeholder="Enter something funny." id="textnotes" class="othertextnotes{{note.id}} othertextnotes" name="text" rows="4" style="overflow: hidden; word-wrap: break-word; resize: none; height: 160px; ">{{ note.text}}</textarea>  
-			      </div>
-			    </div>
-			</div>
-	    	{% endfor %}
-	    	{% endif %}
-	    </div>
-		
-	</div>
+    <div class="reader-unav-right">
+      {% csrf_token %}
+      <svg class="reader-menu-svg" id="reader-bookmark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.29 17.98"><title>Add Bookmark</title><path d="M15.29,1.27V18L7.64,12.26,0,18V1.27C0,.57.76,0,1.7,0H13.59C14.53,0,15.29.57,15.29,1.27Z" fill="#999"/></svg>
 
-	<div id="musiclist">
-		 <ul class="list-group">
-		    <li class="list-group-item">Study Music-1 <audio controls controlsList='nodownload'>
-			  <source src="/static/audi/1.mp3" type="audio/mpeg">
-			Your browser does not support the audio element.
-			</audio></li>
-		    <li class="list-group-item">Study Music-2 <audio controls controlsList='nodownload'>
-			  <source src="/static/audi/2.mp3" type="audio/mpeg">
-			Your browser does not support the audio element.
-			</audio></li>
-		  </ul>
-	</div>
+      <svg class="reader-menu-svg" id="reader-music-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.8 17.97"><title>Study Music</title><ellipse cx="4.52" cy="13.67" rx="4.52" ry="4.3" fill="#999"/><rect x="7.4" width="1.64" height="13.28" fill="#999"/><rect x="9.54" y="-2.14" width="3.13" height="7.4" transform="translate(12.66 -9.54) rotate(90)" fill="#999"/></svg>
 
-</div>
-
-		
-
-<div class="reader">
-	<div class="main-pane">
-		<div id="magazine">
-	       
+      <div class="reader-music-menu">
+        <h3>Music<i class="fa fa-times" aria-hidden="true"></i></h3>
+        <div id="reader-music-divider">
+          <button id="reader-music-homebtn">Home</button>
+          <button id="reader-music-playlistbtn">Playlist</button>
+          <button id="reader-music-uploadbtn">Upload</button>
         </div>
-	</div>
-	<div class="bottom-pane">
-		<input type="range" min="" max="{{ pages }}" value="1" class="slider" id="pageRange" class="slider"  name="pageRange">
-		<output for="pageRange" onforminput="value = pageRange.valueAsNumber;"></output>
-	</div>
-</div>
+        <div id="reader-music-home">
+          <h4 id="reader-music-header1">Recommended for you</h4>
+          <div class="slider reader-music-recommended">
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>Study Music 1</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>2</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>3</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>4</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>5</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>6</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>7</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>8</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>9</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>10</h5>
+            </div>
+          </div>
+          <h4 id="reader-music-header2">Most Popular among Readers</h4>
+          <div class="slider reader-music-popular">
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>Study Music 1</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>2</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>3</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>4</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>5</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>6</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>7</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>8</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>9</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>10</h5>
+            </div>
+          </div>
+          <h4 id="reader-music-header3">Genres</h4>
+          <div class="slider reader-music-genres">
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>Study Music 1</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>2</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>3</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>4</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>5</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>6</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>7</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>8</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>9</h5>
+            </div>
+            <div class="reader-music-item-box">
+              <div class="reader-music-item-pic"></div>
+              <h5>10</h5>
+            </div>
+          </div>
+        </div>
+        <div class="reader-current-music-div">
+          <div class="reader-current-music-details"><span class="reader-current-music-name">Humble Song</span><span class="reader-current-music-artist">(Artist)</span></div>
+          <div class="reader-current-music-controls">
+            <i class="fa fa-play-circle" aria-hidden="true"></i>
+            <i class="fa fa-pause-circle" aria-hidden="true"></i>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
+          </div>
+        </div>
+      </div>
 
-<div class="rs-nav">
-    <a href="/">Home</a>
-    <a href="/dashboard/">Dashboard</a>
-</div>
-<div class="reader-small">
-	
-</div>
-{% else %}
-<h2>Please Rent/Purchase to Read this E-book!</h2>
-{% endif %}
+      <svg class="reader-menu-svg" id="reader-text-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22.48 17.98"><title>Display Options</title><path d="M10.39,7.93H6.31V18H4V7.93H0V6.29H10.39Z" fill="#999"/><path d="M22.48,2.52H17V18H14V2.52H8.51V0h14Z" fill="#999"/></svg>
+      
+      <div class="reader-do">
+        <h2 class="reader-do-title">Display Options<i class="fa fa-times" aria-hidden="true"></i>
+        </h2>
+        <h3 class="reader-do-subtitle">View</h3>
+        <div class="reader-do-view">
+          <button id="reader-ftbtn">Flowing Text</button>
+          <button id="reader-orgbtn">Original</button>
+        </div>
+        <h3 class="reader-do-subtitle">Text Size</h3>
+        <div class="reader-do-size">
+          <button id="reader-zoompbtn"><i class="fa fa-plus" aria-hidden="true"></i></button>
+          <button id="reader-zoommbtn"><i class="fa fa-minus" aria-hidden="true"></i></button>
+        </div>
+        <h3 class="reader-do-subtitle">Font Type</h3>
+        <div class="reader-do-family">
+          <select name="reader-fontfamily" id="reader-fontfamily">
+            <option value="Arial">Arial</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Trebuchet MS">Trebuchet MS</option>
+            <option value="Verdana">Verdana</option>
+          </select>
+        </div>
+        <h3 class="reader-do-subtitle">Page Layout</h3>
+        <div class="reader-do-layout">
+          <svg class="reader-1page-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12.99 18.32"><title>One-page layout</title><path d="M12.47,5H7.86V.46A1,1,0,0,1,8.27.7l4,4A1,1,0,0,1,12.47,5Z" fill="#999"/><path d="M13,5.32H7.53V0L8,.13a1.33,1.33,0,0,1,.55.33l4,4a1.29,1.29,0,0,1,.26.38ZM8.2,4.64h3.53L8.2,1.11Z" fill="#999"/><path d="M11.26,18.32H1.64A1.64,1.64,0,0,1,0,16.68v-15A1.64,1.64,0,0,1,1.64.07H7.57A1.3,1.3,0,0,1,8,.14L8.2.21V4.64h4.48l.09.19a1.32,1.32,0,0,1,.13.57V16.68A1.64,1.64,0,0,1,11.26,18.32ZM1.64.75a1,1,0,0,0-1,1v15a1,1,0,0,0,1,1h9.61a1,1,0,0,0,1-1V5.41a.67.67,0,0,0,0-.09H7.53V.75Z" fill="#999"/><rect x="6.07" y="5.38" width="0.76" height="7.64" rx="0.29" ry="0.29" transform="matrix(0, -1, 1, 0, -2.75, 15.65)" fill="#999"/><rect x="6.07" y="6.91" width="0.76" height="7.64" rx="0.29" ry="0.29" transform="translate(-4.28 17.18) rotate(-90)" fill="#999"/><rect x="6.07" y="8.43" width="0.76" height="7.64" rx="0.29" ry="0.29" transform="translate(-5.8 18.7) rotate(-90)" fill="#999"/><rect x="5.3" y="10.73" width="0.76" height="6.11" rx="0.29" ry="0.29" transform="translate(-8.1 19.47) rotate(-90)" fill="#999"/><path d="M12.47,5a1,1,0,0,0-.19-.28Z" fill="#999"/></svg>
+          <svg class="reader-2page-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25.53 18.99"><title>Two-page layout</title><path d="M24.75,5.25H20.09V.68a1,1,0,0,1,.41.25l4,4A1,1,0,0,1,24.75,5.25Z" fill="#999" stroke="#999" stroke-miterlimit="10"/><path d="M12.86,1a1.32,1.32,0,0,0-.28.43A1.76,1.76,0,0,0,11,.55H2.26A1.76,1.76,0,0,0,.5,2.32V16.73a1.76,1.76,0,0,0,1.76,1.76H11a1.76,1.76,0,0,0,1.54-.91,1.33,1.33,0,0,0,1.22.82h9.72a1.33,1.33,0,0,0,1.32-1.32V5.68a1,1,0,0,0-.1-.43H20.1V.68a1,1,0,0,0-.3,0h-6A1.31,1.31,0,0,0,12.86,1Z" fill="none" stroke="#999" stroke-miterlimit="10"/><rect x="18.28" y="5.65" width="0.77" height="7.73" rx="0.27" ry="0.27" transform="translate(9.15 28.18) rotate(-90)" fill="#999"/><rect x="18.28" y="7.2" width="0.77" height="7.73" rx="0.27" ry="0.27" transform="translate(7.6 29.73) rotate(-90)" fill="#999"/><rect x="18.28" y="8.74" width="0.77" height="7.73" rx="0.27" ry="0.27" transform="translate(6.06 31.27) rotate(-90)" fill="#999"/><rect x="17.51" y="11.06" width="0.77" height="6.18" rx="0.27" ry="0.27" transform="translate(3.74 32.05) rotate(-90)" fill="#999"/><rect x="7" y="5.65" width="0.77" height="7.73" rx="0.27" ry="0.27" transform="translate(-2.13 16.91) rotate(-90)" fill="#999"/><rect x="7" y="7.2" width="0.77" height="7.73" rx="0.27" ry="0.27" transform="translate(-3.67 18.45) rotate(-90)" fill="#999"/><rect x="7" y="2.58" width="0.77" height="7.73" rx="0.27" ry="0.27" transform="matrix(0, -1, 1, 0, 0.95, 13.83)" fill="#999"/><rect x="7" y="4.12" width="0.77" height="7.73" rx="0.27" ry="0.27" transform="translate(-0.6 15.38) rotate(-90)" fill="#999"/><rect x="7" y="8.74" width="0.77" height="7.73" rx="0.27" ry="0.27" transform="translate(-5.22 20) rotate(-90)" fill="#999"/><rect x="6.23" y="11.06" width="0.77" height="6.18" rx="0.27" ry="0.27" transform="translate(-7.54 20.77) rotate(-90)" fill="#999"/></svg>
+        </div>
+      </div>
 
-<p style="display: none;" id="hiddenpages">{{ pages }}</p>
-<p style="display: none;" id="hiddenpagesaccess">{{ pages }}</p>
-<p style="display: none;" id="hiddenid">{{ id }}</p>
-<p style="display: none" id="hiddenlastpage">{{ lastpage }}
-</p>
-<input type="text" size="3" id="page-number" style="display:none">
-<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/bootstrap4.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/turn.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/reader.js' %}">
-</script>
+      <svg class="reader-menu-svg" id="reader-notes-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12.51 17.98"><title>Notes</title><path d="M12.51,5.11V16.65A1.34,1.34,0,0,1,11.18,18H1.34A1.34,1.34,0,0,1,0,16.65V1.34A1.34,1.34,0,0,1,1.34,0H7.4a1,1,0,0,1,.72.3l4.1,4.1A1,1,0,0,1,12.51,5.11Z" fill="#999"/><rect x="5.86" y="5.08" width="0.78" height="7.82" rx="0.37" ry="0.37" transform="translate(-2.74 15.25) rotate(-90)" fill="#e6e6e6"/><rect x="5.86" y="6.65" width="0.78" height="7.82" rx="0.37" ry="0.37" transform="translate(-4.3 16.81) rotate(-90)" fill="#e6e6e6"/><rect x="5.86" y="8.21" width="0.78" height="7.82" rx="0.37" ry="0.37" transform="translate(-5.86 18.38) rotate(-90)" fill="#e6e6e6"/><rect x="5.08" y="10.56" width="0.78" height="6.26" rx="0.37" ry="0.37" transform="translate(-8.21 19.16) rotate(-90)" fill="#e6e6e6"/><polygon points="12.12 5.87 7.43 5.87 7.43 1.17 12.12 5.87" fill="#e6e6e6"/></svg>
 
+      <div class="reader-notes-menu">
+        <h3>My Notes<i class="fa fa-times" aria-hidden="true"></i></h3>
+        <div id="reader-notes-list">
+          <div class="reader-notes-item"></div>
+          <div class="reader-notes-item"></div>
+          <div class="reader-notes-item"></div>
+        </div>
+        <h4>Extract notes as</h4>
+        <div id="reader-notes-extract-div">
+          <button id="reader-notes-extract-all"></button>
+          <button id="reader-notes-extract-selected"></button>
+        </div>
+        <h4>My Saved Files</h4>
+        <div id="reader-notes-saved-files">
+          <div class="reader-notes-saved-fileitem"></div>
+          <div class="reader-notes-saved-fileitem"></div>
+        </div>
+      </div>
+
+      <svg class="reader-menu-svg" id="reader-submenu-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16.67 14"><title>Contents</title><rect x="3.67" y="0.12" width="13" height="2.29" rx="1.15" ry="1.15" fill="#999"/><rect width="2.33" height="2.33" rx="1.17" ry="1.17" fill="#999"/><rect y="5.83" width="2.33" height="2.33" rx="1.17" ry="1.17" fill="#999"/><rect y="11.67" width="2.33" height="2.33" rx="1.17" ry="1.17" fill="#999"/><rect x="3.67" y="11.59" width="13" height="2.29" rx="1.15" ry="1.15" fill="#999"/><rect x="3.67" y="5.85" width="13" height="2.29" rx="1.15" ry="1.15" fill="#999"/></svg>
+
+      <div class="reader-content-menu">
+        <h3>Contents<i class="fa fa-times" aria-hidden="true"></i></h3>
+        <div id="reader-content-divider">
+          <button id="reader-content-contentsbtn">Contents</button>
+          <button id="reader-content-bookmarksbtn">Bookmarks</button>
+        </div>
+        <div id="toc"></div>
+      </div>
+
+      <span id="reader-search">
+        <input type="text" name="reader-search-input" id="reader-search-input" placeholder="Search any word">
+        <i class="fa fa-search" aria-hidden="true"></i>
+      </span>
+      <div class="reader-search-results">
+        <h3>Search(<span id="reader-search-number"></span>)<i class="fa fa-times" aria-hidden="true"></i></h3>
+        <div class="reader-search-results-main"></div>
+      </div>
+    </div>
+  </div>
+  <!--<select id="toc"></select>-->
+  <div id="viewer-wrapper">
+    <div id="viewer" class="spreads"></div>
+    <a id="prev" href="#prev" class="arrow">‹</a>
+    <a id="next" href="#next" class="arrow">›</a>
+  </div>
+  
+  
+  <div id="control">
+      <input id="current-percent" size="3" value="0" style="display:none" />
+      <div id="reader-lnav">
+        <span id="reader-current-percentage">0%</span>
+        <i class="fa fa-angle-left left-decor" aria-hidden="true"></i>
+        <span id="reader-current-location"></span>
+        <span id="reader-total-locations"></span>
+        <i class="fa fa-angle-right right-decor" aria-hidden="true"></i>
+        <svg id="reader-fullscreen-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.69 16.77"><title>Fullscreen</title><path d="M8,15.83l-5.86-.12C1.34,15.7.72,14.51.75,13L.94,3.37C1,1.91,1.63.73,2.42.75L8.28.87" fill="none" stroke="#4d4d4d" stroke-miterlimit="10" stroke-width="1.5"/><path d="M11.41,15.9l5.86.12c.79,0,1.45-1.16,1.48-2.62l.19-9.67c0-1.46-.59-2.66-1.37-2.67L11.71.93" fill="none" stroke="#4d4d4d" stroke-miterlimit="10" stroke-width="1.5"/></svg>
+        <svg id="reader-nmode-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22.25 16.25"><title>Night-mode</title><rect x="0.13" y="0.13" width="22" height="16" fill="#fff" stroke="#4d4d4d" stroke-miterlimit="10" stroke-width="0.25"/><path d="M22.12,16.12H.13V.13Z" fill="#4d4d4d"/><path d="M22.12,16.12.13.13h22Z" fill="#fff"/></svg>
+      </div>
+      <div id="reader-lnav2">
+        <span id="reader-buyopt">Buy/Rent this Book</span>
+        <span id="reader-ulimopt">Subscribe for Unlimited Reading</span>
+      </div>
+  </div>
+  <span id="hidden-ebook-id" style="display: none">{{ id }}</span>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  <script>
+    var bookmarkarr = {{ bookmarkarr|safe }};
+    var controls = document.getElementById("control");
+    var currentPage = document.getElementById("current-percent");
+    var slider = document.createElement("input");
+    var slide = function(){
+        var cfi = book.locations.cfiFromPercentage(slider.value / 100);
+        
+        rendition.display(cfi);
+        $("#rangeSlider").blur();
+    };
+    var mouseDown = false;
+    var params = URLSearchParams && new URLSearchParams(document.location.search.substring(1));
+    var url = params && params.get("url") && decodeURIComponent(params.get("url"));
+    var currentSectionIndex = (params && params.get("loc")) ? params.get("loc") : undefined;
+
+    // Load the opf
+    var book = ePub(url || "https://s3.amazonaws.com/moby-dick/moby-dick.epub");
+    var rendition = book.renderTo("viewer", {
+      width: "100%",
+      height: 570,
+      spread: 'auto',
+    });
+    var displayed = rendition.display();
+    var title = document.getElementById("title");
+    rendition.display(currentSectionIndex);
+    rendition.themes.override("font-family", "Arial");
+    
+    book.ready.then(function(){
+      function doSearch(q) {
+        return Promise.all(
+            book.spine.spineItems.map(item => item.load(book.load.bind(book)).then(item.find.bind(item, q)).finally(item.unload.bind(item)))
+        ).then(results => Promise.resolve([].concat.apply([], results)));
+      };
+
+      $("#reader-search i").click(function(){
+        var term = $("#reader-search-input").val();
+        $('.reader-search-results-main').html('');
+        doSearch(term).then(function(results){
+          $(".reader-search-results").show();
+          dialogopen = true;
+          $("#reader-search-number").html(results.length);
+          var searchlength = term.length
+          for(var i in results){
+            var searchindex = results[i].excerpt.toLowerCase().indexOf(term);
+
+            let result = '<div class="reader-search-item" data-link="'+results[i].cfi+'"><div class="reader-search-item-content">' + results[i].excerpt.substring(0,searchindex)+ '<span class="reader-search-highlight">' +results[i].excerpt.substring(searchindex,searchindex+searchlength) + '</span>' + results[i].excerpt.substring(searchindex+searchlength) + '</div><div class="reader-search-item-location">'+book.locations.locationFromCfi(results[i].cfi) +'</div></div>'
+            $('.reader-search-results-main').append(result);
+
+          }
+        })
+      });
+      
+      $(document).keypress(function(e) {
+          if(e.which == 13 && $("#reader-search-input").is(":focus")) {
+              var term = $("#reader-search-input").val();
+              $('.reader-search-results-main').html('');
+              doSearch(term).then(function(results){
+                $(".reader-search-results").show();
+                dialogopen = true;
+                $("#reader-search-number").html(results.length);
+                var searchlength = term.length
+                for(var i in results){
+                  var searchindex = results[i].excerpt.toLowerCase().indexOf(term);
+
+                  let result = '<div class="reader-search-item" data-link="'+results[i].cfi+'"><div class="reader-search-item-content">' + results[i].excerpt.substring(0,searchindex)+ '<span class="reader-search-highlight">' +results[i].excerpt.substring(searchindex,searchindex+searchlength) + '</span>' + results[i].excerpt.substring(searchindex+searchlength) + '</div><div class="reader-search-item-location">'+book.locations.locationFromCfi(results[i].cfi) +'</div></div>'
+                  $('.reader-search-results-main').append(result);
+
+                }
+              })
+          }
+      });
+      
+      var next = document.getElementById("next");
+
+      next.addEventListener("click", function(e){
+        book.package.metadata.direction === "rtl" ? rendition.prev() : rendition.next();
+        var percentage = $("#rangeSlider").val();
+        $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
+        e.preventDefault();
+      }, false);
+
+      var prev = document.getElementById("prev");
+      prev.addEventListener("click", function(e){
+        book.package.metadata.direction === "rtl" ? rendition.next() : rendition.prev();
+        var percentage = $("#rangeSlider").val();
+        $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
+        e.preventDefault();
+      }, false);
+
+      var keyListener = function(e){
+
+        // Left Key
+        if ((e.keyCode || e.which) == 37) {
+          book.package.metadata.direction === "rtl" ? rendition.next() : rendition.prev();
+            var percentage = $("#rangeSlider").val();
+            $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
+        }
+
+        // Right Key
+        if ((e.keyCode || e.which) == 39) {
+          book.package.metadata.direction === "rtl" ? rendition.prev() : rendition.next();
+            var percentage = $("#rangeSlider").val();
+            $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
+        }
+
+      };
+
+      rendition.on("keyup", keyListener);
+      document.addEventListener("keyup", keyListener, false);
+      
+      // Load in stored locations from json or local storage
+      var key = book.key()+'-locations';
+      var stored = localStorage.getItem(key);
+      if (stored) {
+         return book.locations.load(stored);
+      } else {
+        // Or generate the locations on the fly
+        // Can pass an option number of chars to break sections by
+        // default is 150 chars
+        return book.locations.generate(1600);
+      }
+
+    })
+    .then(function(locations){
+        controls.style.display = "block";
+        slider.setAttribute("type", "range");
+        slider.setAttribute("min", 0);
+        slider.setAttribute("id", 'rangeSlider');
+        slider.setAttribute("max", 100);
+        // slider.setAttribute("max", book.locations.total+1);
+        slider.setAttribute("step", 1);
+        slider.setAttribute("value", 0);
+
+        slider.addEventListener("change", slide, false);
+        slider.addEventListener("input",function(){
+            var percentage = $("#rangeSlider").val();
+            $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
+            $("#reader-current-percentage").html(percentage + "%");
+            $("#reader-total-locations").html(locations.length);
+            $("#reader-current-location").html(Math.floor(locations.length*percentage*0.01)+ '-' + Math.ceil(locations.length*percentage*0.01) + '/');
+        });
+        slider.addEventListener("mousedown", function(){
+            mouseDown = true;
+        }, false);
+        slider.addEventListener("mouseup", function(){
+            mouseDown = false;
+        }, false);
+        
+        // Wait for book to be rendered to get current page
+        displayed.then(function(){
+            // Get the current CFI
+            var currentLocation = rendition.currentLocation();
+            // Get the Percentage (or location) from that CFI
+            var currentPage = book.locations.percentageFromCfi(currentLocation.start.cfi);
+            slider.value = currentPage;
+            currentPage.value = currentPage;
+            var percentage = 0;
+            $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
+        });
+
+        controls.appendChild(slider);
+        currentPage.addEventListener("change", function(){
+          var cfi = book.locations.cfiFromPercentage(currentPage.value/100);
+          rendition.display(cfi);
+        }, false);
+
+        // Listen for location changed event, get percentage from CFI
+        rendition.on('relocated', function(location){
+            var percent = book.locations.percentageFromCfi(location.start.cfi);
+            var percentage = Math.round(percent * 100);
+            if(!mouseDown) {
+                slider.value = percentage;
+                var percenti = $("#rangeSlider").val();
+                $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percenti +'%, rgb(230,230,230) '+ 0 + '%)');
+            }
+            currentPage.value = percentage;
+            $("#reader-current-percentage").html(percentage + "%");
+            $("#reader-total-locations").html(locations.length);
+            $("#reader-current-location").html(location.start.location+ '-' + location.end.location + '/');
+            if($.inArray(parseInt(location.start.location),bookmarkarr) != -1){
+              $("#reader-bookmark-svg path").css({fill:'#7e71c9'});
+            }else{
+              $("#reader-bookmark-svg path").css({fill:'#999'});
+            }
+        });
+        
+        // Save out the generated locations to JSON
+        localStorage.setItem(book.key()+'-locations', book.locations.save());
+
+    });
+    
+
+    var title = document.getElementById("title");
+
+    rendition.on("rendered", function(section){
+      var current = book.navigation && book.navigation.get(section.href);
+
+      if (current) {
+        var $select = document.getElementById("toc");
+        var $selected = $select.querySelector("div[selected]");
+        if ($selected) {
+          $selected.removeAttribute("selected");
+        }
+
+        var $options = $select.querySelectorAll("div");
+        for (var i = 0; i < $options.length; ++i) {
+          let selected = $options[i].getAttribute("ref") === current.href;
+          if (selected) {
+            $options[i].setAttribute("selected", "");
+          }
+        }
+      }
+
+    });
+
+    rendition.on("relocated", function(location){
+      console.log(location);
+
+      var next = book.package.metadata.direction === "rtl" ?  document.getElementById("prev") : document.getElementById("next");
+      var prev = book.package.metadata.direction === "rtl" ?  document.getElementById("next") : document.getElementById("prev");
+
+      if (location.atEnd) {
+        next.style.visibility = "hidden";
+      } else {
+        next.style.visibility = "visible";
+      }
+
+      if (location.atStart) {
+        prev.style.visibility = "hidden";
+      } else {
+        prev.style.visibility = "visible";
+      }
+
+    });
+
+    rendition.on("layout", function(layout) {
+      let viewer = document.getElementById("viewer");
+
+      if (layout.spread) {
+        viewer.classList.remove('single');
+      } else {
+        viewer.classList.add('single');
+      }
+    });
+    rendition.on("mouseup",function(){
+      if(dialogopen==true){
+        $("#reader-text-svg path").css({fill:"#999"});
+        $(".reader-do").hide();
+        $(".reader-search-results").hide();
+        $("#reader-submenu-svg rect").css({fill:"#999"});
+        $(".reader-content-menu").hide();
+        dialogopen = false;
+      }
+    })
+
+    window.addEventListener("unload", function () {
+      console.log("unloading");
+      this.book.destroy();
+    });
+
+    book.loaded.navigation.then(function(toc){
+      var $nav = document.getElementById("toc"),
+      docfrag = document.createDocumentFragment();
+      var addTocItems = function (parent, tocItems) {
+        var $ul = document.createElement("ul");
+        tocItems.forEach(function(chapter) {
+          var item = document.createElement("li");
+          var link = document.createElement("a");
+          item.className = 'reader-toc-items'
+          link.className = 'reader-toc-links';
+          link.textContent = chapter.label;
+          link.href = chapter.href;
+          item.appendChild(link);
+
+          if (chapter.subitems) {
+            addTocItems(item, chapter.subitems)
+          }
+
+          link.onclick = function(){
+            var url = link.getAttribute("href");
+            rendition.display(url);
+            return false;
+          };
+
+          $ul.appendChild(item);
+        });
+        parent.appendChild($ul);
+      };
+
+      addTocItems(docfrag, toc);
+
+      $nav.appendChild(docfrag);
+
+    });
+    
+
+    function getAttributes ( $node ) {
+      $.each( $node[0].attributes, function ( index, attribute ) {
+      console.log(attribute.name+':'+attribute.value);
+   } );
+}
+
+
+    $('div').click(function(){
+      if($(this).data('link')){
+            alert('Hi');
+            getAttributes($(this)); 
+            alert($(this).data('link'));
+            rendition.display($(this).attr('data-link'));
+          }
+          })
+
+  </script>
+  <script type="text/javascript">
+    var fullscreenactive = false;
+    $("#reader-fullscreen-svg").click(function(){
+      function launchIntoFullscreen(element) {
+        if(element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if(element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        } else if(element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen();
+        } else if(element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+        }
+      }
+      launchIntoFullscreen(document.documentElement);
+    });
+    
+    document.addEventListener("keyup",function(e){
+        if(e.keyCode==122 && fullscreenactive==false){
+          $(".reader-unav").hide();
+          $(".reader-unav-right").hide();
+          $("#control").hide();
+          $(".reader-fullscreen-heading").show();
+          fullscreenactive = true
+        }else if(e.keyCode==122 && fullscreenactive==true){
+          $(".reader-unav").show();
+          $(".reader-unav-right").show();
+          $("#control").show();
+          $(".reader-fullscreen-heading").hide();
+          fullscreenactive = false
+        }
+    })
+
+    document.addEventListener("fullscreenchange", function() {
+      if(fullscreenactive == true){
+        $(".reader-unav").show();
+        $(".reader-unav-right").show();
+        $("#control").show();
+        $(".reader-fullscreen-heading").hide();
+        fullscreenactive = false
+      }else{
+        $(".reader-unav").hide();
+        $(".reader-unav-right").hide();
+        $("#control").hide();
+        $(".reader-fullscreen-heading").show();
+        fullscreenactive = true
+      }
+    });
+    document.addEventListener("mozfullscreenchange", function() {
+      if(fullscreenactive == true){
+        $(".reader-unav").show();
+        $(".reader-unav-right").show();
+        $("#control").show();
+        $(".reader-fullscreen-heading").hide();
+        fullscreenactive = false
+      }else{
+        $(".reader-unav").hide();
+        $(".reader-unav-right").hide();
+        $("#control").hide();
+        $(".reader-fullscreen-heading").show();
+        fullscreenactive = true
+      }
+    });
+    document.addEventListener("webkitfullscreenchange", function() {
+        if(fullscreenactive == true){
+          $(".reader-unav").show();
+          $(".reader-unav-right").show();
+          $("#control").show();
+          $(".reader-fullscreen-heading").hide();
+          fullscreenactive = false
+        }else{
+          $(".reader-unav").hide();
+          $(".reader-unav-right").hide();
+          $("#control").hide();
+          $(".reader-fullscreen-heading").show();
+          fullscreenactive = true
+        }
+    });
+    document.addEventListener("msfullscreenchange", function() {
+      if(fullscreenactive == true){
+        $(".reader-unav").show();
+        $(".reader-unav-right").show();
+        $("#control").show();
+        $(".reader-fullscreen-heading").hide();
+        fullscreenactive = false
+      }else{
+        $(".reader-unav").hide();
+        $(".reader-unav-right").hide();
+        $("#control").hide();
+        $(".reader-fullscreen-heading").show();
+        fullscreenactive = true
+      }
+    });
+    var dialogopen = false;
+    $(".reader-do").hide();
+    $("#reader-text-svg").click(function(){
+      if(dialogopen==false){
+        $("#reader-text-svg path").css({fill:"#7e71c9"});
+        $(".reader-do").show();
+        dialogopen = true;
+      }else{
+        $("#reader-text-svg path").css({fill:"#999"});
+        $(".reader-do").hide();
+        dialogopen = false;
+      }
+    })
+    $(".reader-do-title i").click(function(){
+      $("#reader-text-svg path").css({fill:"#999"});
+      $(".reader-do").hide();
+      dialogopen = false;
+    });
+
+    $(".reader-search-results").hide();
+    $(".reader-search-results h3 i").click(function(){
+      $(".reader-search-results").hide();
+      dialogopen = false;
+    });
+
+    $(".reader-content-menu").hide();
+    $("#reader-submenu-svg").click(function(){
+      if(dialogopen==false){
+        $("#reader-submenu-svg rect").css({fill:"#7e71c9"});
+        $(".reader-content-menu").show();
+        dialogopen = true;
+      }else{
+        $("#reader-submenu-svg rect").css({fill:"#999"});
+        $(".reader-content-menu").hide();
+        dialogopen = false;
+      }
+    })
+    $(".reader-content-menu h3 i").click(function(){
+      $("#reader-submenu-svg rect").css({fill:"#999"});
+      $(".reader-content-menu").hide();
+      dialogopen = false;
+    });
+    $(".reader-notes-menu").hide();
+    $("#reader-bookmark-svg").click(function(){
+      var curloc = $("#reader-current-location").html();
+      var curindex = curloc.indexOf('-');
+      var bookloc = parseInt(curloc.substring(0,curindex));
+      bookmarkarr.push(bookloc);
+      $.ajax({
+        url: '/addbookmark/',
+        type:'POST',
+        data:
+        {
+          'ebookid': parseInt($("#hidden-ebook-id").html()),
+          'bookloc': bookloc,
+          'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(data)
+        {
+          if(data=='Deleted'){
+            $("#reader-bookmark-svg path").css({fill:"#999"});
+          }else if(data=='Added'){
+            $("#reader-bookmark-svg path").css({fill:"#7e71c9"});
+          }
+        },
+        error: function(xhr,status,error){
+            alert(xhr.responseText);
+          }             
+      });
+    })
+    var zoom = 1;
+    $("#reader-zoompbtn").click(function(){
+      if(zoom <= 2.2){
+        var newzoom = (zoom + 0.1)*100;
+        rendition.themes.fontSize(newzoom+"%");
+        zoom = zoom + 0.1;
+      }
+    });
+    $("#reader-zoommbtn").click(function(){
+      if(zoom>=0.5){
+        var newzoom = (zoom - 0.1)*100;
+        rendition.themes.fontSize(newzoom+"%");
+        zoom = zoom - 0.1;
+      }
+    });
+    $("#reader-fontfamily").change(function(){
+      var newfont = $(this).val();
+      rendition.themes.override("font-family", newfont,true);
+    })
+    $(".reader-1page-svg").click(function(){
+      rendition.spread("none");
+    });
+    $(".reader-2page-svg").click(function(){
+      rendition.spread("auto");
+    });
+    $(document).on('click','.reader-search-item',function(){
+      rendition.disp;lay($(this).data('link'));
+    })
+    $('.reader-music-recommended').slick({
+      infinite: true,
+      slidesToShow: 3,
+      slidesToScroll: 3,
+    });
+    $(".reader-music-recommended .slick-prev").hide();
+    $('.reader-music-recommended').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+      if(nextSlide ==0){
+          $(".reader-music-recommended .slick-prev").hide();
+      }else{
+          $(".reader-music-recommended .slick-prev").show();
+      }
+    });
+    $('.reader-music-popular').slick({
+      infinite: true,
+      slidesToShow: 3,
+      slidesToScroll: 3,
+    });
+    $(".reader-music-popular .slick-prev").hide();
+    $('.reader-music-popular').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+      if(nextSlide ==0){
+          $(".reader-music-popular .slick-prev").hide();
+      }else{
+          $(".reader-music-popular .slick-prev").show();
+      }
+    });
+    $('.reader-music-genres').slick({
+      infinite: true,
+      slidesToShow: 3,
+      slidesToScroll: 3,
+    });
+    $(".reader-music-genres .slick-prev").hide();
+    $('.reader-music-genres').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+      if(nextSlide ==0){
+          $(".reader-music-genres .slick-prev").hide();
+      }else{
+          $(".reader-music-genres .slick-prev").show();
+      }
+    });
+  </script>
 </body>
 </html>

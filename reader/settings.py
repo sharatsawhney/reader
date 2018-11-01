@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'klpi31sklyv#l#eo2w4l0*$l9b)%q!cy5hg2dld#%_!pm6)yi2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG =False
+DEBUG =True
 
 ALLOWED_HOSTS = [
     'reader-env.xanjtppaay.ap-south-1.elasticbeanstalk.com',
@@ -147,7 +147,7 @@ AUTHENTICATION_BACKENDS = ['rapp.authenticate.EmailBackend']
 STATIC_PATH = os.path.join(BASE_DIR,'static')
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/static/'
+
 STATICFILES_DIRS = (
     STATIC_PATH,
 )

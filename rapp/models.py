@@ -7,7 +7,6 @@ from datetime import datetime, timezone
 
 class Authors(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    publisher_name = models.ForeignKey('Publishers',on_delete=models.DO_NOTHING,default='')
 
     def __str__(self):
         return self.name
@@ -27,14 +26,21 @@ class Category(models.Model):
         return self.cat
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
 class Ebooks(models.Model):
     name = models.CharField(max_length=255, unique=True)
     author = models.ForeignKey('Authors',on_delete=models.DO_NOTHING)
     publisher = models.ForeignKey('Publishers',on_delete=models.DO_NOTHING)
+    publishdate = models.DateField(blank=True,null=True)
     price = models.FloatField()
     pages = models.IntegerField()
-    content = models.FileField(upload_to='media/',default='',blank=True)
-    link = models.URLField(default='',blank=True)
+    content = models.FileField(upload_to='epub/',default='',blank=True)
     category = models.ForeignKey('Category',on_delete=models.DO_NOTHING,default=1)
     img = models.ImageField(upload_to='images/',default='')
     CHOICES = (
@@ -79,6 +85,9 @@ class Ebooks(models.Model):
     )
     bookActive = models.CharField(max_length=20,choices= ACTIVE_CHOICES,default='bookActive')
     isbn = models.CharField(max_length=14,default='')
+    tags = models.ManyToManyField(Tag,blank=True)
+    rating = models.FloatField(default=0)
+    ratedusers = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -221,3 +230,12 @@ class Gmailid(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class Bookmark(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, default='')
+    ebook = models.ForeignKey('Ebooks',on_delete=models.DO_NOTHING)
+    location = models.IntegerField()
+
+    def __str__(self):
+        return self.ebook.name

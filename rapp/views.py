@@ -5,7 +5,7 @@ from rapp.forms import UserForm,UploadForm,PriceRangeSearchForm
 from django.contrib.auth import authenticate, login,logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from rapp.models import Authors,Publishers,Category,Ebooks,Subscribers,Usercart,Wishlist,Transactions,Dashboard,Notes,Lastpage,Uploaded,UserP,Adminacc,Gmailid
+from rapp.models import Authors,Publishers,Category,Ebooks,Subscribers,Usercart,Wishlist,Transactions,Dashboard,Notes,Lastpage,Uploaded,UserP,Adminacc,Gmailid,Bookmark,Tag
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
@@ -807,39 +807,22 @@ def read(request,id):
     book = Ebooks.objects.filter(id=id)[0]
     pages = book.pages
     if request.user.is_authenticated:
-        if len(Notes.objects.filter(user=request.user)) >0:
-            notes = Notes.objects.filter(user=request.user)
-        else:
-            notes = False
-    else:
-        user = User.objects.filter(email='trialuser@gmail.com')[0]
-        if len(Notes.objects.filter(user=user)) >0:
-            notes = Notes.objects.filter(user=user)
-        else:
-            notes = False
-    if request.user.is_authenticated:
-        if len(Lastpage.objects.filter(user=request.user,ebook=book))>0:
-            if (datetime.now(timezone.utc) - Lastpage.objects.filter(user=request.user,ebook=book)[0].time).total_seconds() <10:
-                lastpage = Lastpage.objects.filter(user=request.user,ebook=book)[0].page
-            else:
-                lastpage = False
-        else:
-            lastpage = False
-    else:
-        lastpage = False
-    if request.user.is_authenticated:
         checklen = len(Dashboard.objects.filter(user=request.user,ebook=book,active=True))
         if checklen >0:
             check = True
+            bookmarks = Bookmark.objects.filter(user=request.user,ebook=book)
+            bookmarkarr = []
+            for bookmark in bookmarks:
+                bookmarkarr.append(bookmark.location)
         elif int(id) == 4:
             check = True
         else:
             check = False
-    elif int(id) == 1:
+    elif int(id) == 4:
         check = True
     else:
         check = False
-    return render(request,'rapp/read.html',{'pages':pages,'id':id,'notes':notes,'lastpage':lastpage,'check':check})
+    return render(request,'rapp/read.html',{'pages':pages,'id':id,'check':check,'bookmarkarr':bookmarkarr})
 
 
 def sample(request,id):
@@ -1211,3 +1194,17 @@ def googlesignin(request):
                 return HttpResponse('Success')
         except ValueError:
             pass
+
+
+def addbookmark(request):
+    if request.method == 'POST':
+        ebookid = request.POST['ebookid']
+        ebook = Ebooks.objects.filter(id=ebookid)[0]
+        bookloc = request.POST['bookloc']
+        if Bookmark.objects.filter(user=request.user,ebook=ebook,location=bookloc).exists():
+            Bookmark.objects.filter(user=request.user, ebook=ebook, location=bookloc).delete()
+            return HttpResponse('Deleted')
+        else:
+            Bookmark.objects.create(user=request.user,ebook=ebook,location = bookloc)
+            return HttpResponse('Added')
+
