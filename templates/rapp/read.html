@@ -8,7 +8,6 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
   <script src="{% static 'js/epub.js' %}"></script>
-
   <link rel="stylesheet" type="text/css" href="{% static 'cs/examples.css' %}">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
@@ -18,6 +17,7 @@
     body {
       background-color: white;
       font-family:Arial, Helvetica, sans-serif;
+      overflow-y: hidden;
     }
     #viewer{
       width:90% !important;
@@ -107,14 +107,33 @@
       float:right;
       margin-left: 10px;
     }
+    #reader-exitfullscreen-svg{
+        position: absolute;
+        right: 40px;
+        bottom: 70px;
+        color: #999;
+    }
     .search-results {
       display: block !important;
       color: black !important;
       font-size: 40px;
     }
     .reader-unav-right{
-      position: relative;
+      0position: relative;
       top: -5px;
+    }
+    .loading-dict-div{
+        position: absolute;
+        top: 0px;
+        left: 47%;
+        width: 70px;
+        height: 20px;
+        font-size: 14px;
+        background-color: #ffff66;
+        padding-left: 10px;
+        padding-top: 1px;
+        border-radius: 2px;
+        display: none;
     }
     #reader-search{
       border: 1px solid rgb(204,204,204);
@@ -158,7 +177,6 @@
       text-decoration: none;
     }
     #title-reader{
-      color: #000000;
       position: relative;
       top: 4px;
       margin-left: 20px;
@@ -171,6 +189,10 @@
     .reader-fullscreen-heading{
       margin-top: 10px;
       text-align: center;
+      display: none;
+    }
+    .reader-fullscreen-panel{
+      margin-top: 10px;
       display: none;
     }
     .reader-do{
@@ -417,10 +439,14 @@
     .reader-toc-items{
       list-style-type: none;
       margin-left: -30px;
-      margin-bottom: 3px;
       padding-bottom: 3px;
+      margin-top: 0px;
+      padding-top: 3px;
       border-bottom: 1px solid rgb(204,204,204);
       width: 260px;
+    }
+    .reader-toc-items:hover{
+        background-color: rgb(220,220,220);
     }
     .reader-toc-links{
       text-decoration: none;
@@ -550,6 +576,12 @@
       margin-top: 0px;
       font-size: 14px;
     }
+    #reader-music-header4{
+      text-align: center;
+      font-weight: normal;
+      margin-top: 0px;
+      font-size: 14px;
+    }
     .reader-music-item-box{
       margin-right: 20px;
       position: relative;
@@ -560,6 +592,12 @@
       height: 130px;
     }
     .reader-music-popular{
+      height: 130px;
+    }
+    .reader-music-genres{
+      height: 130px;
+    }
+    .reader-music-category{
       height: 130px;
     }
     .reader-music-item-box:nth-child(1){
@@ -575,11 +613,33 @@
       margin-left: 8px;
       margin-right: 8px;
       font-size:10px;
+      line-height: 12px;
+    }
+    .reader-music-genre-box{
+      margin-right: 20px;
+      position: relative;
+      z-index: 5;
+      outline: none;
+    }
+    .reader-music-genre-box:nth-child(1){
+      margin-left: 10px;
+    }
+    .reader-music-genre-pic{
+      background-color: #E5E5E5;
+      border-radius: 5px;
+      height: 80px;
+    }
+    .reader-music-genre-box h5{
+      margin-top: 7px;
+      margin-left: 8px;
+      margin-right: 8px;
+      font-size:10px;
+      line-height: 12px;
     }
     #reader-music-home{
       padding-left: 20px;
       padding-right: 20px;
-      height: 350px;
+      height: 340px;
       overflow-y: auto;
     }
     #reader-music-home::-webkit-scrollbar {
@@ -614,6 +674,7 @@
       height: 15px;
       box-shadow: 0px 0px 4px grey;
       z-index: 10;
+      opacity: 1.0 !important;
     }
     .slick-next{
       position: absolute;
@@ -633,22 +694,892 @@
       height: 15px;
       box-shadow: 0px 0px 4px grey;
       z-index: 10;
+      opacity: 1.0 !important;
+    }
+    .reader-current-music-div{
+      background-color: #E5E5E5;
+      margin: -1px !important;
+      height: 90px;
+      position: relative;
+    }
+    .reader-current-music-div:before{
+      content:"";
+      background:#E5E5E5;
+      display: inline-block;
+      margin: 0 1em 1em 0;
+      height: 14px;
+      width: 28px;
+      border-top-left-radius: 90px;
+      border-top-right-radius: 90px;
+      position: absolute;
+      top: -9px;
+      left: 175px;
+    }
+    .reader-music-lifter-svg{
+      position: absolute;
+      top: -12px;
+      left: 177px;
+    }
+    .reader-music-lower-svg{
+      position: absolute;
+      top: -12px;
+      left: 177px;
+    }
+    .reader-current-music-details{
+      text-align: center;
+      padding-top: 65px;
+    }
+    .reader-current-music-name{
+      font-size: 17px;
+    }
+    .reader-current-music-artist{
+      font-size: 14px;
+    }
+    .reader-current-music-controls{
+      position: relative;
+    }
+    .reader-music-prev{
+      background-color: white;
+      border-radius: 50%;
+      padding: 2px 5px 2px 5px;
+      width: 18px;
+      position: absolute;
+      top: 30px;
+      left: 80px;
+    }
+    .reader-music-next{
+      background-color: white;
+      border-radius: 50%;
+      padding: 2px 5px 2px 5px;
+      width: 18px;
+      position: absolute;
+      top: 30px;
+      right: 80px;
+    }
+    .reader-music-play{
+      background-color: white;
+      border-radius: 50%;
+      padding: 5px 7px 5px 7px;
+      width: 26px;
+      position: absolute;
+      top: 26px;
+      left: 170px;
+    }
+    .reader-music-pause{
+      display: none;
+      background-color: white;
+      border-radius: 50%;
+      padding: 5px 7px 5px 7px;
+      width: 26px;
+      position: absolute;
+      top: 26px;
+      left: 170px;
+    }
+    #reader-music-playlist{
+      height: 340px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    #reader-empty-playlist-heading{
+      background-color: #E5E5E5;
+      text-align: center;
+      padding: 5px;
+    }
+    #reader-music-playlist::-webkit-scrollbar {
+        width: 6px;
+    }
+     
+    #reader-music-playlist::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
+    }
+     
+    #reader-music-playlist::-webkit-scrollbar-thumb {
+      background-color: rgb(179,179,179);
+      outline: 1px solid rgb(179,179,179);
+    }
+    .playlist-carousel{
+      margin-left: 20px;
+      margin-top: 10px;
+      margin-right: 18px;
+      box-sizing: border-box;
+    }
+    .reader-music-playlist-box{
+      background-color: #E5E5E5;
+      border-radius: 5px;
+      height: 80px;
+      margin-right: 15px;
+      position: relative;
+      z-index: 5;
+      outline: none;
+      top: 10px;
+      width: 90px;
+      text-align: center;
+    }
+    .playlist-box-selected{
+      background-color: rgb(128,128,128);
+    }
+    .reader-music-playlist-box h5{
+      font-weight: normal;
+      padding-left: 5px;
+      padding-right: 5px;
+      display:flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .playlist-carousel .slick-prev{
+      position: absolute;
+      top: 48px;
+      right: 2px !important;
+      z-index: 10;
+      margin-left: 20px;
+    }
+    .playlist-carousel .slick-next{
+      position: absolute;
+      top: 48px;
+      right: -2px;
+    }
+    .slick-center{
+      background-color: #B2B2B2;
+      height: 100px;
+      width: 110px;
+      position: relative;
+      top: 0px;
+    }
+    .music-queue-heading{
+      font-weight: normal;
+      font-size: 14px;
+      margin-left: 25px;
+    }
+    .music-queue{
+      margin-left: 25px;
+      margin-right: 25px;
+      margin-bottom: 10px;
+    }
+    .music-queue-item{
+      position: relative;
+      padding-bottom: 50px;
+    }
+    .music-queue-item-control .fa-play{
+      background-color: #B2B2B2;
+      border-radius: 50%;
+      padding: 11px 10px 11px 13px;
+      font-size: 10px;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+    }
+    .music-queue-item-control .fa-pause{
+      background-color: #B2B2B2;
+      border-radius: 50%;
+      padding: 11px 10px 11px 13px;
+      font-size: 10px;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      display: none;
+    }
+    .music-queue-item-name{
+      position: absolute;
+      top: 0px;
+      left: 45px;
+      font-size: 16px;
+    }
+    .music-queue-item-artist{
+      position: absolute;
+      top: 18px;
+      left: 45px;
+      font-size: 13px;
+    }
+    .music-queue-item-duration{
+      position: absolute;
+      top: 0px;
+      left: 260px;
+    }
+    .music-queue-item-options{
+      position: absolute;
+      top: 0px;
+      left: 315px;
+    }
+    .music-queue-item-options-div{
+      background-color: #E5E5E5;
+      width: 130px;
+      height: auto;
+      position: relative;
+      top:-30px;
+      right: 140px;
+      font-size: 12px;
+      z-index: 1;
+      cursor: pointer;
+    }
+    .music-queue-item-options-div ul{
+      list-style-type: none;
+      padding: 0px;
+    }
+    .music-queue-item-options-div li{
+      text-align: center;
+      padding-bottom: 2px;
+      padding-top: 2px;
+    }
+    .music-queue-item-options-div li:nth-child(1){
+      padding-top: 3px;
+    }
+    .music-queue-item-options-div li:hover{
+      background-color: rgb(128,128,128);
+    }
+    .select-playlist-name{
+      background-color: transparent;
+      width:90%;
+      margin-left: 5%;
+      outline: none;
+      border: none;
+      font-style: 10px;
+    }
+    .new-playlist-name{
+      background-color: transparent;
+      width:80%;
+      margin-left: 10%;
+      outline: none;
+      border: none;
+      font-size: 10px;
+    }
+    .music-queue-item-options-div h6{
+        margin: 0px;
+        text-align: center;
+        margin-top:2px;
+        margin-bottom: 2px;
+    }
+    #reader-music-selected{
+      height: 340px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    #reader-music-selected::-webkit-scrollbar {
+        width: 6px;
+    }
+     
+    #reader-music-selected::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
+    }
+     
+    #reader-music-selected::-webkit-scrollbar-thumb {
+      background-color: rgb(179,179,179);
+      outline: 1px solid rgb(179,179,179);
+    }
+    .reader-music-selected-box{
+      outline: none;
+      text-align: center;
+      margin-top: 10px;
+    }
+    .reader-music-selected-pic{
+      background-color: #E5E5E5;
+      border-radius: 5px;
+      height: 110px;
+      width: 130px;
+      margin-left: 120px;
+    }
+    .reader-music-selected-name{
+      margin-top: 7px;
+      margin-left: 8px;
+      margin-right: 8px;
+      font-size:14px;
+      line-height: 12px;
+    }
+    .reader-music-selected-artist{
+      margin-top: -10px;
+      margin-left: 8px;
+      margin-right: 8px;
+      font-size:10px;
+      line-height: 12px;
+    }
+    .reader-music-progress{
+      width: 90%;
+      position: absolute;
+      left: 5%;
+      top: 12px;
+      -webkit-appearance: none;
+      height: 4px;
+      border-radius: 5px;
+      outline: none;
+      background-color: white;
+    }
+    .reader-music-progress::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: rgb(128,128,128);
+        cursor: pointer;
+        border: 1px solid rgb(153,153,153);
+    }
+    .reader-music-progress::-moz-range-thumb {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: rgb(128,128,128);
+        cursor: pointer;
+        border: 1px solid rgb(153,153,153);
+    }
+    .reader-current-music-location{
+       position: absolute;
+       top: 25px;
+       left:15px;
+       background-color: rgb(128,128,128);
+       width: 28px;
+       height: 14px;
+       font-size: 10px;
+       color: white;
+       border-radius: 3px;
+       text-align: center;
+       padding-top: 2px;
+    }
+    /*.reader-current-music-location:after{
+      content:"";
+      box-sizing: border-box;
+      display: inline-block;
+      width: 10px;
+      height: 5px;
+      position: absolute;
+      top: 16px;
+      left: 9px;
+      border-top: solid 5px rgb(128,128,128);
+      border-left: solid 5px transparent;
+      border-right: solid 5px transparent;
+    }*/
+    .reader-current-music-duration{
+       position: absolute;
+       top: 25px;
+       right:15px;
+       background-color: rgb(128,128,128);
+       width: 28px;
+       height: 14px;
+       font-size: 10px;
+       color: white;
+       border-radius: 3px;
+       text-align: center;
+       padding-top: 2px;
+    }
+    /*.reader-current-music-duration:after{
+      content:"";
+      box-sizing: border-box;
+      display: inline-block;
+      width: 10px;
+      height: 5px;
+      position: absolute;
+      top: 16px;
+      left: 9px;
+      border-top: solid 5px rgb(128,128,128);
+      border-left: solid 5px transparent;
+      border-right: solid 5px transparent;
+    }*/
+    .selector-div{
+        background-color: white;
+        width: 100px;
+        height: 55px;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        z-index: 2;
+        padding: 2px 0px 2px 0px;
+        box-shadow: 0px 0px 4px rgb(77,77,77);
+    }
+    .selector-ul{
+      list-style-type: none;
+      text-decoration: none;
+      margin:0px;
+      padding: 0px;
+      border-bottom: 1px solid rgb(204,204,204);
+    }
+    .selector-ul li:hover{
+        background-color: #7e71c9;
+        color: white;
+    }
+    .selector-ul li{
+      padding-top: 4px;
+      padding-bottom: 4px;
+      padding-left: 5px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .selector-highlight{
+      display: flex;
+    }
+    .selector-highlight div{
+      width: 15px;
+      height: 15px;
+      border: 1px solid #999;
+      margin: 8px 2px 3px 2px;
+    }
+    .selector-highlight div:hover{
+      border: 2px solid #999;
+      margin-top: 7px;
+      margin-right: 1px;
+      margin-left: 1px;
+    }
+    .selector-highlight1{
+      background-color: rgb(255, 237, 165);
+      margin-left: 4px !important;
+    }
+    .selector-highlight1:hover{
+      margin-left: 3px !important;
+    }
+    .selector-highlight2{
+      background-color: rgb(219, 255, 183);
+    }
+    .selector-highlight3{
+      background-color: rgb(255, 219, 219);
+    }
+    .selector-highlight4{
+      background-color: rgb(201, 237, 237);
+    }
+    .note-maker{
+      width: 380px;
+      height: 195px;
+      background-color: white;
+      box-shadow: 0px 0px 4px rgb(77,77,77);
+      z-index: 1;
+      padding: 10px;
+      position: absolute;
+      top: 200px;
+      left: 200px;
+      border-radius: 2px;
+      display: none;
+    }
+    .note-textarea{
+      width: 360px;
+      height: 132px;
+      border: 1px solid #7e71c9;
+      outline: none;
+      resize: none;
+      padding: 8px;
+      font-size: 11px;
+    }
+    .note-control{
+      display: flex;
+    }
+    .note-control div{
+      width: 25px;
+      height: 25px;
+      border: 1px solid #999;
+      margin: 9px 5px 3px 5px;
+    }
+    .note-highlighter1{
+      background-color: rgb(255, 237, 165);
+      margin-left: 0px !important;
+      border: 2px solid #999 !important;
+    }
+    .note-highlighter2{
+      background-color: rgb(219, 255, 183);
+    }
+    .note-highlighter3{
+      background-color: rgb(255, 219, 219);
+    }
+    .note-highlighter4{
+      background-color: rgb(201, 237, 237);
+    }
+    .note-control button{
+      width: 72px;
+      height: 29px;
+      margin-top: 8px;
+      border-radius: 3px;
+      outline: none;
+    }
+    .note-control .note-save{
+      margin-left: 70px;
+      background-color: #4d90fe;
+      color: white;
+      border: 1px solid #3079ed;
+    }
+    .note-control .note-cancel{
+      margin-left: 20px;
+      background-color: #f5f5f5;;
+      color: black;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+    .hmarker-div{
+      display: flex;
+      width: 180px;
+      height: 50px;
+      background-color: white;
+      box-shadow: 0px 0px 4px rgb(77,77,77);
+      z-index: 1;
+      padding: 10px;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      border-radius: 2px;
+      display: none;
+    }
+    .hmarker-div button{
+      width: 75px;
+      height: 29px;
+      margin-top: 20px;
+      border-radius: 3px;
+      outline: none;
+    }
+    .hmarker-note{
+    	margin: 0px;
+    	font-size: 12px;
+    }
+    .hmarker-div .hmarker-edit{
+      background-color: #4d90fe;
+      color: white;
+      border: 1px solid #3079ed;
+    }
+    .hmarker-div .hmarker-delete{
+      margin-left: 25px;
+      background-color: #f5f5f5;;
+      color: black;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+    .dictionary-div{
+    	position: absolute;
+    	visibility: visible;
+    	left: 333.5px;
+    	top: 228px;
+    	width: 387px;
+    	height: 300px;
+    	background-color: white;
+    	box-shadow: 0px 0px 4px rgb(77,77,77);
+        z-index: 1;
+        padding: 15px 10px 10px 10px;
+        border-radius: 2px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        font-size: 13px;
+        display: none;
+    }
+    .dictionary-title{
+    	font-weight: bold;
+    	font-size: 2em;
+    }
+    .dictionary-pronunciation{
+    	font-weight: bold;
+    	font-size: 1.2em;
+    	margin-top: 3px;
+    }
+    .dictionary-part-of-speech{
+    	font-style: italic;
+    	font-size: 1em;
+    	margin-top: 12px;
+    }
+    .dictionary-definitions{
+    	margin-left: 8px;
+    	margin-top: 8px;
+    }
+    .dictionary-index{
+    	vertical-align: top;
+    }
+    .dictionary-synonyms{
+    	color: #878787;
+    }
+    .dictionary-synonym-label{
+        vertical-align: top;
+    }
+    .dictionary-div::-webkit-scrollbar {
+        width: 6px;
+    }
+     
+    .dictionary-div::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
+    }
+     
+    .dictionary-div::-webkit-scrollbar-thumb {
+      background-color: rgb(179,179,179);
+      outline: 1px solid rgb(179,179,179);
+    }
+    #bookmark-menu{
+        display: none;
+        max-height: 350px;
+        height: auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+    #bookmark-menu::-webkit-scrollbar {
+        width: 6px;
+    }
+     
+    #bookmark-menu::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
+    }
+     
+    #bookmark-menu::-webkit-scrollbar-thumb {
+      background-color: rgb(179,179,179);
+      outline: 1px solid rgb(179,179,179);
+    }
+    .bookmark-ul{
+    	margin-top: 20px;
+    	padding-left:7%;
+    	font-size: 12px;
+    	width: 86%;
+    }
+    .bookmark-li{
+    	list-style-type: none;
+    	padding-bottom: 3px;
+    	padding-top: 3px;
+    	border-bottom: 1px solid rgb(204,204,204);
+    	cursor: pointer;
+    }
+    .bookmark-li:hover{
+        background-color: rgb(220,220,220);
+    }
+    .bookmark-loc{
+    	position: absolute;
+    	left: 250px;
+    }
+    #reader-notes-list::-webkit-scrollbar {
+        width: 6px;
+    }
+     
+    #reader-notes-list::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
+    }
+     
+    #reader-notes-list::-webkit-scrollbar-thumb {
+      background-color: rgb(179,179,179);
+      outline: 1px solid rgb(179,179,179);
+    }
+    #reader-notes-list{
+      overflow-y:auto;
+      overflow-x: hidden;
+      max-height: 250px;
+      height: auto;
+    }
+    .reader-notes-item{
+        border: 2px solid rgb(128,128,128,0.4);
+        width: 80%;
+        margin-left: 7%;
+        margin-right: 7% !important;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        padding: 8px;
+        border-radius: 3px;
+        position: relative;
+        cursor: pointer;
+        min-height: 35px;
+    }
+    .reader-notes-item:hover{
+    	background-color: rgb(240,240,240);
+    }
+    .reader-notes-note{
+    	font-size: 14px;
+    	color: rgb(77,77,77);
+    	width: 80%;
+    }
+    .reader-notes-text{
+    	font-size: 12px;
+    	color: orange;
+    	width: 80%;
+    }
+    .reader-notetick-svg{
+    	width: 15px;
+    	position: absolute;
+    	top: 10px;
+    	right: 10px;
+    }
+    .reader-notes-loc{
+    	position: absolute;
+    	bottom: 10px;
+    	right: 10px;
+    	font-size: 13px;
+    	color: #999;
+    }
+    #reader-notes-extract-title{
+    	color: #999;
+    	text-align: center;
+    	font-size: 17px;
+    	font-weight: normal;
+    	margin-top: 10px;
+    	margin-bottom: 0px;
+    }
+    #reader-notes-extract-div button{
+    	background-color: white;
+    	border: 2px solid rgb(128,128,128,0.4);
+    	border-radius: 20px;
+    	padding: 5px 12px 5px 12px;
+    	width: 100px;
+    	color: #999;
+    	font-size: 14px;
+    	margin-top: 5px !important;
+    	outline: none;
+    }
+    #reader-notes-extract-div{
+    	border-bottom: 1px solid rgb(128,128,128,0.4);
+    	width:80%;
+    	margin-left: 10%;
+    	padding-bottom: 8px;
+    }
+    #reader-notes-extract-all{
+    	margin-left: 10px;
+    }
+    #reader-notes-extract-selected{
+    	margin-left: 25px;
+    }
+    #reader-notes-saved-title{
+    	color: rgb(77,77,77);
+    	text-align: center;
+    	font-size: 18px;
+    	font-weight: normal;
+    	margin-top: 10px;
+    	margin-bottom: 0px;
+    }
+    #reader-notes-saved-files{
+        max-height: 100px;
+        height: auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+    }
+    #reader-notes-saved-files::-webkit-scrollbar {
+        width: 6px;
+    }
+     
+    #reader-notes-saved-files::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
+    }
+     
+    #reader-notes-saved-files::-webkit-scrollbar-thumb {
+      background-color: rgb(179,179,179);
+      outline: 1px solid rgb(179,179,179);
+    }
+    .reader-notes-saved-fileitem{
+    	margin-left: 30px;
+    	margin-top: 10px;
+    	margin-bottom: 10px;
+    	cursor: pointer;
+    	position: relative;
+    }
+    .reader-notes-filename{
+        color: rgb(77,77,77);
+        font-size: 15px;
+    }
+    .reader-notes-filedate{
+        color: #999;
+        font-size: 13px;
+        position: absolute;
+        right: 30px;
+    }
+    .notefile-preview-div{
+      width: 80%;
+      border-radius: 2px;
+      border: 1px solid white;
+      background-color: white;
+      box-shadow: 0px 0px 8px rgb(128,128,128);
+      -webkit-box-shadow: 0px 0px 8px rgb(128,128,128);
+      position: absolute;
+      top: 10%;
+      left: 10%;
+      z-index: 1;
+      height: 500px;
+      display: none;
+      opacity: 1.0 !important;
+    }
+    .notefile-preview-div h3{
+      font-size: 20px;
+      text-align:center;
+      font-weight: normal;
+      margin-top: 20px;
+      color: rgb(77,77,77);
+    }
+    .notefile-preview-div h3 i{
+      font-size: 25px;
+      float: right;
+      margin-right:40px;
+      color: rgb(77,77,77,0.8);
+      margin-top: 3px;
+    }
+    .notefile-preview-div table{
+    	width: 90%;
+    	margin-left: 3%;
+    }
+    .notefile-preview-table-container{
+        overflow-x:hidden;
+        overflow-y: auto;
+        height: 300px;
+        padding-top: 10px;
+    }
+    .notefile-tr > td{
+    	padding-bottom: 20px;
+    }
+    .notefile-tr td{
+    	vertical-align: top;
+    }
+    .notefile-item-index{
+    	color: rgb(100,100,100);
+    	font-size: 15px;
+    }
+    .notefile-item-note{
+    	color: rgb(100,100,100);
+    	width: 48%;
+    	font-size: 15px;
+    }
+    .notefile-item-text{
+        color: rgb(247,147,30);
+    	padding-left:5%;
+    	width: 48%;
+    	font-size: 14px;
+    }
+    .notefile-tr i{
+        color: #999;
+        position: relative;
+        bottom: 10px;
+    }
+    .notefile-preview-table-container::-webkit-scrollbar {
+        width: 6px;
+    }
+     
+    .notefile-preview-table-container::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
+    }
+     
+    .notefile-preview-table-container::-webkit-scrollbar-thumb {
+      background-color: rgb(179,179,179);
+      outline: 1px solid rgb(179,179,179);
+    }
+    .notefile-preview-saver-div{
+    	text-align: center;
+    	position: absolute;
+    	bottom: 50px;
+    	left: 0%;
+    	width: 100%;
+    }
+    .notefile-preview-namefield{
+    	outline: none;
+    	border: 1px solid #7e71c9;
+    	border-right: none;
+        width: 30%;
+        border-radius: 20px 0px 0px 20px;
+        padding: 6px 10px 6px 20px;
+        font-size: 17px;
+    }
+    .notefile-preview-save{
+    	background-color: #7e71c9;
+    	border: 1px solid #7e71c9;
+    	color: white;
+    	border-radius: 20px;
+    	font-size: 17px;
+    	padding: 6px 20px 6px 20px;
+    	position: relative;
+    	right: 15px;
+    	outline: none;
     }
   </style>
 </head>
 <body>
   <!-- <div id="title"></div> -->
   <div class="reader-fullscreen-heading">
-    <span id="title-reader">Playing It my way,My Autobiography- </span>
-    <span id="author-reader">Sachin Tendulkar</span>
+    <span id="title-reader">{{ ename }}- </span>
+    <span id="author-reader">{{ eauthor }}</span>
   </div>
   <div class="reader-unav">
     <div class="reader-unav-left"></div>
       <a href="" id="exit-reader"><i class="fa fa-angle-double-left" aria-hidden="true"></i>
   EXIT</a>
-      <span id="title-reader">Playing It my way,My Autobiography- </span>
-      <span id="author-reader">Sachin Tendulkar</span>
+      <span id="title-reader">{{ ename}}- </span>
+      <span id="author-reader">{{ eauthor }}</span>
     </div>
+    <div class="loading-dict-div">Loading...</div>
     <div class="reader-unav-right">
       {% csrf_token %}
       <svg class="reader-menu-svg" id="reader-bookmark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.29 17.98"><title>Add Bookmark</title><path d="M15.29,1.27V18L7.64,12.26,0,18V1.27C0,.57.76,0,1.7,0H13.59C14.53,0,15.29.57,15.29,1.27Z" fill="#999"/></svg>
@@ -665,143 +1596,148 @@
         <div id="reader-music-home">
           <h4 id="reader-music-header1">Recommended for you</h4>
           <div class="slider reader-music-recommended">
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>Study Music 1</h5>
+            {% for item in musicr %}
+            <div class="reader-music-item-box" data-name="{{ item.name }}" data-artist="{{ item.artist }}" data-media="{{ item.media}}" data-id="{{ item.id }}" data-image="{{ item.image }}">
+              <div class="reader-music-item-pic" style="background-image:url('/media/{{ item.image }}');background-size: 100% 100%;"></div>
+              <h5>{{ item.name }}</h5>
+              {% csrf_token %}
             </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>2</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>3</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>4</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>5</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>6</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>7</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>8</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>9</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>10</h5>
-            </div>
+            {% endfor %}
           </div>
           <h4 id="reader-music-header2">Most Popular among Readers</h4>
           <div class="slider reader-music-popular">
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>Study Music 1</h5>
+            {% for item in musicp %}
+            <div class="reader-music-item-box" data-name="{{ item.name }}" data-artist="{{ item.artist }}" data-media="{{ item.media}}" data-id="{{ item.id }}" data-image="{{ item.image }}">
+              <div class="reader-music-item-pic" style="background-image:url('/media/{{ item.image }}');background-size: 100% 100%;"></div>
+              <h5>{{ item.name }}</h5>
+              {% csrf_token %}
             </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>2</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>3</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>4</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>5</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>6</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>7</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>8</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>9</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>10</h5>
-            </div>
+            {% endfor %}
           </div>
           <h4 id="reader-music-header3">Genres</h4>
           <div class="slider reader-music-genres">
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>Study Music 1</h5>
+            {% for item in musicgenre %}
+            <div class="reader-music-genre-box">
+              <div class="reader-music-genre-pic" style="background-image:url('/media/{{ item.image }}');background-size: 100% 100%;"></div>
+              <h5>{{ item.name }}</h5>
             </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>2</h5>
+            {% endfor %}
+          </div>
+          <h4 id="reader-music-header4"></h4>
+          <div class="slider reader-music-category">
+            {% for item in musicr %}
+            <div class="reader-music-item-box reader-music-category-box" data-name="{{ item.name }}" data-artist="{{ item.artist }}" data-media="{{ item.media}}" data-id="{{ item.id }}" data-image="{{ item.image }}" data-genre="{{ item.genre.name }}">
+              <div class="reader-music-item-pic" style="background-image:url('/media/{{ item.image }}');background-size: 100% 100%;"></div>
+              <h5>{{ item.name }}</h5>
+              {% csrf_token %}
             </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>3</h5>
+            {% endfor %}
+          </div>
+        </div>
+        <div id='reader-music-playlist'>
+          {% if playlist|length == 0 %}
+          <div id="reader-empty-playlist-heading">Empty Playlist</div>
+          {% else %}
+          <div class="playlist-carousel">
+            {% for item in playlist %}
+            <div class="reader-music-playlist-box" data-pid="{{ item.id }}">
+              <h5>{{ item.name }}</h5>
+              {% for ul in item.music.all %}
+              <div class="music-queue-item music-playlist-item" data-id="{{ ul.id }}" data-name="{{ ul.name }}" data-artist="{{ul.artist}}" data-duration="{{ul.duration}}" data-media="{{ul.media}}" data-image="{{ul.image }}" data-pid="{{ item.id }}">
+                <span class="music-queue-item-control"><i class="fa fa-play" aria-hidden="true"></i><i class="fa fa-pause" aria-hidden="true"></i></span>
+                <span class="music-queue-item-details"><span class="music-queue-item-name">{{ ul.name }}</span><span class="music-queue-item-artist">{{ ul.artist }}</span></span>
+                <span class="music-queue-item-duration">{{ ul.duration }}</span>
+                <span class="music-queue-item-options">
+                  <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                  <div class="music-queue-item-options-div">
+                  <ul>
+                    {% csrf_token %}
+                    <li class="reader-removefrom-playlist">Remove from Playlist</li>
+                  </ul>
+                </div>
+                </span>
+              </div>
+              {% endfor %}
             </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>4</h5>
+            {% endfor %}
+          </div>
+          <h4 class="music-queue-heading">Queue</h4>
+          <div class="music-queue">
+          </div>
+          {% endif %}
+        </div>
+        <div id='reader-music-selected'>
+          <div class="reader-music-selected-box">
+            <div class="reader-music-selected-pic">
             </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>5</h5>
+            <h5 class="reader-music-selected-name">Humble Song</h5>
+            <h5 class="reader-music-selected-artist">Artist</h5>
+          </div>
+          <h4 class="music-queue-heading">Queue</h4>
+          <div class="music-queue">
+            {% if musiclislen == 0 %}
+            {% for item in musicr|slice:"10" %}
+            <div class="music-queue-item" data-id="{{ item.id }}" data-name="{{ item.name}}" data-artist="{{item.artist}}" data-duration="{{ item.duration}}" data-media="{{ item.media}}" data-image="{{ item.image }}">
+              <span class="music-queue-item-control"><i class="fa fa-play" aria-hidden="true"></i><i class="fa fa-pause" aria-hidden="true"></i></span>
+              <span class="music-queue-item-details"><span class="music-queue-item-name">{{item.name}}</span><span class="music-queue-item-artist">{{item.artist}}</span>
+              <span class="music-queue-item-duration">{{ item.duration}}</span>
+              <span class="music-queue-item-options">
+                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                <div class="music-queue-item-options-div">
+                  <ul>
+                    {% csrf_token %}
+                    <li class="reader-remove-queue">Remove from Queue</li>
+                    <li class="reader-addto-playlist">Add to Playlist</li>
+                  </ul>
+                </div>
+              </span>
             </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>6</h5>
+            {% endfor %}
+            {% else %}
+            {% for item in musiclis %}
+            <div class="music-queue-item" data-id="{{ item.0 }}" data-name="{{ item.1}}" data-artist="{{item.2}}" data-duration="{{ item.3}}" data-media="{{ item.4}}" data-image="{{ item.6 }}">
+              <span class="music-queue-item-control"><i class="fa fa-play" aria-hidden="true"></i><i class="fa fa-pause" aria-hidden="true"></i></span>
+              <span class="music-queue-item-details"><span class="music-queue-item-name">{{item.1}}</span><span class="music-queue-item-artist">{{item.2}}</span>
+              <span class="music-queue-item-duration">{{ item.3}}</span>
+              <span class="music-queue-item-options">
+                <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                <div class="music-queue-item-options-div">
+                  <ul>
+                    {% csrf_token %}
+                    <li class="reader-remove-queue">Remove from Queue</li>
+                    <select class="select-playlist-name">
+                      <option disabled selected value="Select a Playlist">Select a Playlist</option>
+                      {% for playitem in playlist %}
+                      <option value="{{ playitem.name }}" data-pid="{{ playitem.id }}">{{ playitem.name }}</option>
+                      {% endfor %}
+                    </select>
+                    <h6>OR</h6>
+                    <input type="name" name="new-playlist-name" placeholder="Create a New Playlist" class="new-playlist-name">
+                    {% csrf_token %}
+                    <li class="reader-addto-playlist">Add to Playlist</li>
+                  </ul>
+                </div>
+              </span>
             </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>7</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>8</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>9</h5>
-            </div>
-            <div class="reader-music-item-box">
-              <div class="reader-music-item-pic"></div>
-              <h5>10</h5>
-            </div>
+            {% endfor %}
+            {% endif %}
           </div>
         </div>
         <div class="reader-current-music-div">
-          <div class="reader-current-music-details"><span class="reader-current-music-name">Humble Song</span><span class="reader-current-music-artist">(Artist)</span></div>
+          <svg class="reader-music-lifter-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
+          <svg class="reader-music-lower-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/></svg>
           <div class="reader-current-music-controls">
-            <i class="fa fa-play-circle" aria-hidden="true"></i>
-            <i class="fa fa-pause-circle" aria-hidden="true"></i>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
+            <input class="reader-music-progress" type="range" value="0" min="0" max="500">
+            <div class="reader-current-music-location">0:00</div>
+            <div class="reader-current-music-duration"></div>
+            <svg class="reader-music-play" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
+            <svg class="reader-music-pause" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
+            <svg class="reader-music-prev" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
+            <svg class="reader-music-next" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
           </div>
+          <div class="reader-current-music-details"><span class="reader-current-music-name">Humble Song</span><span class="reader-current-music-artist">(Artist)</span></div>
         </div>
+        
       </div>
 
       <svg class="reader-menu-svg" id="reader-text-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22.48 17.98"><title>Display Options</title><path d="M10.39,7.93H6.31V18H4V7.93H0V6.29H10.39Z" fill="#999"/><path d="M22.48,2.52H17V18H14V2.52H8.51V0h14Z" fill="#999"/></svg>
@@ -841,19 +1777,26 @@
       <div class="reader-notes-menu">
         <h3>My Notes<i class="fa fa-times" aria-hidden="true"></i></h3>
         <div id="reader-notes-list">
-          <div class="reader-notes-item"></div>
-          <div class="reader-notes-item"></div>
-          <div class="reader-notes-item"></div>
         </div>
-        <h4>Extract notes as</h4>
+        <h4 id="reader-notes-extract-title">Extract notes as</h4>
         <div id="reader-notes-extract-div">
-          <button id="reader-notes-extract-all"></button>
-          <button id="reader-notes-extract-selected"></button>
+          <button id="reader-notes-extract-all">All</button>
+          <button id="reader-notes-extract-selected">Selected</button>
         </div>
-        <h4>My Saved Files</h4>
+        <h4 id="reader-notes-saved-title">My Saved Files</h4>
         <div id="reader-notes-saved-files">
-          <div class="reader-notes-saved-fileitem"></div>
-          <div class="reader-notes-saved-fileitem"></div>
+          {% for file in notefilearr %}
+          <div class="reader-notes-saved-fileitem">
+          	<span class="reader-notes-filename">{{ file.0 }}</span>
+          	<span class="reader-notes-filedate">{{ file.1 }}</span>
+          	{% for item in file.2 %}
+          	<span style="display: none" class="hidden-file-note">{{ item }}</span>
+          	{% endfor %}
+          	{% for item in file.3 %}
+          	<span style="display: none" class="hidden-file-text">{{ item }}</span>
+          	{% endfor %}
+          </div>
+          {% endfor %}
         </div>
       </div>
 
@@ -866,6 +1809,9 @@
           <button id="reader-content-bookmarksbtn">Bookmarks</button>
         </div>
         <div id="toc"></div>
+        <div id="bookmark-menu">
+
+        </div>
       </div>
 
       <span id="reader-search">
@@ -884,8 +1830,48 @@
     <a id="prev" href="#prev" class="arrow">‹</a>
     <a id="next" href="#next" class="arrow">›</a>
   </div>
-  
-  
+  <div class="selector-div">
+    <ul class="selector-ul">
+      {% csrf_token %}
+      <li class="selector-note">Add Note</li>
+    </ul>
+    <div class="selector-highlight">
+      {% csrf_token %}
+      <div class="selector-highlight1"></div>
+      {% csrf_token %}
+      <div class="selector-highlight2"></div>
+      {% csrf_token %}
+      <div class="selector-highlight3"></div>
+      {% csrf_token %}
+      <div class="selector-highlight4"></div>
+    </div>
+  </div>
+  <div class="note-maker">
+    <textarea class="note-textarea"></textarea>
+    <div class="note-control">
+      <div class="note-highlighter1"></div>
+      <div class="note-highlighter2"></div>
+      <div class="note-highlighter3"></div>
+      <div class="note-highlighter4"></div>
+      {% csrf_token %}
+      <button class="note-save">Save</button>
+      <button class="note-cancel">Cancel</button>
+    </div>
+  </div>
+  <div class="hmarker-div">
+    <p class="hmarker-note"></p>
+    <button class="hmarker-edit">Edit</button>
+    {% csrf_token %}
+    <button class="hmarker-delete">Delete</button>
+  </div>
+  <div class="dictionary-div">
+	
+  </div>
+  <div class="notefile-preview-div">
+  </div>
+  <div class="reader-fullscreen-panel">
+  	<svg id="reader-exitfullscreen-svg" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 18 18"><title>Exit Fullscreen</title><path d="M3 12.5h2.5V15H7v-4H3v1.5zm2.5-7H3V7h4V3H5.5v2.5zM11 15h1.5v-2.5H15V11h-4v4zm1.5-9.5V3H11v4h4V5.5h-2.5z"/></svg>
+  </div>
   <div id="control">
       <input id="current-percent" size="3" value="0" style="display:none" />
       <div id="reader-lnav">
@@ -903,10 +1889,21 @@
       </div>
   </div>
   <span id="hidden-ebook-id" style="display: none">{{ id }}</span>
+  <span id="hidden-ebook-lang" style="display: none">{{ elang  }}</span>
+  <span style="display: none" id="hidden-esource">{{ esource }}</span>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
   <script>
+    $(".selector-div").hide();
     var bookmarkarr = {{ bookmarkarr|safe }};
+    var highlightarr = {{ highlightarr|safe }};
+    var highlightcolorarr = {{ highlightcolorarr|safe }};
+    var highlighttextarr = {{ highlighttextarr|safe }};
+    var bookmarkdataarr = {{ bookmarkdataarr|safe }};
+    var notetextarr = {{ notetextarr|safe }};
+    var noteselectedtextarr = {{ noteselectedtextarr|safe }};
+    var notecfiarr = {{ notecfiarr|safe }};
+    var esource = $("#hidden-esource").html();
     var controls = document.getElementById("control");
     var currentPage = document.getElementById("current-percent");
     var slider = document.createElement("input");
@@ -922,7 +1919,8 @@
     var currentSectionIndex = (params && params.get("loc")) ? params.get("loc") : undefined;
 
     // Load the opf
-    var book = ePub(url || "https://s3.amazonaws.com/moby-dick/moby-dick.epub");
+    esource = "https://s3.ap-south-1.amazonaws.com/readerearth/" +  esource;
+    var book = ePub(url || esource);
     var rendition = book.renderTo("viewer", {
       width: "100%",
       height: 570,
@@ -932,6 +1930,12 @@
     var title = document.getElementById("title");
     rendition.display(currentSectionIndex);
     rendition.themes.override("font-family", "Arial");
+    /*rendition.themes.register("night", { "body": { "background": "#191919","color": "white"}});
+    rendition.themes.select("night");
+    $("body").css('background-color','#191919');*/
+    for(var i=0;i<highlightarr.length;i++){
+        rendition.annotations.highlight(highlightarr[i],String(highlightcolorarr[i]) + '@#$%^-decode##' + String(highlighttextarr[i]));
+    }
     
     book.ready.then(function(){
       function doSearch(q) {
@@ -939,6 +1943,7 @@
             book.spine.spineItems.map(item => item.load(book.load.bind(book)).then(item.find.bind(item, q)).finally(item.unload.bind(item)))
         ).then(results => Promise.resolve([].concat.apply([], results)));
       };
+
 
       $("#reader-search i").click(function(){
         var term = $("#reader-search-input").val();
@@ -1030,6 +2035,38 @@
 
     })
     .then(function(locations){
+    	var bookmarkappender = ``;
+    	for(var i in bookmarkarr){
+	      	var bookmarkcfi = book.locations.cfiFromLocation(parseInt(bookmarkarr[i]));
+	      	if(bookmarkdataarr[i].length > 25){
+	      		bookmarkdataarr[i] = bookmarkdataarr[i].substring(0,25) + '...';
+	      	}
+	      	var obj = `<li class="bookmark-li" data-cfi="` + bookmarkcfi + `"><span class="bookmark-data">` + bookmarkdataarr[i] + `</span><span class="bookmark-loc">` + bookmarkarr[i] +`</span></li>`;
+	      	bookmarkappender = bookmarkappender + obj;
+	      }
+	     bookmarkappender = `<ul class="bookmark-ul">` + bookmarkappender + `</ul>`;
+	    $("#bookmark-menu").append(bookmarkappender);
+        var noteappender = ``;
+    	for(var i in notetextarr){
+	      	var noteloc = book.locations.locationFromCfi(notecfiarr[i]);
+	      	var truenotetext = notetextarr[i];
+	      	var truenoteselectedtext = noteselectedtextarr[i];
+	      	if(notetextarr[i].length > 25){
+	      		notetextarr[i] = notetextarr[i].substring(0,25) + '...';
+	      	}
+	      	if(noteselectedtextarr[i].length > 60){
+	      		noteselectedtextarr[i] = noteselectedtextarr[i].substring(0,60) + '...';
+	      	}
+	      	var obj = `<div class="reader-notes-item" data-cfi="` + notecfiarr[i] + `" data-note="` + truenotetext + `" data-text="` + truenoteselectedtext + `"><div class="reader-notes-club-div">
+          	           <div class="reader-notes-note">` + notetextarr[i] + `</div>
+          	           <div class="reader-notes-text">` + noteselectedtextarr[i] + `</div></div>
+          	           <svg class="reader-notetick-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.28 14.28"><title>Tick</title><circle cx="7.14" cy="7.14" r="7.14" fill="#999"/><rect x="7.89" y="3.23" width="1.15" height="7.94" transform="translate(7.57 -3.88) rotate(45)" fill="#fff"/><rect x="4.41" y="6.5" width="1.16" height="4.13" transform="translate(-4.6 6.04) rotate(-45)" fill="#fff"/></svg>
+          	           <div class="reader-notes-loc">`+ noteloc +`</div>
+                       </div>`;
+	      	noteappender = noteappender + obj;
+	      };
+
+	    $("#reader-notes-list").append(noteappender);
         controls.style.display = "block";
         slider.setAttribute("type", "range");
         slider.setAttribute("min", 0);
@@ -1091,7 +2128,399 @@
               $("#reader-bookmark-svg path").css({fill:'#999'});
             }
         });
-        
+
+        /*rendition.on("selected", function(cfiRange, contents) {
+          rendition.annotations.highlight(cfiRange, {}, (e) => {
+            console.log("highlight clicked", e.target);
+          });
+          contents.window.getSelection().removeAllRanges();
+
+        });*/
+        /*function onMouseUp(e) {
+            var selection = book.renderer.render.window.getSelection();
+            var text = selection.toString();
+            console.log("Texto selecionado: %s", text);
+            // $('body #area').highlight(text);
+        }
+      
+        book.on('renderer:mouseup', onMouseUp);*/
+
+        var epubcfi = undefined;
+        var newcfi = undefined;
+        var useselection = undefined;
+        var selected = undefined;
+        rendition.on('mouseup',function(cfiRange,contents){
+          epubcfi = undefined;
+          newcfi = undefined;
+          var range = rendition.getRange(rendition.currentLocation().start.cfi);
+          var endRange = rendition.getRange(rendition.currentLocation().end.cfi);
+          range.setEnd(endRange.startContainer, endRange.startOffset);
+          var cfistring = range.toString();
+          var selection =  rendition.views()._views[0].iframe;
+          var idoc= selection.contentDocument || selection.contentWindow.document;
+          var iwin= selection.contentWindow || selection.contentDocument.defaultView;
+
+          selected = ''+iwin.getSelection();
+          if(selected.length > 0 && selected.replace(/\s+/g, '').length > 0){
+              useselection = iwin.getSelection();
+              var irange = iwin.getSelection().getRangeAt(0);
+              var startcon = irange.startContainer.data;
+              var paraindex = cfistring.indexOf(startcon);
+              var selectionindex = irange.startOffset;
+              
+              var attacher = rendition.currentLocation().start.cfi.substring(8,rendition.currentLocation().start.cfi.indexOf('!'));
+              epubcfi = new ePub.CFI(irange).toString();
+              newcfi = epubcfi.substring(0,8) + attacher + epubcfi.substring(9,);
+              var screenx = String(cfiRange.screenX-80) + 'px';
+              var screeny = String(cfiRange.screenY-70) + 'px';
+              if(selected.indexOf(' ') != -1 && selected.indexOf(' ') != selected.length - 1){
+                  $(".selector-div").show();
+                  $(".selector-div").css({'top':screeny,'left': screenx});
+              }else{
+              	  $(".loading-dict-div").show();
+              	  $(".dictionary-div").empty();
+              	  $.ajax({
+		              url: '/getdict/',
+		              type:'POST',
+		              data:
+		              {
+		                'word': selected,
+		                'lang': $("#hidden-ebook-lang").html(),
+		                'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+		              },
+		              success: function(data)
+		              {
+		              	/*<div class="dictionary-pronunciation">θɪn</div>
+						<div class="dictionary-part-of-speech">adjective</div>
+						<table class="dictionary-definitions">
+							<tbody>
+								<tr><td class="dictionary-index"><strong>1</strong></td><td class="dictionary-definition">with opposite surfaces or sides that are close or relatively close together.</td></tr>
+								<tr><th></th><td>
+									<div class="dictionary-synonyms">
+										<table><tbody>
+											<tr><td class="dictionary-synonym-label">synonyms:</td><td>narrow, fine, implausible</td></tr>
+										</tbody></table>
+									</div>
+								</td></tr>
+							</tbody>
+						</table>*/
+						var phoneticlist = data['phoneticlist'];
+		                var categorylist = data['categorylist'];
+		                var definelist = data['definelist'];
+		                var syarray = data['syarray'];
+		                if(categorylist.length != 0){
+		                	var appender = ``;
+                            for(var i in categorylist){
+                              var rowarray = ``;
+	                          for(var j in definelist[i]){
+	                          	var index = parseInt(j) + 1;
+	                          	var obj = `<tr><td class="dictionary-index"><strong>` + String(index) + `</strong></td><td class="dictionary-definition">` + definelist[i][j] + `</td></tr>`;
+	                          	rowarray = rowarray + obj;
+	                          };
+	                          if(syarray[i].length != 0){
+	                          	var systr = ``;
+	                          	for(var k in syarray[i]){
+                                  for(var m in syarray[i][k]){
+                                  	systr = systr + syarray[i][k][m] + `, `;
+                                  }
+	                          	}
+	                          	systr = `<tr><th></th><td>
+									      <div class="dictionary-synonyms">
+										  <table><tbody>
+											<tr><td class="dictionary-synonym-label">synonyms:</td><td>` + systr +`</td></tr>
+										  </tbody></table>
+									      </div>
+								          </td></tr>`
+	                          }else{
+	                          	var systr = ``;
+	                          }
+	                          var capp = `<div class="dictionary-pronunciation">` + phoneticlist[i] + `</div>
+						                  <div class="dictionary-part-of-speech">` + categorylist[i] + `</div>
+						                  <table class="dictionary-definitions">
+							              <tbody>` + rowarray + systr + 
+							              `</tbody>
+						                  </table>`;
+	                          appender = appender + capp;
+			                } 
+			                appender = `<div class="dictionary-title">` + selected + `</div>` + appender;
+			                $(".dictionary-div").append(appender);
+			                $(".loading-dict-div").hide();
+			                $('.dictionary-div').show();
+			                $(".selector-div").show();
+		                }else{
+		                	$(".dictionary-div").append('Nothing to show!');
+			                $(".loading-dict-div").hide();
+			                $('.dictionary-div').show();
+			                $(".selector-div").show();
+		                }
+		              },
+		              error: function(xhr,status,error){
+		                  alert(xhr.responseText);
+		                }             
+		          });
+                  var wwidth = $(window).width();
+		          var wheight = $(window).height();
+		          if(cfiRange.screenY +300 < wheight && cfiRange.screenX +387 < wwidth){
+		            $(".dictionary-div").css({'top':cfiRange.screenY-100,'left':cfiRange.screenX-90});
+		            $(".selector-div").css({'top':cfiRange.screenY-100+10,'left':cfiRange.screenX-90+290});
+		          }else if(cfiRange.screenY +300>= wheight || cfiRange.screenX + 387>= wwidth){
+		              if(cfiRange.screenY + 300 >= wheight && cfiRange.screenX + 387 < wwidth){
+		                  var ydiff = cfiRange.screenY + 300- wheight;
+		                  $(".dictionary-div").css({'top':cfiRange.screenY-ydiff -100,'left':cfiRange.screenX-90});
+		                  $(".selector-div").css({'top':cfiRange.screenY-ydiff -100+10,'left':cfiRange.screenX-90+290});
+		              }else if(cfiRange.screenY + 300 < wheight && cfiRange.screenX + 387 >= wwidth){
+		                  var xdiff = cfiRange.screenX + 387 - wwidth;
+		                  $(".dictionary-div").css({'top':cfiRange.screenY-100,'left':cfiRange.screenX-xdiff-90});
+		                  $(".selector-div").css({'top':cfiRange.screenY-100+10,'left':cfiRange.screenX-xdiff-90+290});
+		              }else if(cfiRange.screenY + 300 >= wheight && cfiRange.screenX + 387 >= wwidth){
+		                  var xdiff = cfiRange.screenX + 387 - wwidth;
+		                  var ydiff = cfiRange.screenY + 300- wheight;
+		                  $(".dictionary-div").css({'top':cfiRange.screenY-ydiff-100,'left':cfiRange.screenX-xdiff-90});
+		                  $(".selector-div").css({'top':cfiRange.screenY-ydiff-100+10,'left':cfiRange.screenX-xdiff-90+290});
+		              }
+		              
+		          };
+              }
+          }
+        });
+        rendition.on('mousemove',function(){
+            $(".hmarker-div").hide();
+        });
+        $(".hmarker-delete").click(function(){
+            var cfirange = $(this).parent().attr('data-cfi');
+            $.ajax({
+              url: '/removehighlight/',
+              type:'POST',
+              data:
+              {
+                'ebookid': parseInt($("#hidden-ebook-id").html()),
+                'cfirange': cfirange,
+                'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+              },
+              success: function(data)
+              {
+                rendition.annotations.remove(cfirange,"highlight");
+                $(".hmarker-note").html('');
+                $(".note-textarea").val('');
+                $(".hmarker-div").hide();
+              },
+              error: function(xhr,status,error){
+                  alert(xhr.responseText);
+                }             
+            });
+        });
+        var hmarkercfi = undefined;
+        var hmarkercolor = undefined;
+        var newnote = false;
+        $(".hmarker-edit").click(function(e){
+        	newnote = false;
+            hmarkercfi = $(".hmarker-div").attr('data-cfi');
+            $(".hmarker-div").hide();
+            $(".note-maker").show();
+            var wwidth = $(window).width();
+            var wheight = $(window).height();
+            if(e.screenY +195 < wheight && e.screenX + 380 < wwidth){
+              $(".note-maker").css({'top':e.screenY-100,'left':e.screenX-90});
+            }else if(e.screenY +195>= wheight || e.screenX + 380>= wwidth){
+              if(e.screenY + 195 >= wheight && e.screenX + 380 < wwidth){
+                  var ydiff = e.screenY + 195- wheight;
+                  $(".note-maker").css({'top':e.screenY-ydiff -100,'left':e.screenX-90});
+              }else if(e.screenY + 195 < wheight && e.screenX + 380 >= wwidth){
+                  var xdiff = e.screenX + 380 - wwidth;
+                  $(".note-maker").css({'top':e.screenY-100,'left':e.screenX-xdiff-90});
+              }else if(e.screenY + 195 >= wheight && e.screenX + 380 >= wwidth){
+                  var xdiff = e.screenX + 380 - wwidth;
+                  var ydiff = e.screenY + 195- wheight;
+                  $(".note-maker").css({'top':e.screenY-ydiff-100,'left':e.screenX-xdiff-90});
+              }
+              
+            }
+            $(".note-control div").css('cssText','border:1px solid #999 !important');
+            $(".note-highlighter1").css('cssText','border:2px solid #999 !important');
+            hmarkercolor = 'rgb(255, 237, 165)';
+            $(".note-textarea").val($(".hmarker-note").attr('data-text'));
+        });
+        $(".note-highlighter1").click(function(){
+          $(".note-control div").css('cssText','border:1px solid #999 !important');
+          $(".note-highlighter1").css('cssText','border:2px solid #999 !important');
+          hmarkercolor = 'rgb(255, 237, 165)';
+        });
+        $(".note-highlighter2").click(function(){
+          $(".note-control div").css('cssText','border:1px solid #999 !important');
+          $(".note-highlighter2").css('cssText','border:2px solid #999 !important');
+          hmarkercolor = 'rgb(219, 255, 183)';
+        });
+        $(".note-highlighter3").click(function(){
+          $(".note-control div").css('cssText','border:1px solid #999 !important');
+          $(".note-highlighter3").css('cssText','border:2px solid #999 !important');
+          hmarkercolor = 'rgb(255, 219, 219)';
+        });
+        $(".note-highlighter4").click(function(){
+          $(".note-control div").css('cssText','border:1px solid #999 !important');
+          $(".note-highlighter4").css('cssText','border:2px solid #999 !important');
+          hmarkercolor = 'rgb(201, 237, 237)';
+        });
+        $(".note-cancel").click(function(){
+          $(".note-maker").hide();
+        });
+        $(".note-save").click(function(){
+        	try{
+        	    useselection.removeAllRanges();
+        	}
+        	catch(err){
+                
+        	}
+            var notetext = $(".note-textarea").val();
+            if(notetext == ''){
+              var notenote = 0;
+            }else{
+              var notenote = 1;
+            }
+            if(newnote== true){
+              var cf = newcfi;
+              var cl = hmarkercolor;
+              var seltext = selected;
+            }else{
+              var cf = hmarkercfi;
+              var cl = hmarkercolor;
+              var seltext = '';
+            }
+
+            $.ajax({
+              url: '/changehighlight/',
+              type:'POST',
+              data:
+              {
+                'ebookid': parseInt($("#hidden-ebook-id").html()),
+                'cfirange': cf,
+                'notenote': notenote,
+                'notetext':notetext,
+                'color': cl,
+                'selected':seltext,
+                'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+              },
+              success: function(data)
+              {
+                $(".note-maker").hide();
+                if(newnote==false){
+                    rendition.annotations.remove(hmarkercfi,'highlight');
+                }
+                rendition.annotations.highlight(cf,String(cl) + '@#$%^-decode##' + String(notetext));
+                if(newnote== true){
+                	var noteappender = ``;
+			      	var noteloc = book.locations.locationFromCfi(cf);
+			      	var truenotetext = notetext;
+			      	var truenoteselectedtext = seltext;
+			      	if(notetext.length > 25){
+			      		notetext = notetext.substring(0,25) + '...';
+			      	}
+			      	if(seltext.length > 60){
+			      		seltext = seltext.substring(0,60) + '...';
+			      	}
+			      	var obj = `<div class="reader-notes-item" data-cfi="` + cf + `" data-note="` + truenotetext + `" data-text="` + truenoteselectedtext + `"><div class="reader-notes-club-div">
+		          	           <div class="reader-notes-note">` + notetext + `</div>
+		          	           <div class="reader-notes-text">` + seltext + `</div></div>
+		          	           <svg class="reader-notetick-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.28 14.28"><title>Tick</title><circle cx="7.14" cy="7.14" r="7.14" fill="#999"/><rect x="7.89" y="3.23" width="1.15" height="7.94" transform="translate(7.57 -3.88) rotate(45)" fill="#fff"/><rect x="4.41" y="6.5" width="1.16" height="4.13" transform="translate(-4.6 6.04) rotate(-45)" fill="#fff"/></svg>
+		          	           <div class="reader-notes-loc">`+ noteloc +`</div>
+		                       </div>`;
+			      	noteappender = noteappender + obj;
+				    $("#reader-notes-list").append(noteappender);
+                }else{
+                	$(".reader-notes-item").each(function(){
+                		if($(this).attr('data-cfi') == cf){
+                			var truenotetext = notetext;
+					      	if(notetext.length > 25){
+					      		notetext = notetext.substring(0,25) + '...';
+					      	}
+					      	$(this).attr('data-note',truenotetext);
+					      	$(this).find('.reader-notes-note').html(notetext);
+                		}
+                	})
+                }
+              },
+              error: function(xhr,status,error){
+                  alert(xhr.responseText);
+                }             
+            });
+        });
+        $(".selector-highlight div").click(function(){
+            var selclass = String($(this).attr('class'));
+            if(selclass == 'selector-highlight1'){
+              var colora = 'rgb(255, 237, 165)';
+            }
+            else if(selclass == 'selector-highlight2'){
+              var colora = 'rgb(219, 255, 183)';
+            }
+            else if(selclass == 'selector-highlight3'){
+              var colora = 'rgb(255, 219, 219)';
+            }
+            else if(selclass == 'selector-highlight4'){
+              var colora = 'rgb(201, 237, 237)';
+            }
+            $(".selector-div").hide();
+            useselection.removeAllRanges();
+            rendition.annotations.highlight(newcfi,String(colora) + '@#$%^-decode##');
+
+            $.ajax({
+              url: '/addhighlight/',
+              type:'POST',
+              data:
+              {
+                'ebookid': parseInt($("#hidden-ebook-id").html()),
+                'cfirange': newcfi,
+                'colora': colora,
+                'selected':selected,
+                'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+              },
+              success: function(data)
+              {
+                
+              },
+              error: function(xhr,status,error){
+                  alert(xhr.responseText);
+                }             
+            });
+        });
+        $(".selector-note").click(function(e){
+        	$(".selector-div").hide();
+            $(".note-maker").show();
+            var wwidth = $(window).width();
+            var wheight = $(window).height();
+            newnote = true;
+            if(e.screenY +195 < wheight && e.screenX + 380 < wwidth){
+              $(".note-maker").css({'top':e.screenY-100,'left':e.screenX-90});
+            }else if(e.screenY +195>= wheight || e.screenX + 380>= wwidth){
+              if(e.screenY + 195 >= wheight && e.screenX + 380 < wwidth){
+                  var ydiff = e.screenY + 195- wheight;
+                  $(".note-maker").css({'top':e.screenY-ydiff -100,'left':e.screenX-90});
+              }else if(e.screenY + 195 < wheight && e.screenX + 380 >= wwidth){
+                  var xdiff = e.screenX + 380 - wwidth;
+                  $(".note-maker").css({'top':e.screenY-100,'left':e.screenX-xdiff-90});
+              }else if(e.screenY + 195 >= wheight && e.screenX + 380 >= wwidth){
+                  var xdiff = e.screenX + 380 - wwidth;
+                  var ydiff = e.screenY + 195- wheight;
+                  $(".note-maker").css({'top':e.screenY-ydiff-100,'left':e.screenX-xdiff-90});
+              }
+              
+            }
+            $(".note-control div").css('cssText','border:1px solid #999 !important');
+            $(".note-highlighter1").css('cssText','border:2px solid #999 !important');
+            $(".note-textarea").val('');
+            hmarkercolor = 'rgb(255, 237, 165)';
+        });
+        this.rendition.themes.default({
+          '::selection': {
+            'background': 'rgba(255,255,0, 0.3)'
+          }
+        });
+        rendition.on('mousedown',function(){
+            $(".selector-div").hide();
+            $(".dictionary-div").hide();
+        });
+        $(document).on('click','.reader-notes-club-div',function(){
+        	var cfi = $(this).parent().attr('data-cfi');
+        	rendition.display(cfi);
+        });
         // Save out the generated locations to JSON
         localStorage.setItem(book.key()+'-locations', book.locations.save());
 
@@ -1157,6 +2586,11 @@
         $(".reader-search-results").hide();
         $("#reader-submenu-svg rect").css({fill:"#999"});
         $(".reader-content-menu").hide();
+        $("#reader-music-svg rect").css({fill:"#999"});
+        $("#reader-music-svg ellipse").css({fill:"#999"});
+        $(".reader-music-menu").hide();
+        $(".reader-notes-menu").hide();
+	    $("#reader-notes-svg path").css({fill:"#999"});
         dialogopen = false;
       }
     })
@@ -1235,8 +2669,27 @@
       }
       launchIntoFullscreen(document.documentElement);
     });
+    $("#reader-exitfullscreen-svg").click(function(){
+      function launchIntoFullscreen(element) {
+        if(element.exitFullscreen) {
+          element.exitFullscreen();
+        } else if(element.mozCancelFullScreen) {
+          element.mozCancelFullScreen();
+        } else if(element.webkitExitFullscreen) {
+          element.webkitExitFullscreen();
+        } else if(element.msExitFullscreen) {
+          element.msExitFullscreen();
+        }
+      }
+      launchIntoFullscreen(document);
+    });
     
-    document.addEventListener("keyup",function(e){
+    document.addEventListener("keydown",function(e){
+    	if(e.keyCode == 122){
+    		e.preventDefault();
+    	}
+    	/*console.log(e.keyCode);
+    	console.log(fullscreenactive);
         if(e.keyCode==122 && fullscreenactive==false){
           $(".reader-unav").hide();
           $(".reader-unav-right").hide();
@@ -1249,8 +2702,41 @@
           $("#control").show();
           $(".reader-fullscreen-heading").hide();
           fullscreenactive = false
+        }*/
+    });
+    var ctrlDown = false;
+    rendition.on('keydown',function(e) {
+        if (e.keyCode == 17){
+          ctrlDown = true;
         }
-    })
+    });
+    rendition.on('keyup',function(e){
+        if (e.keyCode == 17){
+          ctrlDown = false;
+        }
+    });
+    rendition.on("keydown",function(e){
+    	if(e.keyCode == 67 && ctrlDown == true){
+            e.preventDefault();
+    	}
+    });
+    var ctrlDown2 = false;
+    $(document).on('keydown',function(e) {
+        if (e.keyCode == 17){
+          ctrlDown2 = true;
+        }
+    });
+    $(document).on('keyup',function(e){
+        if (e.keyCode == 17){
+          ctrlDown2 = false;
+        }
+    });
+    $(document).on("keydown",function(e){
+    	if(e.keyCode == 67 && ctrlDown2 == true){
+            e.preventDefault();
+    	}
+    });
+
 
     document.addEventListener("fullscreenchange", function() {
       if(fullscreenactive == true){
@@ -1258,12 +2744,14 @@
         $(".reader-unav-right").show();
         $("#control").show();
         $(".reader-fullscreen-heading").hide();
+        $(".reader-fullscreen-panel").hide();
         fullscreenactive = false
       }else{
         $(".reader-unav").hide();
         $(".reader-unav-right").hide();
         $("#control").hide();
         $(".reader-fullscreen-heading").show();
+        $(".reader-fullscreen-panel").show();
         fullscreenactive = true
       }
     });
@@ -1273,12 +2761,14 @@
         $(".reader-unav-right").show();
         $("#control").show();
         $(".reader-fullscreen-heading").hide();
+        $(".reader-fullscreen-panel").hide();
         fullscreenactive = false
       }else{
         $(".reader-unav").hide();
         $(".reader-unav-right").hide();
         $("#control").hide();
         $(".reader-fullscreen-heading").show();
+        $(".reader-fullscreen-panel").show();
         fullscreenactive = true
       }
     });
@@ -1288,12 +2778,14 @@
           $(".reader-unav-right").show();
           $("#control").show();
           $(".reader-fullscreen-heading").hide();
+          $(".reader-fullscreen-panel").hide();
           fullscreenactive = false
         }else{
           $(".reader-unav").hide();
           $(".reader-unav-right").hide();
           $("#control").hide();
           $(".reader-fullscreen-heading").show();
+          $(".reader-fullscreen-panel").show();
           fullscreenactive = true
         }
     });
@@ -1303,12 +2795,14 @@
         $(".reader-unav-right").show();
         $("#control").show();
         $(".reader-fullscreen-heading").hide();
+        $(".reader-fullscreen-panel").hide();
         fullscreenactive = false
       }else{
         $(".reader-unav").hide();
         $(".reader-unav-right").hide();
         $("#control").hide();
         $(".reader-fullscreen-heading").show();
+        $(".reader-fullscreen-panel").show();
         fullscreenactive = true
       }
     });
@@ -1355,10 +2849,135 @@
       dialogopen = false;
     });
     $(".reader-notes-menu").hide();
+    $("#reader-notes-svg").click(function(){
+    	if(dialogopen==false){
+	        $("#reader-notes-svg path").css({fill:"#7e71c9"});
+	        $(".reader-notes-menu").show();
+	        dialogopen = true;
+	    }else{
+	        $("#reader-notes-svg path").css({fill:"#999"});
+	        $(".reader-notes-menu").hide();
+	        dialogopen = false;
+	    }
+    });
+    $(".reader-notes-menu h3 i").click(function(){
+	  $("#reader-notes-svg path").css({fill:"#999"});
+      $(".reader-notes-menu").hide();
+      dialogopen = false;
+    });
+    $(".reader-music-menu").hide();
+    $("#reader-music-svg").click(function(){
+      if(dialogopen==false){
+        $("#reader-music-svg rect").css({fill:"#7e71c9"});
+        $("#reader-music-svg ellipse").css({fill:"#7e71c9"});
+        $(".reader-music-menu").show();
+        dialogopen = true;
+        $('.reader-music-recommended').slick({
+          infinite: true,
+          slidesToShow: 3,
+          slidesToScroll: 3,
+        });
+        $('.reader-music-popular').slick({
+          infinite: true,
+          slidesToShow: 3,
+          slidesToScroll: 3,
+        });
+        $('.reader-music-genres').slick({
+          infinite: true,
+          slidesToShow: 3,
+          slidesToScroll: 3,
+        });
+        $('.reader-music-category').slick({
+          infinite: true,
+          slidesToShow: 3,
+          slidesToScroll: 3,
+        });
+        $(".reader-music-recommended .slick-prev").hide();
+        $('.reader-music-recommended').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+          if(nextSlide ==0){
+              $(".reader-music-recommended .slick-prev").hide();
+          }else{
+              $(".reader-music-recommended .slick-prev").show();
+          }
+        });
+        $('.reader-music-recommended').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+          var slidemodulo = {{ musicr|length|safe }}%3;
+          if(slidemodulo == 0){
+            slidemodulo = 3;
+          }
+          if(nextSlide =={{ musicr|length|safe }} -slidemodulo){
+              $(".reader-music-recommended .slick-next").hide();
+          }else{
+              $(".reader-music-recommended .slick-next").show();
+          }
+        });
+        $(".reader-music-popular .slick-prev").hide();
+        $('.reader-music-popular').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+          if(nextSlide ==0){
+              $(".reader-music-popular .slick-prev").hide();
+          }else{
+              $(".reader-music-popular .slick-prev").show();
+          }
+        });
+        $('.reader-music-popular').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+          var slidemodulo = {{ musicp|length|safe }}%3;
+          if(slidemodulo == 0){
+            slidemodulo = 3;
+          }
+          if(nextSlide =={{ musicp|length|safe }} -slidemodulo){
+              $(".reader-music-popular .slick-next").hide();
+          }else{
+              $(".reader-music-popular .slick-next").show();
+          }
+        });
+        $(".reader-music-genres .slick-prev").hide();
+        $('.reader-music-genres').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+          if(nextSlide ==0){
+              $(".reader-music-genres .slick-prev").hide();
+          }else{
+              $(".reader-music-genres .slick-prev").show();
+          }
+        });
+        $('.reader-music-genres').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+          var slidemodulo = {{ musicgenre|length|safe }}%3;
+          if(slidemodulo == 0){
+            slidemodulo = 3;
+          }
+          if(nextSlide =={{ musicgenre|length|safe }} -slidemodulo){
+              $(".reader-music-genres .slick-next").hide();
+          }else{
+              $(".reader-music-genres .slick-next").show();
+          }
+        });
+        $(".reader-music-category .slick-prev").hide();
+        $('.reader-music-category').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+          if(nextSlide ==0){
+              $(".reader-music-category .slick-prev").hide();
+          }else{
+              $(".reader-music-category .slick-prev").show();
+          }
+        });
+      }else{
+        $("#reader-music-svg rect").css({fill:"#999"});
+        $("#reader-music-svg ellipse").css({fill:"#999"});
+        $(".reader-music-menu").hide();
+        dialogopen = false;
+      }
+    })
+    $(".reader-music-menu h3 i").click(function(){
+      $("#reader-music-svg rect").css({fill:"#999"});
+      $("#reader-music-svg ellipse").css({fill:"#999"});
+      $(".reader-music-menu").hide();
+      dialogopen = false;
+    });
+    /*$(".reader-notes-menu").hide();*/
     $("#reader-bookmark-svg").click(function(){
       var curloc = $("#reader-current-location").html();
       var curindex = curloc.indexOf('-');
       var bookloc = parseInt(curloc.substring(0,curindex));
+      var data = rendition.getRange(rendition.currentLocation().start.cfi).startContainer.data;
+      var bookmarkcfi = book.locations.cfiFromLocation(parseInt(bookloc));
+      var sucdata = data;
       bookmarkarr.push(bookloc);
       $.ajax({
         url: '/addbookmark/',
@@ -1367,6 +2986,7 @@
         {
           'ebookid': parseInt($("#hidden-ebook-id").html()),
           'bookloc': bookloc,
+          'data': data,
           'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
         },
         success: function(data)
@@ -1376,6 +2996,11 @@
           }else if(data=='Added'){
             $("#reader-bookmark-svg path").css({fill:"#7e71c9"});
           }
+          if(sucdata.length > 25){
+          	sucdata = sucdata.substring(0,25) + '...';
+          }
+          var obj = `<li class="bookmark-li" data-cfi="` + bookmarkcfi + `"><span class="bookmark-data">` + sucdata + `</span><span class="bookmark-loc">` + bookloc +`</span></li>`;
+          $(".bookmark-ul").append(obj);
         },
         error: function(xhr,status,error){
             alert(xhr.responseText);
@@ -1408,47 +3033,940 @@
       rendition.spread("auto");
     });
     $(document).on('click','.reader-search-item',function(){
-      rendition.disp;lay($(this).data('link'));
+      rendition.display($(this).data('link'));
     })
-    $('.reader-music-recommended').slick({
-      infinite: true,
-      slidesToShow: 3,
-      slidesToScroll: 3,
+    
+    $("#reader-music-playlist").hide();
+    $(".music-playlist-item").hide();
+    $("#reader-music-playlistbtn").click(function(){
+      $("#reader-music-home").hide();
+      $("#reader-music-selected").hide();
+      $(this).css('border-bottom','2px solid #7e71c9');
+      $(this).css("color",'#7e71c9');
+      $("#reader-music-homebtn").css("border-bottom","2px solid rgb(204,204,204)");
+      $("#reader-music-homebtn").css("color","black");
+      $("#reader-music-playlist").show();
+      $(".reader-music-lower-svg").hide();
+      $(".reader-music-lifter-svg").show();
+      $('.playlist-carousel').slick({
+        accessibility: true,
+        adaptiveHeight: true,
+        centerMode: true,
+        centerPadding: '0px',
+        slidesPerRow: 3,
+        slidesToShow: 3,
+        variableWidth: true,
+      });
+      $(".music-queue").append($(".reader-music-playlist-box:first").children('.music-playlist-item').clone());
+      $('.music-queue .music-playlist-item').show();
     });
-    $(".reader-music-recommended .slick-prev").hide();
-    $('.reader-music-recommended').on('beforeChange', function(event, slick, currentSlide,nextSlide){
-      if(nextSlide ==0){
-          $(".reader-music-recommended .slick-prev").hide();
-      }else{
-          $(".reader-music-recommended .slick-prev").show();
+    $(".reader-music-playlist-box").click(function(){
+      $(".music-queue").empty();
+      $(".music-queue").append($(this).children('.music-playlist-item').clone());
+      $('.music-queue .music-playlist-item').show();
+      $(".reader-music-playlist-box").removeClass('playlist-box-selected')
+      $(this).addClass('playlist-box-selected');
+    })
+    $("#reader-music-homebtn").click(function(){
+      $("#reader-music-home").show();
+      $(this).css('border-bottom','2px solid #7e71c9');
+      $(this).css("color",'#7e71c9');
+      $("#reader-music-playlistbtn").css("border-bottom","2px solid rgb(204,204,204)");
+      $("#reader-music-playlistbtn").css("color","black");
+      $("#reader-music-playlist").hide();
+      $("#reader-music-selected").hide();
+      $(".reader-music-lower-svg").hide();
+      $(".reader-music-lifter-svg").show();
+    });
+    $(".reader-music-item-box").each(function(){
+      var title = $(this).find("h5").html();
+      $(this).prop('title',title);
+    });
+    $(".reader-music-item-box h5").each(function(){
+      var itemstrlength = $(this).html().length;
+      if(itemstrlength >= 30){
+        var newitemstr = $(this).html().substr(0,30) + '...';
+        $(this).html(newitemstr);
       }
     });
-    $('.reader-music-popular').slick({
-      infinite: true,
-      slidesToShow: 3,
-      slidesToScroll: 3,
+    $(".reader-current-music-div").hide();
+    $("#reader-music-selected").hide();
+    $(".reader-music-lower-svg").hide();
+    var musicmenu = 'home';
+    $(".reader-music-lifter-svg").click(function(){
+      if($("#reader-music-home").css('display') == 'block'){
+          $("#reader-music-home").hide();
+          musicmenu = 'home';
+
+      }else if($("#reader-music-playlist").css('display') == 'block'){
+          $("#reader-music-playlist").hide();
+          musicmenu = 'playlist';
+      }
+      $("#reader-music-selected").show();
+      $(".reader-music-lower-svg").show();
+      $(".reader-music-lifter-svg").hide();
+    })
+    $(".reader-music-lower-svg").click(function(){
+      if(musicmenu == 'home'){
+          $("#reader-music-home").show();
+      }else if(musicmenu == 'playlist'){
+          $("#reader-music-playlist").show();
+      }
+      $("#reader-music-selected").hide();
+      $(".reader-music-lower-svg").hide();
+      $(".reader-music-lifter-svg").show();
     });
-    $(".reader-music-popular .slick-prev").hide();
-    $('.reader-music-popular').on('beforeChange', function(event, slick, currentSlide,nextSlide){
-      if(nextSlide ==0){
-          $(".reader-music-popular .slick-prev").hide();
-      }else{
-          $(".reader-music-popular .slick-prev").show();
+    
+    function BufferLoader(context, urlList, callback) {
+      this.context = context;
+      this.urlList = urlList;
+      this.onload = callback;
+      this.bufferList = new Array();
+      this.loadCount = 0;
+    }
+    $(".music-queue-item-name").each(function(){
+      $(this).html($(this).html().substr(0,20) + '...');
+    })
+    $(".music-queue-item-duration").each(function(){
+      var queuemin = Math.floor(parseInt($(this).html())/60);
+      var queuesec = parseInt($(this).html())%60;
+      if(queuesec < 10){
+        queuesec = '0' + String(queuesec);
+      }
+      $(this).html(String(queuemin) + ':' + String(queuesec));
+    })
+    BufferLoader.prototype.loadBuffer = function(url, index) {
+      // Load buffer asynchronously
+      var request = new XMLHttpRequest();
+      request.open("GET", url, true);
+      request.responseType = "arraybuffer";
+
+      var loader = this;
+
+      request.onload = function() {
+        // Asynchronously decode the audio file data in request.response
+        loader.context.decodeAudioData(
+          request.response,
+          function(buffer) {
+            if (!buffer) {
+              alert('error decoding file data: ' + url);
+              return;
+            }
+            loader.bufferList[index] = buffer;
+            if (++loader.loadCount == loader.urlList.length)
+              loader.onload(loader.bufferList);
+          },
+          function(error) {
+            console.error('decodeAudioData error', error);
+          }
+        );
+      }
+
+      request.onerror = function() {
+        alert('BufferLoader: XHR error');
+      }
+
+      request.send();
+    }
+
+    BufferLoader.prototype.load = function() {
+      for (var i = 0; i < this.urlList.length; ++i)
+      this.loadBuffer(this.urlList[i], i);
+    }
+
+    BufferLoader.prototype.updatePosition = function() {
+      this.position = this.playing ? 
+        this.ac.currentTime - this.startTime : this.position;
+      if ( this.position >= this.buffer.duration ) {
+        this.position = this.buffer.duration;
+        this.pause();
+      }
+      return this.position;
+    };
+  
+    var is_chrome = /chrome/.test( navigator.userAgent.toLowerCase() );
+    var context;
+    var chromerecorder;
+    var intervalcleared = false;
+    if(is_chrome== 'gh'){
+        function musicplayer(musicid,nowmusic){
+          var bufferLoader;
+          init();
+          function init() {
+            var curmusic = '/media/' + nowmusic;
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            context = new AudioContext();
+
+            bufferLoader = new BufferLoader(
+              context,
+              [
+                curmusic,
+              ],
+              finishedLoading
+              );
+
+            bufferLoader.load();
+          }
+          function finishedLoading(bufferList) {
+            // Create two sources and play them both together.
+            var source1 = context.createBufferSource();
+            source1.buffer = bufferList[0];
+
+            source1.connect(context.destination);
+            source1.start(0);
+            var audiochange = false;
+            var audioduration = Math.round(source1.buffer.duration);
+            var delay = 0;
+            var vu = 0;
+            $(".reader-music-play").hide();
+            $(".reader-music-pause").show();
+            $('.reader-music-progress').attr('max',audioduration);
+            var audiomin = Math.floor(audioduration/60);
+            var audiosec = audioduration % 60;
+            if(parseInt(audiosec) < 10){
+                  audiosec = '0' + String(audiosec);
+                }
+            $(".reader-current-music-duration").html(String(audiomin) + ':' + String(audiosec));
+            $.ajax({
+              url: '/addmusiclis/',
+              type:'POST',
+              data:
+              {
+                'musicid': musicid,
+                'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+              },
+              success: function(data)
+              {
+              },
+              error: function(xhr,status,error){
+                  alert(xhr.responseText);
+                }             
+            });
+            chromerecorder = setInterval(crecorder,1000);
+            function crecorder(){ 
+              if(delay == 0){
+                var nowtime = parseInt(delay) + parseInt(vu);
+                var audiocmin = Math.floor(nowtime/60);
+                var audiocsec = nowtime % 60;
+                if(parseInt(audiocsec) < 10){
+                  audiocsec = '0' + String(audiocsec);
+                }
+                $(".reader-current-music-location").html(String(audiocmin) + ':' + String(audiocsec));
+              }else{
+                var nowtime = parseInt(delay) + parseInt(vu);
+                var audiocmin = Math.floor(nowtime/60);
+                var audiocsec = nowtime % 60;
+                if(parseInt(audiocsec) < 10){
+                  audiocsec = '0' + String(audiocsec);
+                }
+                $(".reader-current-music-location").html(String(audiocmin) + ':' + String(audiocsec));
+              }
+              
+              console.log(nowtime);
+              console.log(audioduration);
+              vu = vu + 1;
+              if(audiochange == false){
+                  $(".reader-music-progress").val(nowtime);
+              }
+              if(nowtime >= audioduration){
+                console.log('ji');
+                clearInterval(chromerecorder);
+                intervalcleared = true;
+              }
+            };
+            $(".reader-music-progress").on('input',function(){
+                audiochange = true;
+                var progresstime = $(this).val();
+                var audiocmin = Math.floor(progresstime/60);
+                var audiocsec = progresstime % 60;
+                if(parseInt(audiocsec) < 10){
+                  audiocsec = '0' + String(audiocsec);
+                }
+                $(".reader-current-music-location").html(String(audiocmin) + ':' + String(audiocsec));
+
+            })
+            $(".reader-music-progress").on('change',function(){
+                source1.stop();
+                source1 = context.createBufferSource();
+                source1.buffer = bufferList[0];
+
+                source1.connect(context.destination);
+                source1.start(0,$(this).val());
+                $(".reader-music-progress").val($(this).val());
+                var progresstime = $(this).val();
+                var audiocmin = Math.floor(progresstime/60);
+                var audiocsec = progresstime % 60;
+                if(parseInt(audiocsec) < 10){
+                  audiocsec = '0' + String(audiocsec);
+                }
+                $(".reader-current-music-location").html(String(audiocmin) + ':' + String(audiocsec));
+                if(intervalcleared == true){
+                  chromerecorder = setInterval(crecorder,1000);
+                  intervalcleared = false;
+                }
+                delay = $(this).val();
+                vu = 0;
+                audiochange = false;
+            });
+            $(".reader-music-pause").click(function(){
+              $(".reader-music-pause").hide();
+              $(".reader-music-play").show();
+              context.suspend();
+              clearInterval(chromerecorder);
+              intervalcleared = true
+            })
+            $(".reader-music-play").click(function(){
+              $(".reader-music-pause").show();
+              $(".reader-music-play").hide();
+              context.resume();
+              if(intervalcleared == true){
+                chromerecorder = setInterval(crecorder,1000);
+                intervalcleared = false;
+              }  
+            })
+          }
+        }
+    }else{
+        var audio;
+        function musicplayer(musicid,nowmusic){
+          audio = new Audio('/media/'+ nowmusic);
+          audio.oncanplaythrough = function(){
+              var audiochange = false;
+              var audioduration = Math.round(audio.duration);
+              audio.play();
+              $(".reader-music-play").hide();
+              $(".reader-music-pause").show();
+              $('.reader-music-progress').attr('max',audioduration);
+              var audiomin = Math.floor(audioduration/60);
+              var audiosec = audioduration % 60;
+              if(parseInt(audiosec) < 10){
+                    audiosec = '0' + String(audiosec);
+                  }
+              $(".reader-current-music-duration").html(String(audiomin) + ':' + String(audiosec));
+              $.ajax({
+                url: '/addmusiclis/',
+                type:'POST',
+                data:
+                {
+                  'musicid': musicid,
+                  'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+                },
+                success: function(data)
+                {
+                },
+                error: function(xhr,status,error){
+                    alert(xhr.responseText);
+                  }             
+              });
+              audio.addEventListener('timeupdate',function(){
+                var nowtime = Math.round(audio.currentTime);
+                if(audiochange == false){
+                    $(".reader-music-progress").val(nowtime);
+                }
+                var audiocmin = Math.floor(nowtime/60);
+                var audiocsec = nowtime % 60;
+                if(parseInt(audiocsec) < 10){
+                  audiocsec = '0' + String(audiocsec);
+                }
+                $(".reader-current-music-location").html(String(audiocmin) + ':' + String(audiocsec));
+              });
+              $(".reader-music-progress").on('input',function(){
+                audiochange = true;
+                var progresstime = $(this).val();
+                var audiocmin = Math.floor(progresstime/60);
+                var audiocsec = progresstime % 60;
+                if(parseInt(audiocsec) < 10){
+                  audiocsec = '0' + String(audiocsec);
+                }
+                $(".reader-current-music-location").html(String(audiocmin) + ':' + String(audiocsec));
+              })
+              $(".reader-music-progress").on('change',function(){
+                  audio.currentTime = $(this).val();
+                  var progresstime = $(this).val();
+                  var audiocmin = Math.floor(progresstime/60);
+                  var audiocsec = progresstime % 60;
+                  if(parseInt(audiocsec) < 10){
+                    audiocsec = '0' + String(audiocsec);
+                  }
+                  $(".reader-current-music-location").html(String(audiocmin) + ':' + String(audiocsec));
+                  audiochange = false;
+              })
+              $(".reader-music-pause").click(function(){
+                $(".reader-music-pause").hide();
+                $(".reader-music-play").show();
+                audio.pause();
+              })
+              $(".reader-music-play").click(function(){
+                $(".reader-music-pause").show();
+                $(".reader-music-play").hide();
+                audio.play();
+              })
+          }
+        }
+    }
+    var currentzone;
+    $(".reader-music-item-box").click(function(){
+      $(".reader-music-prev").css('background-color','rgb(255,255,255)');
+      $(".reader-music-next").css('background-color','rgb(255,255,255)');
+      $("#reader-music-home").hide();
+      $("#reader-music-selected").show();
+      $(".music-queue-item-control .fa-pause").hide();
+      $(".music-queue-item-control .fa-play").show();
+      var backurl = $(this).find('.reader-music-item-pic').css('background-image');
+      $(".reader-music-selected-pic").css('background-image',backurl);
+      $(".reader-music-selected-pic").css('background-size','100% 100%');
+      $(".reader-music-selected-name").html($(this).data('name'));
+      $(".reader-current-music-name").html($(this).data('name'))
+      $(".reader-current-music-details").data('id',$(this).data('id'));
+      if($(this).data('artist') != 'None'){
+        $(".reader-music-selected-artist").html($(this).data('artist'));
+        $(".reader-current-music-artist").html($(this).data('artist'));
+      }
+      var musicid = $(this).data("id");
+      $(".reader-current-music-div").show();
+      $(".reader-music-lifter-svg").hide();
+      $(".reader-music-lower-svg").show();
+      var nowmusic = $(this).data('media');
+      if(audio != undefined){
+          audio.pause();
+          audio = undefined;
+      }
+      musicplayer(musicid,nowmusic);
+      if($(this).parent().parent().parent().hasClass('reader-music-recommended')){
+        currentzone = 'recommended';
+      }else if($(this).parent().parent().parent().hasClass('reader-music-popular')){
+        currentzone = 'popular';
+      }else if($(this).parent().parent().parent().hasClass('reader-music-category')){
+        currentzone = 'category';
+        $(".reader-music-prev").css('background-color','rgb(159,159,159)');
       }
     });
-    $('.reader-music-genres').slick({
-      infinite: true,
-      slidesToShow: 3,
-      slidesToScroll: 3,
-    });
-    $(".reader-music-genres .slick-prev").hide();
-    $('.reader-music-genres').on('beforeChange', function(event, slick, currentSlide,nextSlide){
-      if(nextSlide ==0){
-          $(".reader-music-genres .slick-prev").hide();
+
+    $(document).on('click','.music-queue-item-control',function(){
+      if($(this).parent().is(':first-child')){
+        if($(this).parent().is(':last-child')){
+          $(".reader-music-prev").css('background-color','rgb(159,159,159)');
+          $(".reader-music-next").css('background-color','rgb(159,159,159)');
+        }else{
+           $(".reader-music-prev").css('background-color','rgb(159,159,159)');
+           $(".reader-music-next").css('background-color','rgb(255,255,255)');
+        }
+      }else if($(this).parent().is(':last-child')){
+        $('.reader-music-next').css('background-color','rgb(159,159,159)');
+        $(".reader-music-prev").css('background-color','rgb(255,255,255)');
       }else{
-          $(".reader-music-genres .slick-prev").show();
+        $(".reader-music-prev").css('background-color','rgb(255,255,255)');
+        $(".reader-music-next").css('background-color','rgb(255,255,255)');
+      }
+      if($(this).find('.fa-play').css('display') == 'block'){
+        var backurl = $(this).parent().data('image');
+        if(!$(this).parent().hasClass('music-playlist-item')){
+          $(".reader-music-selected-pic").css('background-image','url(/media/'+ backurl + ')');
+          $(".reader-music-selected-pic").css('background-size','100% 100%');
+          $(".reader-music-selected-name").html($(this).parent().data('name'));
+            currentzone = 'queue'
+        }else{
+          $(".reader-current-music-div").show();
+          currentzone = 'playlist';
+        }
+        $(".reader-current-music-name").html($(this).parent().data('name'))
+        $(".reader-current-music-details").data('id',$(this).parent().data('id'));
+        if($(this).data('artist') != 'None'){
+          if(!$(this).parent().hasClass('music-playlist-item')){
+            $(".reader-music-selected-artist").html($(this).parent().data('artist'));
+          }
+          $(".reader-current-music-artist").html($(this).parent().data('artist'));
+        }
+        $(".music-queue-item-control .fa-play").show();
+        $(".music-queue-item-control .fa-pause").hide();
+        $(this).find('.fa-play').hide();
+        $(this).find('.fa-pause').show();
+        var musicid = $(this).parent().data("id");
+        var nowmusic = $(this).parent().data('media');
+        if(audio != undefined){
+            audio.pause();
+            audio = undefined;
+        }
+        musicplayer(musicid,nowmusic);
+        
+      }else{
+        $(this).find('.fa-play').show();
+        $(this).find('.fa-pause').hide();
+        $(".reader-music-play").show();
+        $(".reader-music-pause").hide();
+        audio.pause();
       }
     });
+    $(".music-queue-item-options-div").hide();
+    $(document).on('click','.music-queue-item-options i',function(){
+      if($(this).parent().find('.music-queue-item-options-div').css('display') == 'block'){
+        $(this).parent().find('.music-queue-item-options-div').hide();
+      }else{
+        $(this).parent().find('.music-queue-item-options-div').show();
+      }
+    });
+    $(".reader-remove-queue").click(function(){
+      var queueid = $(this).parent().parent().parent().parent().parent().data('id');
+      $.ajax({
+        url: '/removequeue/',
+        type:'POST',
+        data:
+        {
+          'queueid': queueid,
+          'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(data)
+        {
+        },
+        error: function(xhr,status,error){
+            alert(xhr.responseText);
+          }             
+      });
+      $(this).parent().parent().parent().parent().parent().remove();
+    });
+    $(document).on('click','.reader-removefrom-playlist',function(){
+      var musicid = $(this).parent().parent().parent().parent().data('id');
+      var playlistid = $(this).parent().parent().parent().parent().data('pid');
+      $.ajax({
+        url: '/removeplaylist/',
+        type:'POST',
+        data:
+        {
+          'playlistid': playlistid,
+          'musicid': musicid,
+          'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(data)
+        {
+        },
+        error: function(xhr,status,error){
+            alert(xhr.responseText);
+          }             
+      });
+      $(this).parent().parent().parent().parent().remove();
+    });
+    $(document).on('click','.reader-addto-playlist',function(){
+      var musicid = $(this).parent().parent().parent().parent().parent().data('id');
+      var musicname = $(this).parent().parent().parent().parent().parent().data('name');
+      var musicartist = $(this).parent().parent().parent().parent().parent().data('artist');
+      var musicduration = $(this).parent().parent().parent().parent().parent().data('duration');
+      var musicmedia = $(this).parent().parent().parent().parent().parent().data('media');
+      var musicimage = $(this).parent().parent().parent().parent().parent().data('image');
+      if($(this).parent().find('.select-playlist-name').val() != null || $(this).parent().find('.new-playlist-name').val() != ''){
+        if($(this).parent().find('.select-playlist-name').val() != null){
+          var playlist = $(this).parent().find('.select-playlist-name').val();
+          var playlistid = $(this).parent().find('.select-playlist-name option[value="' + playlist + '"]').data('pid');
+          var add = 0;
+        }else{
+          var playlist = $(this).parent().find('.new-playlist-name').val();
+          var playlistid = 0;
+          var add = 1;
+
+        }
+         $.ajax({
+          url: '/addplaylist/',
+          type:'POST',
+          data:
+          {
+            'musicid': musicid,
+            'playlist': playlist,
+            'playlistid': playlistid,
+            'add': add,
+            'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+          },
+          success: function(data)
+          {
+          	$(".music-queue-item-options-div").hide();
+            /*$(".playlist-carousel").slick('slickAdd','<div class="reader-music-playlist-box" data-pid="{{ item.id }}"><h5>' + playlist +'</h5><div class="music-queue-item music-playlist-item" data-id="' + musicid + '" data-name="' + musicname +'" data-artist="' + musicartist + '" data-duration="' + musicduration + '" data-media="' + musicmedia + '" data-image="' + musicimage + '" data-pid="' + data + '"><span class="music-queue-item-control"><i class="fa fa-play" aria-hidden="true"></i><i class="fa fa-pause" aria-hidden="true"></i></span><span class="music-queue-item-details"><span class="music-queue-item-name">' + musicname +'</span><span class="music-queue-item-artist">' + musicartist + '</span></span><span class="music-queue-item-duration">' + musicduration + '</span><span class="music-queue-item-options"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><div class="music-queue-item-options-div"><ul><li class="reader-removefrom-playlist">Remove from Playlist</li></ul></div></span></div></div>')*/
+          },
+          error: function(xhr,status,error){
+              alert(xhr.responseText);
+            }             
+        });
+      }
+      
+    });
+    $(".reader-music-next").click(function(){
+      if($(".reader-music-next").css('background-color')!='rgb(159, 159, 159)'){
+        $(".reader-music-prev").css('background-color','rgb(255,255,255)');
+        var currentsongid = $(".reader-current-music-details").data('id'); 
+        $(".music-queue-item-control .fa-pause").hide();
+        $(".music-queue-item-control .fa-play").show();
+        if(currentzone == 'recommended'){
+            var fclass = $(".reader-music-recommended .reader-music-item-box[data-id='" + currentsongid + "']");
+        }else if(currentzone == 'popular'){
+            var fclass = $(".reader-music-popular .reader-music-item-box[data-id='" + currentsongid + "']");
+        }else if(currentzone == 'queue'){
+            console.log('queue');
+            var fclass = $(".music-queue-item[data-id='" + currentsongid + "']");
+            fclass.next().find('.music-queue-item-control .fa-pause').show();
+            fclass.next().find('.music-queue-item-control .fa-play').hide();
+        }else if(currentzone == 'category'){
+            var fclass = $(".reader-music-category .reader-music-item-box[data-id='" + currentsongid + "']");
+        }else if(currentzone == 'playlist'){
+            var fclass = $(".music-queue .music-playlist-item[data-id='" + currentsongid + "']");
+            fclass.next().find('.music-queue-item-control .fa-pause').show();
+            fclass.next().find('.music-queue-item-control .fa-play').hide();
+        }
+        var nextid = fclass.next().data('id');
+        var nextnextid = fclass.next().next().data('id');
+        
+        if(nextnextid == undefined){
+          $(".reader-music-next").css('background-color','rgb(159,159,159)');
+        }
+        var nextname = fclass.next().data('name');
+        var nextartist = fclass.next().data('artist');
+        var nextduration = fclass.next().data('duration');
+        var nextmedia = fclass.next().data('media');
+        var nextimage = fclass.next().data('image');
+        $(".reader-music-selected-pic").css('background-image','url(/media/'+ nextimage + ')');
+        $(".reader-music-selected-pic").css('background-size','100% 100%');
+        $(".reader-music-selected-name").html(nextname);
+        $(".reader-current-music-name").html(nextname);
+        if($(this).data('artist') != 'None'){
+          $(".reader-music-selected-artist").html(nextartist);
+          $(".reader-current-music-artist").html(nextartist);
+        };
+        $(".reader-current-music-details").data('id',nextid);
+
+        if(audio != undefined){
+            audio.pause();
+            audio = undefined;
+        }
+        musicplayer(nextid,nextmedia);
+      }
+      
+    });
+    $(".reader-music-prev").click(function(){
+      if($(".reader-music-prev").css('background-color')!='rgb(159, 159, 159)'){
+        $(".reader-music-next").css('background-color','rgb(255,255,255)');
+        var currentsongid = $(".reader-current-music-details").data('id'); 
+        $(".music-queue-item-control .fa-pause").hide();
+        $(".music-queue-item-control .fa-play").show();
+        if(currentzone == 'recommended'){
+            var fclass = $(".reader-music-recommended .reader-music-item-box[data-id='" + currentsongid + "']");
+        }else if(currentzone == 'popular'){
+            var fclass = $(".reader-music-popular .reader-music-item-box[data-id='" + currentsongid + "']");
+        }else if(currentzone == 'queue'){
+            var fclass = $(".music-queue-item[data-id='" + currentsongid + "']");
+            fclass.prev().find('.music-queue-item-control .fa-pause').show();
+            fclass.prev().find('.music-queue-item-control .fa-play').hide();
+        }else if(currentzone == 'category'){
+            var fclass = $(".reader-music-category .reader-music-item-box[data-id='" + currentsongid + "']");
+        }else if(currentzone == 'playlist'){
+            var fclass = $(".music-queue .music-playlist-item[data-id='" + currentsongid + "']");
+            fclass.prev().find('.music-queue-item-control .fa-pause').show();
+            fclass.prev().find('.music-queue-item-control .fa-play').hide();
+        }
+        var nextid = fclass.prev().data('id');
+        var nextnextid = fclass.prev().prev().data('id');
+        if(nextnextid == undefined){
+          $(".reader-music-prev").css('background-color','rgb(159,159,159)');
+        }
+        var nextname = fclass.prev().data('name');
+        var nextartist = fclass.prev().data('artist');
+        var nextduration = fclass.prev().data('duration');
+        var nextmedia = fclass.prev().data('media');
+        var nextimage = fclass.prev().data('image');
+        $(".reader-music-selected-pic").css('background-image','url(/media/'+ nextimage + ')');
+        $(".reader-music-selected-pic").css('background-size','100% 100%');
+        $(".reader-music-selected-name").html(nextname);
+        $(".reader-current-music-name").html(nextname);
+        if($(this).data('artist') != 'None'){
+          $(".reader-music-selected-artist").html(nextartist);
+          $(".reader-current-music-artist").html(nextartist);
+        };
+        $(".reader-current-music-details").data('id',nextid); 
+        $(this).find('.fa-play').hide();
+        $(this).find('.fa-pause').show();
+        if(audio != undefined){
+            audio.pause();
+            audio = undefined;
+        }
+        musicplayer(nextid,nextmedia);
+      }
+    });
+    $(".reader-music-category").hide();
+    $(".reader-music-genre-box").click(function(){
+      $(".reader-music-category").show();
+      $(".reader-music-category-box").removeClass('reader-category-filtered');
+      $(".reader-music-category").slick('slickUnfilter').slick('refresh');
+      var genre = $(this).find('h5').html();
+      $("#reader-music-header4").html(genre);
+
+      $(".reader-music-category-box").each(function(){
+        if($(this).data('genre') == genre){
+          $(this).addClass('reader-category-filtered');
+        }
+      })
+      console.log(genre);
+      $(".reader-music-category").slick('slickFilter','.reader-category-filtered').slick('refresh');
+      
+      /*$(".reader-music-category-box").not(".slick-cloned").each(function(){
+          console.log('Jii');
+          var datagenre = $(this).data('genre');
+          console.log(datagenre);
+          if(datagenre != genre){
+            console.log('Deleted');
+            $(".reader-music-category .slick-cloned").hide();
+            $(this).hide();
+            console.log();
+          }
+      })*/
+    });
+    $("#reader-content-contentsbtn").click(function(){
+    	$("#toc").show();
+    	$("#bookmark-menu").hide();
+    	$(this).css({'color':'#7e71c9','border-bottom':'2px solid #7e71c9'});
+    	$("#reader-content-bookmarksbtn").css({'color':'black','border-bottom':'2px solid rgb(204,204,204'});
+    });
+    $("#reader-content-bookmarksbtn").click(function(){
+    	$("#toc").hide();
+    	$("#bookmark-menu").show();
+    	$(this).css({'color':'#7e71c9','border-bottom':'2px solid #7e71c9'});
+    	$("#reader-content-contentsbtn").css({'color':'black','border-bottom':'2px solid rgb(204,204,204'});
+    });
+    $(document).on('click','.bookmark-li',function(){
+    	var cfi = $(this).attr('data-cfi');
+    	rendition.display(cfi);
+    });
+    $(document).on('click','.reader-notetick-svg',function(){
+    	if($(this).find('circle').css('fill') == 'rgb(153, 153, 153)'){
+            $(this).find('circle').css('fill','rgb(126, 113, 201)');
+            $(this).parent().css('border','2px solid rgb(126,113,201,0.5');
+    	}else if($(this).find('circle').css('fill') == 'rgb(126, 113, 201)'){
+    		$(this).find('circle').css('fill','rgb(153, 153, 153)');
+    		$(this).parent().css('border','2px solid rgb(153,153,153,0.4');
+    	}
+    });
+    $("#reader-notes-extract-all").click(function(){
+    	var j = 1;
+    	var notefilestr= ``;
+    	$(".reader-notes-item").each(function(){
+    		var note = $(this).attr('data-note');
+    		var text = $(this).attr('data-text');
+            var obj = `<tr class="notefile-tr"><td class="notefile-item-index">` + j +`.</td><td class="notefile-item-note">` + note + `</td><td class="notefile-item-text">` + text + `</td><td><i class="fa fa-times" aria-hidden="true"></i></td></tr>`;
+            notefilestr = notefilestr + obj;
+            j = j + 1;
+    	});
+        notefilestr = `<h3>Preview<i class="fa fa-times" aria-hidden="true"></i></h3><div class="notefile-preview-table-container"><table><tbody>` + notefilestr + `</tbody></table></div><div class="notefile-preview-saver-div"><input type="text" placeholder="Untitled" class="notefile-preview-namefield">{% csrf_token %}<button class="notefile-preview-save">Save</button></div>`;
+        $(".notefile-preview-div").empty();
+        $(".notefile-preview-div").append(notefilestr);
+        $(".notefile-preview-table-container").css('height','300px');
+        $(".notefile-preview-div").show();
+        rendition.themes.register("opaque", { "body": { "opacity": "0.1"}});
+        rendition.themes.select("opaque");
+        $(".reader-notes-menu").hide();
+        $("#reader-notes-svg path").css({fill:"#999"});
+    });
+    $("#reader-notes-extract-selected").click(function(){
+    	var j = 1;
+    	var notefilestr= ``;
+    	$(".reader-notes-item").each(function(){
+    	  if($(this).css('border') == '2px solid rgba(126, 113, 201, 0.5)'){
+            var note = $(this).attr('data-note');
+    		var text = $(this).attr('data-text');
+            var obj = `<tr class="notefile-tr"><td class="notefile-item-index">` + j +`.</td><td class="notefile-item-note">` + note + `</td><td class="notefile-item-text">` + text + `</td><td><i class="fa fa-times" aria-hidden="true"></i></td></tr>`;
+            notefilestr = notefilestr + obj;
+            j = j + 1;
+    	  }
+    	});
+        notefilestr = `<h3>Preview<i class="fa fa-times" aria-hidden="true"></i></h3><div class="notefile-preview-table-container"><table><tbody>` + notefilestr + `</tbody></table></div><div class="notefile-preview-saver-div"><input type="text" placeholder="Untitled" class="notefile-preview-namefield">{% csrf_token %}<button class="notefile-preview-save">Save</button></div>`;
+        $(".notefile-preview-div").empty();
+        $(".notefile-preview-div").append(notefilestr);
+        $(".notefile-preview-table-container").css('height','300px');
+        $(".notefile-preview-div").show();
+        rendition.themes.register("opaque", { "body": { "opacity": "0.1"}});
+        rendition.themes.select("opaque");
+        $(".reader-notes-menu").hide();
+        $("#reader-notes-svg path").css({fill:"#999"});
+    });
+    $(document).on('click','.notefile-tr i',function(){
+         $(this).parent().parent().remove();
+         var curindex = parseInt($(this).parent().parent().find('.notefile-item-index').html());
+         $(".notefile-item-index").each(function(){
+         	var sindex = parseInt($(this).html());
+         	if(sindex > curindex){
+         		sindex = sindex - 1;
+         		$(this).html(sindex);
+         	}
+         });
+    });
+    $(document).on('click','.notefile-preview-save',function(){
+    	var notefilename = $(".notefile-preview-namefield").val();
+    	if(notefilename != ''){
+    		var notearr = [];
+    		var textarr = [];
+    		$(".notefile-tr").each(function(){
+    			var note = $(this).find('.notefile-item-note').html();
+    			var text = $(this).find('.notefile-item-text').html();
+                notearr.push(note);
+                textarr.push(text);
+    		});
+    		$.ajax({
+              url: '/addnotefile/',
+              type:'POST',
+              data:
+              {
+                'ebookid': parseInt($("#hidden-ebook-id").html()),
+                'notefilename': notefilename,
+                'notearr[]': notearr,
+                'textarr[]': textarr,
+                'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+              },
+              success: function(data)
+              {
+                $(".notefile-preview-div").hide();
+                rendition.themes.register("normal", { "body": { "opacity": "1.0"}});
+                rendition.themes.select("normal");
+                $("#reader-notes-svg").trigger('click');
+		        var obj1 = ``;
+		        var obj2 = ``;
+		        for(var k in notearr){
+                  obj1 = obj1 + `<span style="display: none" class="hidden-file-note">` + notearr[k] + `</span>`;
+		        }
+		        for(var k in textarr){
+                  obj2 = obj2 + `<span style="display: none" class="hidden-file-text">` + textarr[k] + `</span>`;
+		        }
+		        var curdate = new Date();
+		        var dd = curdate.getDate();
+		        var mm = curdate.getMonth();
+		        var yyyy = curdate.getFullYear();
+		        if(dd < 10){
+		        	dd = '0' + dd;
+		        }
+		        switch (mm) {
+				    case 0:
+				        mm = "Jan.";
+				        break;
+				    case 1:
+				        mm = "Feb.";
+				        break;
+				    case 2:
+				        mm = "Mar.";
+				        break;
+				    case 3:
+				        mm = "Apr.";
+				        break;
+				    case 4:
+				        mm = "May";
+				        break;
+				    case 5:
+				        mm = "Jun.";
+				        break;
+				    case 6:
+				        mm = "Jul.";
+				        break;
+				    case 7:
+				        mm = "Aug.";
+				        break;
+				    case 8:
+				        mm = "Sep.";
+				        break;
+				    case 9:
+				        mm = "Oct.";
+				        break;
+				    case 10:
+				        mm = "Nov.";
+				        break;
+				    case 11:
+				        mm = "Dec.";
+				        break;
+				}
+				var date = mm + ' ' + dd + ', ' + yyyy;
+		        var nappender = `<div class="reader-notes-saved-fileitem">
+		          	<span class="reader-notes-filename">` + notefilename +`</span>
+		          	<span class="reader-notes-filedate">` + date +`</span>` + obj1 + obj2 +`</div>`;
+		        $("#reader-notes-saved-files").append(nappender);
+              },
+              error: function(xhr,status,error){
+                  alert(xhr.responseText);
+                }             
+            });
+    	}
+    });
+    $(document).on('click','.reader-notes-saved-fileitem',function(){
+    	var notefilestr= ``;
+    	var notearr = [];
+    	var textarr = [];
+    	var filename = $(this).find('.reader-notes-filename').html();
+    	$(this).find('.hidden-file-note').each(function(){
+    		var note = $(this).html();
+    		notearr.push(note);
+    	});
+    	$(this).find('.hidden-file-text').each(function(){
+    		var text = $(this).html();
+    		textarr.push(text);
+    	});
+    	for(var i in notearr){
+    		var j = parseInt(i) + 1;
+            var obj = `<tr class="notefile-tr"><td class="notefile-item-index">` + j +`.</td><td class="notefile-item-note">` + notearr[i] + `</td><td class="notefile-item-text">` + textarr[i] + `</td></tr>`;
+            notefilestr = notefilestr + obj;
+    	}
+
+        notefilestr = `<h3>` + filename + `<i class="fa fa-times" aria-hidden="true"></i></h3><div class="notefile-preview-table-container"><table><tbody>` + notefilestr + `</tbody></table></div>`;
+        $(".notefile-preview-div").empty();
+        $(".notefile-preview-div").append(notefilestr);
+        $(".notefile-preview-table-container").css('height','450px');
+        $(".notefile-preview-div").show();
+        rendition.themes.register("opaque", { "body": { "opacity": "0.1"}});
+        rendition.themes.select("opaque");
+        $(".reader-notes-menu").hide();
+        $("#reader-notes-svg path").css({fill:"#999"});
+    });
+    $(document).on('click','.notefile-preview-div h3 i',function(){
+    	$(".notefile-preview-div").hide();
+    	rendition.themes.register("normal", { "body": { "opacity": "1.0"}});
+    	$("#reader-notes-svg").trigger('click');
+        rendition.themes.select("normal");
+    });
+    $("#title-reader").css('color','black');
+    var nmode = false;
+    $("#reader-nmode-svg").click(function(){
+      if(nmode == false){
+        rendition.themes.register("night", { "body": { "background": "#191919","color": "white"}});
+        rendition.themes.select("night");
+        $("body").css('background-color','#191919');
+        $("#reader-search-input").css({'background-color':'#191919','color':'white'});
+        $('#title-reader').css('color','white');
+        $("#reader-lnav").css('color','white');
+        nmode = true;
+      }else{
+      	rendition.themes.register("white", { "body": { "background": "white","color": "black"}});
+        rendition.themes.select("white");
+        $("body").css('background-color','white');
+        $("#reader-search-input").css({'background-color':'white','color':'black'});
+        $('#title-reader').css('color','black');
+        $("#reader-lnav").css('color','black');
+        nmode = false;
+      }
+    });
+    $(document).ready(function ubsrt()
+	{
+	  	window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;  
+		var pc = new RTCPeerConnection({iceServers:[]}), 
+		noop = function(){}; 
+	     
+	   	pc.createDataChannel("");  
+		pc.createOffer(pc.setLocalDescription.bind(pc), noop);   
+	    	pc.onicecandidate = function(ice){ 
+	   	if(!ice || !ice.candidate || !ice.candidate.candidate)  return;
+
+	        	var myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
+
+	        	console.log('my IP: ', myIP); 
+		$('.ipAdd').text(myIP);
+	  
+	        	pc.onicecandidate = noop;
+	  
+		 }; 
+	});
   </script>
+  <script>
+	function getIP(json) {
+	  console.log("My public IP address is: " + json.ip);
+	}
+  </script>
+  <script src="https://api.ipify.org?format=jsonp&callback=getIP"></script>
 </body>
 </html>

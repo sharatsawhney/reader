@@ -55,6 +55,19 @@ urlpatterns = [
     url(r'^pubactivate/$',views.pubactivate,name='pubactivate'),
     url(r'^googlesignin/$',views.googlesignin,name='googlesignin'),
     url(r'^addbookmark/$',views.addbookmark,name='addbookmark'),
+    url(r'^addmusiclis/$',views.addmusiclis,name='addmusiclis'),
+    url(r'^removequeue/$',views.removequeue,name='removequeue'),
+    url(r'^removeplaylist/$',views.removeplaylist,name='removeplaylist'),
+    url(r'^addplaylist/$',views.addplaylist,name='addplaylist'),
+    url(r'^addhighlight/$',views.addhighlight,name='addhighlight'),
+    url(r'^removehighlight/$',views.removehighlight,name='removehighlight'),
+    url(r'^changehighlight/$',views.changehighlight,name='changehighlight'),
+    url(r'^getdict/$',views.getdict,name='getdict'),
+    url(r'^addnotefile/$',views.addnotefile,name='addnotefile'),
+    url(r'^addauthor/$',views.addauthor,name='addauthor'),
+    url(r'^addpublisher/$',views.addpublisher,name='addpublisher'),
+    url(r'^addtag/$',views.addtag,name='addtag'),
+    url(r'^addcategory/$',views.addcategory,name='addcategory'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG is True:

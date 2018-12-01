@@ -5,7 +5,7 @@ from rapp.forms import UserForm,UploadForm,PriceRangeSearchForm
 from django.contrib.auth import authenticate, login,logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from rapp.models import Authors,Publishers,Category,Ebooks,Subscribers,Usercart,Wishlist,Transactions,Dashboard,Notes,Lastpage,Uploaded,UserP,Adminacc,Gmailid,Bookmark,Tag
+from rapp.models import Authors,Publishers,Category,Ebooks,Subscribers,Usercart,Wishlist,Transactions,Dashboard,Notes,Lastpage,Uploaded,UserP,Adminacc,Gmailid,Bookmark,Tag,Musicgenre,Musictag,Music,Musiclis,Playlist,Highlight,Notefile,Notefileitem,Uploadadmin,Keyvalue
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
@@ -36,7 +36,7 @@ import logging, traceback
 import rapp.constants as constants
 import rapp.config as config
 from random import randint
-import requests
+import requests as req
 from datetime import datetime, timezone
 from haystack.generic_views import SearchView
 from haystack.forms import FacetedSearchForm
@@ -45,6 +45,8 @@ from haystack.query import SearchQuerySet
 from haystack.inputs import AutoQuery, Exact, Clean
 from google.oauth2 import id_token
 from google.auth.transport import requests
+import boto.s3
+from boto.s3.key import Key
 
 
 UserModel = get_user_model()
@@ -803,17 +805,133 @@ def reader(request,id):
     return render(request,'interface/the_outsiders_se_hinton/index.html',{})
 
 
+def recommender(user):
+    musiclis = Musiclis.objects.filter(user=user)
+    tagdict = {}
+    genredict = {}
+    for item in musiclis:
+        yeardiff = (datetime.now().year - item.time.year)*365
+        monthdff = (datetime.now().month - item.time.month)*30
+        daydiff = datetime.now().day - item.time.day
+        diff = datetime.now(timezone.utc) - item.time
+        if diff.days <= 3:
+            alpha = 1
+        elif 3 < diff.days <= 7:
+            alpha = 0.95
+        elif 3 < diff.days <= 7:
+            alpha = 0.90
+        elif 7 < diff.days <= 14:
+            alpha = 0.85
+        elif 14 < diff.days <= 21:
+            alpha = 0.80
+        elif 21 < diff.days <= 28:
+            alpha = 0.75
+        elif 28 < diff.days <= 40:
+            alpha = 0.70
+        elif 40 < diff.days <= 60:
+            alpha = 0.65
+        elif 60 < diff.days <= 100:
+            alpha = 0.60
+        elif diff.days > 100:
+            alpha = 0.55
+        for tag in item.music.tag.all():
+            if tag.name in tagdict:
+                tagdict[tag.name] = tagdict[tag.name] +  (1*alpha)
+            else:
+                tagdict[tag.name] = 1*alpha
+        if item.music.genre.name in genredict:
+            genredict[item.music.genre.name] = genredict[item.music.genre.name] + 1*alpha
+        else:
+            genredict[item.music.genre.name] = 1 * alpha
+    music = Music.objects.all()
+    musdict = {}
+    for mus in music:
+      if not Musiclis.objects.filter(music=mus, user=user).exists():
+        for tag in mus.tag.all():
+            if tag.name in tagdict:
+                if mus in musdict:
+                    musdict[mus] = musdict[mus] + tagdict[tag.name]
+                else:
+                    musdict[mus] = tagdict[tag.name]
+        if mus.genre.name in genredict:
+            if mus in musdict:
+                musdict[mus] = musdict[mus] + genredict[mus.genre.name]
+            else:
+                musdict[mus] = genredict[mus.genre.name]
+
+    return musdict
+
+
 def read(request,id):
+    musdict = recommender(request.user)
     book = Ebooks.objects.filter(id=id)[0]
     pages = book.pages
+    esource = book.content
+    ename = book.name
+    eauthor = book.author
+    elang = book.language
+    musicp = Music.objects.all().order_by('-listennum')
+    musicr = Music.objects.all().order_by('-priority')
+    def musicsorter(i,musdict):
+        if i in musdict:
+            p = musdict[i]
+        else:
+            p = 0
+        return p
+
+    musicrr = sorted(musicr, key=lambda i:musicsorter(i,musdict),reverse=True)
+    musicgenre = Musicgenre.objects.all()
+    existing_lis = []
+    new_lis = []
+    musiclis = Musiclis.objects.filter(user=request.user,queue=True)
+    for lisi in musiclis:
+        if lisi.music in existing_lis:
+            thu = {i for i, t in enumerate(new_lis) if t[0] == lisi.music.id}
+            new_lis[list(thu)[0]][5] = new_lis[list(thu)[0]][5] + 1
+        else:
+            existing_lis.append(lisi.music)
+            new_lis.append([lisi.music.id,lisi.music.name,lisi.music.artist,lisi.music.duration,lisi.music.media,1,lisi.music.image])
+    new_lis2 = sorted(new_lis,key=lambda i:i[5],reverse=True)
+    playlist = Playlist.objects.filter(user=request.user)
     if request.user.is_authenticated:
         checklen = len(Dashboard.objects.filter(user=request.user,ebook=book,active=True))
         if checklen >0:
             check = True
             bookmarks = Bookmark.objects.filter(user=request.user,ebook=book)
             bookmarkarr = []
+            bookmarkdataarr = []
             for bookmark in bookmarks:
                 bookmarkarr.append(bookmark.location)
+                bookmarkdataarr.append(bookmark.data)
+            highlightarr = []
+            highlightcolorarr = []
+            highlighttextarr = []
+            highlights = Highlight.objects.filter(user=request.user,ebook=book)
+            for highlight in highlights:
+                highlightarr.append(highlight.cfirange)
+                highlightcolorarr.append(highlight.color)
+                if highlight.text != None:
+                    highlighttextarr.append(highlight.text)
+                else:
+                    highlighttextarr.append('')
+            notes = Highlight.objects.filter(user=request.user,ebook=book,note=True)
+            notetextarr = []
+            noteselectedtextarr = []
+            notecfiarr = []
+            for note in notes:
+                notetextarr.append(note.text)
+                noteselectedtextarr.append(note.selectedtext)
+                notecfiarr.append(note.cfirange)
+            notefiles = Notefile.objects.filter(user=request.user,ebook=book)
+            notefileitems = Notefileitem.objects.filter(notefile__in=notefiles)
+            notefilearr = []
+            for file in notefiles:
+                filenotearr = []
+                filetextarr = []
+                for item in notefileitems.filter(notefile=file):
+                    filenotearr.append(item.note)
+                    filetextarr.append(item.text)
+                notefilearr.append([file.name,file.date,filenotearr,filetextarr])
         elif int(id) == 4:
             check = True
         else:
@@ -822,7 +940,8 @@ def read(request,id):
         check = True
     else:
         check = False
-    return render(request,'rapp/read.html',{'pages':pages,'id':id,'check':check,'bookmarkarr':bookmarkarr})
+
+    return render(request,'rapp/read.html',{'pages':pages,'id':id,'check':check,'bookmarkarr':bookmarkarr,'musicp':musicp,'musicr':musicrr,'musicgenre':musicgenre,'musiclis':new_lis2,'musiclislen':len(musiclis),'playlist':playlist,'esource':str(esource),'ename':ename,'eauthor':eauthor,'highlightarr':highlightarr,'highlightcolorarr':highlightcolorarr,'highlighttextarr':highlighttextarr,'elang':elang,'bookmarkdataarr':bookmarkdataarr,'notetextarr':notetextarr,'noteselectedtextarr':noteselectedtextarr,'notecfiarr':notecfiarr,'notefilearr':notefilearr})
 
 
 def sample(request,id):
@@ -1018,44 +1137,117 @@ def publisher(request):
 
 def secure(request):
     user = request.user
-    if user.email == 'sharatsawhneyy@gmail.com':
+    if Uploadadmin.objects.filter(user=user).exists():
         usercheck = True
     else:
         usercheck = False
     if request.method == 'POST':
         name = request.POST['name']
         author = request.POST['author']
-        publisher = request.POST['publisher']
+        try:
+          publisher = request.POST['publisher']
+        except Exception as e:
+            publisher = 'None'
+        publishdate = request.POST['publishdate']
         isbn = request.POST['isbn']
         price = request.POST['price']
         pages = request.POST['pages']
         category = request.POST['category']
+        ebookfile = request.FILES['ebookfile']
         image = request.FILES['image']
         language = request.POST['language']
         description = request.POST['description']
+        tags = request.POST.getlist('tags[]')
         priority = request.POST['priority']
 
-        publisher_name = Publishers.objects.filter(name=publisher)[0]
-        authorf = Authors.objects.get_or_create(name=author,publisher_name=publisher_name)
-        author_name = Authors.objects.filter(name=author,publisher_name=publisher_name)[0]
-        categoryf = Category.objects.filter(cat=category)[0]
-        if category == ('Engineering' or 'Medical'):
-            ebook = Ebooks.objects.get_or_create(name=name,author=author_name,publisher=publisher_name,price=price,pages=pages,category=categoryf,img=image,dayopt='3 days,7 days,14 days,21 days,1 month,1.5 months,2 months,3 months,4 months,5 months,6 months,12 months',language=language,description=description,priority=priority,isbn=isbn)
-            book = ebook[0]
-            latestid = book.id
-        else:
-            ebook = Ebooks.objects.get_or_create(name=name, author=author_name, publisher=publisher_name, price=price,
-                                                 pages=pages, category=categoryf, img=image,
-                                                 dayopt='3 days,7 days,14 days,21 days,1 month,1.5 months,2 months',
-                                                 language=language, description=description, priority=priority,
-                                                 isbn=isbn)
-            book = ebook[0]
-            latestid = book.id
-    else:
-        latestid = ''
-    publishers = Publishers.objects.all()
+        AWS_ACCESS_KEY_ID = 'AKIAI3WSXTMIMMG6VWWA'
+        AWS_SECRET_ACCESS_KEY = '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'
 
-    return render(request,'rapp/secure.html',{'latestid':latestid,'usercheck':usercheck,'publishers':publishers})
+        END_POINT = 'ap-south-1'  # eg. us-east-1
+        S3_HOST = 's3.ap-south-1.amazonaws.com'  # eg. s3.us-east-1.amazonaws.com
+        BUCKET_NAME = 'readerearth'
+        imagename = image.name
+        extension1 = imagename[imagename.rfind('.'):]
+        if len(extension1) <=1:
+            extension1 = None
+        filename = ebookfile.name
+        extension2 = filename[filename.rfind('.'):]
+        if len(extension2) <= 1:
+            extension2 = None
+        imagekey = Keyvalue.objects.filter(key='image')[0]
+        imkey = imagekey.value
+        imagekey.value = imagekey.value + 1
+        imagekey.save()
+        if extension1 != None:
+            UPLOADED_FILENAME = 'media/bookimages/' + str(imkey) + extension1
+            imageurl = UPLOADED_FILENAME
+        else:
+            UPLOADED_FILENAME = 'media/bookimages/' + str(imkey)
+            imageurl = UPLOADED_FILENAME
+        ebookkey = Keyvalue.objects.filter(key='ebook')[0]
+        ekey = ebookkey.value
+        ebookkey.value = ebookkey.value + 1
+        ebookkey.save()
+        if extension2 != None:
+            UPLOADED_FILENAME2 = 'media/epubs/' + str(ekey) + extension2
+            eurl = UPLOADED_FILENAME2
+        else:
+            UPLOADED_FILENAME2 = 'media/epubs/' + str(ekey)
+            eurl = UPLOADED_FILENAME2
+        # include folders in file path. If it doesn't exist, it will be created
+
+        s3 = boto.s3.connect_to_region(END_POINT,
+                                       aws_access_key_id=AWS_ACCESS_KEY_ID,
+                                       aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                                       host=S3_HOST)
+
+        bucket = s3.get_bucket(BUCKET_NAME)
+        k = Key(bucket)
+        k.key = UPLOADED_FILENAME
+        k.set_contents_from_file(image)
+        k = Key(bucket)
+        k.key = UPLOADED_FILENAME2
+        k.set_contents_from_file(ebookfile)
+
+        cat = Category.objects.filter(cat=category)[0]
+        catmodel = cat.catmodel
+        if catmodel == '3month':
+            dayopt = '3 days,7 days,14 days,21 days,1 month,1.5 months,2 months,3 months'
+        else:
+            dayopt = '3 days,7 days,14 days,21 days,1 month,1.5 months,2 months,3 months,4 months,5 months,6 months,12 months'
+
+        authorf = Authors.objects.filter(name=author)[0]
+        publisherf = Publishers.objects.filter(name=publisher)[0]
+        if publishdate == '':
+            publishdate = None
+        if publisher != '' and description != '<p><br></p>':
+            ebook = Ebooks.objects.create(name=name,author=authorf,publisher=publisherf,publishdate=publishdate,price=price,pages=pages,content=eurl,category=cat,
+                                  img=imageurl,dayopt=dayopt,language=language,description=description,priority=priority,isbn=isbn)
+        elif publisher == '' and description == '<p><br></p>':
+            ebook = Ebooks.objects.create(name=name, author=authorf, publishdate=publishdate, price=price,pages=pages, content=eurl, category=cat,
+                                  img=imageurl, dayopt=dayopt, language=language,priority=priority, isbn=isbn)
+        else:
+            if publisher == '':
+                ebook = Ebooks.objects.create(name=name, author=authorf, publishdate=publishdate,
+                                      price=price, pages=pages, content=eurl, category=cat,
+                                      img=imageurl, dayopt=dayopt, language=language, description=description,
+                                      priority=priority, isbn=isbn)
+            else:
+                ebook = Ebooks.objects.create(name=name, author=authorf, publisher=publisherf, publishdate=publishdate,
+                                      price=price, pages=pages, content=eurl, category=cat,
+                                      img=imageurl, dayopt=dayopt, language=language,
+                                      priority=priority, isbn=isbn)
+        if len(tags) > 0:
+            for tag in tags:
+                tagf = Tag.objects.filter(name=tag)[0]
+                ebook.tags.add(tagf)
+        ebook.save()
+    publishers = Publishers.objects.all()
+    cats = Category.objects.all()
+    tags = Tag.objects.all()
+    authors = Authors.objects.all()
+
+    return render(request,'rapp/secure.html',{'usercheck':usercheck,'publishers':publishers,'cats':cats,'tags':tags,'authors':authors})
 
 
 def bookrequest(request):
@@ -1201,10 +1393,248 @@ def addbookmark(request):
         ebookid = request.POST['ebookid']
         ebook = Ebooks.objects.filter(id=ebookid)[0]
         bookloc = request.POST['bookloc']
+        data = request.POST['data']
         if Bookmark.objects.filter(user=request.user,ebook=ebook,location=bookloc).exists():
             Bookmark.objects.filter(user=request.user, ebook=ebook, location=bookloc).delete()
             return HttpResponse('Deleted')
         else:
-            Bookmark.objects.create(user=request.user,ebook=ebook,location = bookloc)
+            Bookmark.objects.create(user=request.user,ebook=ebook,location = bookloc,data=data)
             return HttpResponse('Added')
 
+
+def addmusiclis(request):
+    if request.method == 'POST':
+        musicid = request.POST['musicid']
+        music = Music.objects.filter(id=musicid)[0]
+        Musiclis.objects.create(music=music,user=request.user)
+
+        return HttpResponse('Success')
+
+
+def removequeue(request):
+    if request.method == 'POST':
+        queueid = request.POST['queueid']
+        music = Music.objects.filter(id=queueid)
+        musiclis = Musiclis.objects.filter(music=music,user=request.user)
+        for lis in musiclis:
+            lis.queue = False
+            lis.save()
+
+        return HttpResponse('Success')
+
+
+def removeplaylist(request):
+    if request.method == 'POST':
+        playlistid = int(request.POST['playlistid'])
+        musicid = int(request.POST['musicid'])
+        playlist = Playlist.objects.filter(id=playlistid,user=request.user)[0]
+        for mus in playlist.music.all():
+            if mus.id == musicid:
+                playlist.music.remove(mus)
+        playlist.save()
+
+        return HttpResponse('Success')
+
+
+def addplaylist(request):
+    if request.method == 'POST':
+        musicid = int(request.POST['musicid'])
+        playlistname = request.POST['playlist']
+        playlistid = int(request.POST['playlistid'])
+        addi = int(request.POST['add'])
+        music = Music.objects.filter(id=musicid)[0]
+        if addi == 0:
+            playlist = Playlist.objects.filter(id=playlistid, user=request.user)[0]
+            playlist.music.add(music)
+            playlist.save()
+            playlistide = playlistid
+        elif addi == 1:
+            list = Playlist.objects.create(name=playlistname,user=request.user)
+            list.music.add(music)
+            list.save()
+            playlistide = list.id
+
+        return HttpResponse(playlistide)
+
+
+def addhighlight(request):
+    if request.method == 'POST':
+        cfirange = request.POST['cfirange']
+        ebookid = request.POST['ebookid']
+        ebook = Ebooks.objects.filter(id=ebookid)[0]
+        colora = request.POST['colora']
+        selected = request.POST['selected']
+        Highlight.objects.create(cfirange=cfirange,user=request.user,ebook=ebook,color=colora,note=False,selectedtext=selected)
+
+        return HttpResponse('success')
+
+
+def removehighlight(request):
+    if request.method == 'POST':
+        cfirange = request.POST['cfirange']
+        ebookid = request.POST['ebookid']
+        ebook = Ebooks.objects.filter(id=ebookid)[0]
+        Highlight.objects.filter(cfirange=cfirange,user=request.user,ebook=ebook)[0].delete()
+
+        return HttpResponse('success')
+
+
+def changehighlight(request):
+    if request.method == 'POST':
+        cfirange = request.POST['cfirange']
+        ebookid = request.POST['ebookid']
+        ebook = Ebooks.objects.filter(id=ebookid)[0]
+        colora = request.POST['color']
+        notenote = int(request.POST['notenote'])
+        notetext = request.POST['notetext']
+        selected = request.POST['selected']
+        if notenote == 0:
+            if Highlight.objects.filter(cfirange=cfirange, user=request.user, ebook=ebook).exists():
+                high = Highlight.objects.filter(cfirange=cfirange, user=request.user, ebook=ebook)[0]
+                high.color = colora
+                high.note = False
+                high.save()
+            else:
+                Highlight.objects.create(cfirange=cfirange,user=request.user,ebook=ebook,color=colora,note=False,selectedtext=selected)
+        elif notenote == 1:
+            if Highlight.objects.filter(cfirange=cfirange, user=request.user, ebook=ebook).exists():
+                high = Highlight.objects.filter(cfirange=cfirange, user=request.user, ebook=ebook)[0]
+                high.color = colora
+                high.note = True
+                high.text = notetext
+                high.save()
+            else:
+                Highlight.objects.create(cfirange=cfirange, user=request.user, ebook=ebook, color=colora, note=True,text=notetext,selectedtext=selected)
+
+        return HttpResponse('success')
+
+
+
+def getdict(request):
+    if request.method == 'POST':
+        word = request.POST['word']
+        if word[-1] == '.' or word[-1] == "'" or word[-1] == " ":
+            word = word[0:len(word)-1]
+        lang = request.POST['lang']
+        if lang == 'English':
+            langs = 'en'
+        elif lang == 'Hindi':
+            langs = 'hi'
+        app_id = 'c0ce2857'
+        app_key = '94c05bd02a17260ce98991443aec78d4'
+        language = langs
+        word_id = word
+        url = 'https://od-api.oxforddictionaries.com:443/api/v1/entries/' + language + '/' + word_id.lower()
+        r = req.get(url, headers={'app_id': app_id, 'app_key': app_key})
+
+        if r.status_code == 404 and (word[-1] == 's' or word[-1] == 'd'):
+            word = word[0:len(word)-1]
+            word_id = word
+            url = 'https://od-api.oxforddictionaries.com:443/api/v1/entries/' + language + '/' + word_id.lower()
+            r = req.get(url, headers={'app_id': app_id, 'app_key': app_key})
+        if r.status_code == 200:
+          try:
+            list1 = r.json()
+            url2 = 'https://od-api.oxforddictionaries.com:443/api/v1/entries/' + language + '/' + word_id.lower() + '/synonyms'
+            r2 = req.get(url2, headers={'app_id': app_id, 'app_key': app_key})
+            phoneticlist = []
+            categorylist = []
+            definelist = []
+            for item in list1['results'][0]['lexicalEntries']:
+                try:
+                    phoneticlist.append(item['pronunciations'][0]['phoneticSpelling'])
+                except KeyError:
+                    phoneticlist.append('')
+                categorylist.append(item['lexicalCategory'])
+                temparray = []
+                if item['lexicalCategory'] == 'Other':
+                    for jk in item['entries'][0]['senses']:
+                        temparray.append(jk['crossReferenceMarkers'][0])
+                    definelist.append(temparray)
+                else:
+                    for jk in item['entries'][0]['senses']:
+                        try:
+                            temparray.append(jk['definitions'][0])
+                        except KeyError:
+                            try:
+                                temparray.append(jk['subsenses'][0]['definitions'][0])
+                            except KeyError:
+                                temparray.append(jk['crossReferenceMarkers'][0])
+                    definelist.append(temparray)
+            syarray = []
+            for cat in categorylist:
+                syarray.append([])
+            if r2.status_code != 404:
+                list2 = r2.json()
+                n = 0
+                for item in list2['results'][0]['lexicalEntries']:
+                    if item['lexicalCategory'] in categorylist:
+                        index = categorylist.index(item['lexicalCategory'])
+                        tre2array = []
+                        for hj in item['entries'][0]['senses']:
+                            tre1array = []
+                            for kl in hj['synonyms']:
+                                tre1array.append(kl['text'])
+                            tre2array.append(tre1array)
+                        syarray[index] = tre2array
+                    n = n + 1
+          except JSONDecodeError:
+              phoneticlist = []
+              categorylist = []
+              definelist = []
+              syarray = []
+        else:
+            phoneticlist = []
+            categorylist = []
+            definelist = []
+            syarray = []
+        return HttpResponse(json.dumps({"phoneticlist": phoneticlist, "categorylist": categorylist,"definelist":definelist,"syarray":syarray}),
+                            content_type="application/json")
+
+
+def addnotefile(request):
+    if request.method == 'POST':
+        ebookid = request.POST['ebookid']
+        ebook = Ebooks.objects.filter(id=ebookid)[0]
+        notefilename = request.POST['notefilename']
+        notearr = request.POST.getlist('notearr[]')
+        textarr = request.POST.getlist('textarr[]')
+        file = Notefile.objects.create(name=notefilename,user=request.user,ebook=ebook)
+
+        for i in range(len(notearr)):
+            Notefileitem.objects.create(notefile=file,note=notearr[i],text=textarr[i])
+
+        return HttpResponse('success')
+
+
+def addauthor(request):
+    if request.method == 'POST':
+        authorname = request.POST['authorname']
+        Authors.objects.create(name=authorname)
+
+        return HttpResponse('success')
+
+
+def addpublisher(request):
+    if request.method == 'POST':
+        publishername = request.POST['publishername']
+        Publishers.objects.create(name=publishername)
+
+        return HttpResponse('success')
+
+
+def addtag(request):
+    if request.method == 'POST':
+        tagname = request.POST['tagname']
+        Tag.objects.create(name=tagname)
+
+        return HttpResponse('success')
+
+
+def addcategory(request):
+    if request.method == 'POST':
+        categoryname = request.POST['categoryname']
+        categorymodel = request.POST['categorymodel']
+        Category.objects.create(cat=categoryname,catmodel=categorymodel)
+
+        return HttpResponse('success')

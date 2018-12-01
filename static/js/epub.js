@@ -2112,7 +2112,7 @@ Object.defineProperty(exports, "__esModule", {
 var EPUBJS_VERSION = exports.EPUBJS_VERSION = "0.3";
 
 // Dom events to listen for
-var DOM_EVENTS = exports.DOM_EVENTS = ["keydown", "keyup", "keypressed", "mouseup", "mousedown", "click", "touchend", "touchstart"];
+var DOM_EVENTS = exports.DOM_EVENTS = ["keydown", "keyup", "keypressed", "mouseup", "mousedown", "click", "touchend", "touchstart","mousemove","mouseover","mouseenter","mouseleave","hover","dblclick"];
 
 var EVENTS = exports.EVENTS = {
   BOOK: {
@@ -10684,24 +10684,26 @@ var IframeView = function () {
 	}, {
 		key: "highlight",
 		value: function highlight(cfiRange) {
-			var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+			var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 			var cb = arguments[2];
 
 			var _this3 = this;
-
-			var className = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "epubjs-hl";
-			var styles = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+			var className = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "epubjs-hl";
+			var styles = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
 
 			if (!this.contents) {
 				return;
 			}
-			var attributes = Object.assign({ "fill": "yellow", "fill-opacity": "0.3", "mix-blend-mode": "multiply" }, styles);
+			
+			var datae = arguments[1];
+			var colora = datae.substring(0,datae.indexOf('@#$%^-decode##'));
+			var notetext = datae.substring(datae.indexOf('@#$%^-decode##')+14,datae.length);
+			var attributes = Object.assign({"fill":colora,"fill-opacity": "0.5", "mix-blend-mode": "multiply"}, styles);
 			var range = this.contents.range(cfiRange);
-
+            
 			var emitter = function emitter() {
 				_this3.emit(_constants.EVENTS.VIEWS.MARK_CLICKED, cfiRange, data);
 			};
-
 			data["epubcfi"] = cfiRange;
 
 			if (!this.pane) {
@@ -10716,11 +10718,50 @@ var IframeView = function () {
 			h.element.setAttribute("ref", className);
 			h.element.addEventListener("click", emitter);
 			h.element.addEventListener("touchstart", emitter);
+			h.element.addEventListener("mousemove",function(){
+               $(".hmarker-div").show();
+               $(".hmarker-div .hmarker-note").attr('data-text',notetext);
+               if(notetext.length < 20){
+                 $(".hmarker-div .hmarker-note").html(notetext);
+               }else{
+               	 var notetext2 = notetext.substring(0,20) + '...'
+               	 $(".hmarker-div .hmarker-note").html(notetext2);
+               }
+               if(notetext != ''){
+               	$(".hmarker-div button").css('margin-top','10px');
+               }else{
+               	$(".hmarker-div button").css('margin-top','20px');
+               }
+               $(".hmarker-div").attr('data-cfi',h.data.epubcfi);
+               rendition.on('mousemove',function(e){
+               	    var wwidth = $(window).width();
+		            var wheight = $(window).height();
+		            if(e.screenY +50 < wheight && e.screenX + 180 < wwidth){
+		              $(".hmarker-div").css({'top':e.screenY-100,'left':e.screenX-90});
+		            }else if(e.screenY +50>= wheight || e.screenX + 180>= wwidth){
+		              if(e.screenY + 50 >= wheight && e.screenX + 180 < wwidth){
+		                  var ydiff = e.screenY + 50- wheight;
+		                  $(".hmarker-div").css({'top':e.screenY-ydiff -100,'left':e.screenX-90});
+		              }else if(e.screenY + 50 < wheight && e.screenX + 180 >= wwidth){
+		                  var xdiff = e.screenX + 180 - wwidth;
+		                  $(".hmarker-div").css({'top':e.screenY-100,'left':e.screenX-xdiff-90});
+		              }else if(e.screenY + 50 >= wheight && e.screenX + 180 >= wwidth){
+		                  var xdiff = e.screenX + 180 - wwidth;
+		                  var ydiff = e.screenY + 50- wheight;
+		                  $(".hmarker-div").css({'top':e.screenY-ydiff-100,'left':e.screenX-xdiff-90});
+		              }
+		              
+		            }
+               })
+               
+
+			});
 
 			if (cb) {
 				h.element.addEventListener("click", cb);
 				h.element.addEventListener("touchstart", cb);
 			}
+
 			return h;
 		}
 	}, {
@@ -17919,7 +17960,7 @@ function proxyMouse(target, tracked) {
         this.target = target;
     }
 
-    var _arr = ['mouseup', 'mousedown', 'click', 'touchstart'];
+    var _arr = ['mouseup', 'mousedown', 'click', 'touchstart','mousemove','mouseover','mouseenter','mouseleave','hover','dblclick'];
     for (var _i = 0; _i < _arr.length; _i++) {
         var ev = _arr[_i];
         this.target.addEventListener(ev, function (e) {

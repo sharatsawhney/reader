@@ -21,6 +21,11 @@ class Publishers(models.Model):
 
 class Category(models.Model):
     cat = models.CharField(max_length=255)
+    CHOICES = (
+        ('3month', '3month'),
+        ('12month', '12month'),
+    )
+    catmodel = models.CharField(max_length=20, choices=CHOICES, default='3month')
 
     def __str__(self):
         return self.cat
@@ -36,13 +41,13 @@ class Tag(models.Model):
 class Ebooks(models.Model):
     name = models.CharField(max_length=255, unique=True)
     author = models.ForeignKey('Authors',on_delete=models.DO_NOTHING)
-    publisher = models.ForeignKey('Publishers',on_delete=models.DO_NOTHING)
+    publisher = models.ForeignKey('Publishers',on_delete=models.DO_NOTHING,null=True,default='')
     publishdate = models.DateField(blank=True,null=True)
     price = models.FloatField()
     pages = models.IntegerField()
-    content = models.FileField(upload_to='epub/',default='',blank=True)
+    content = models.URLField(default='')
     category = models.ForeignKey('Category',on_delete=models.DO_NOTHING,default=1)
-    img = models.ImageField(upload_to='images/',default='')
+    img = models.URLField(default='')
     CHOICES = (
         ('3 days','3 days'),
         ('7 days','7 days'),
@@ -65,7 +70,7 @@ class Ebooks(models.Model):
         ('Hindi','Hindi'),
     )
     language = models.CharField(max_length=30,choices= LANG_CHOICES,default='English')
-    description = models.TextField(default="",blank=True)
+    description = models.TextField(default="",blank=True,null=True)
     PRI_CHOICES = (
         (1,1),
         (2,2),
@@ -84,7 +89,7 @@ class Ebooks(models.Model):
         ('bookInactive','bookInactive'),
     )
     bookActive = models.CharField(max_length=20,choices= ACTIVE_CHOICES,default='bookActive')
-    isbn = models.CharField(max_length=14,default='')
+    isbn = models.CharField(max_length=14,default='',null=True)
     tags = models.ManyToManyField(Tag,blank=True)
     rating = models.FloatField(default=0)
     ratedusers = models.IntegerField(default=0)
@@ -236,6 +241,123 @@ class Bookmark(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, default='')
     ebook = models.ForeignKey('Ebooks',on_delete=models.DO_NOTHING)
     location = models.IntegerField()
+    data = models.TextField(default='')
 
     def __str__(self):
         return self.ebook.name
+
+
+class Musicgenre(models.Model):
+    name = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='musicgenre/',null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Musictag(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
+class Music(models.Model):
+    name = models.CharField(max_length=255)
+    artist = models.CharField(max_length=255,blank=True,null=True)
+    image = models.ImageField(upload_to='musicimages/')
+    duration = models.IntegerField()
+    media = models.FileField(upload_to='music/')
+    genre = models.ForeignKey('Musicgenre',on_delete=models.DO_NOTHING)
+    tag = models.ManyToManyField(Musictag,blank=True)
+    listennum = models.IntegerField(default=0)
+    PRI_CHOICES = (
+        (1, 1),
+        (2, 2),
+        (3, 3),
+        (4, 4),
+        (5, 5),
+        (6, 6),
+        (7, 7),
+        (8, 8),
+        (9, 9),
+        (10, 10),
+    )
+    priority = models.IntegerField(choices= PRI_CHOICES,default=5)
+    publishdate = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Musiclis(models.Model):
+    music = models.ForeignKey('Music',on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    time = models.DateTimeField(auto_now_add=True)
+    queue = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.music.name
+
+
+class Playlist(models.Model):
+    name = models.CharField(max_length=255)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    music = models.ManyToManyField(Music,blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Highlight(models.Model):
+    cfirange = models.TextField()
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    ebook = models.ForeignKey('Ebooks',on_delete=models.DO_NOTHING)
+    CHOICES = (
+        ('rgb(255, 237, 165)', 'rgb(255, 237, 165)'),
+        ('rgb(219, 255, 183)', 'rgb(219, 255, 183)'),
+        ('rgb(255, 219, 219)', 'rgb(255, 219, 219)'),
+        ('rgb(201, 237, 237)', 'rgb(201, 237, 237)'),
+    )
+    color = models.CharField(max_length=255, choices=CHOICES,default='rgb(255, 237, 165)')
+    note = models.BooleanField(default=False)
+    text = models.TextField(blank=True,null=True)
+    selectedtext = models.TextField(default='')
+    time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.cfirange
+
+
+class Notefile(models.Model):
+    name = models.CharField(max_length=255)
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    ebook = models.ForeignKey(Ebooks,on_delete=models.DO_NOTHING)
+    date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Notefileitem(models.Model):
+    notefile = models.ForeignKey(Notefile,on_delete=models.DO_NOTHING)
+    note = models.TextField()
+    text = models.TextField()
+
+    def __str__(self):
+        return self.notefile.name
+
+
+class Uploadadmin(models.Model):
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+
+    def __str__(self):
+        return self.user.username
+
+
+class Keyvalue(models.Model):
+    key = models.CharField(max_length=255)
+    value = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.key
