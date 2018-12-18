@@ -1,5 +1,5 @@
 from django.contrib import admin
-from rapp.models import Authors,Publishers,Ebooks,UserP,Adminacc,Subscribers,Category,Usercart,Wishlist,Dashboard,Transactions,Notes,Lastpage,Uploaded,Gmailid,Bookmark,Tag,Musicgenre,Musictag,Music,Musiclis,Playlist,Highlight,Notefile,Notefileitem,Uploadadmin,Keyvalue
+from rapp.models import Authors,Publishers,Ebooks,UserP,Adminacc,Subscribers,Category,Usercart,Wishlist,Dashboard,Transactions,Notes,Lastpage,Uploaded,Gmailid,Bookmark,Tag,Musicgenre,Musictag,Music,Musiclis,Playlist,Highlight,Notefile,Notefileitem,Uploadadmin,Keyvalue,Offer,Bestseller,Detailview,Readview,Sampleview,Genreview,Newreleaseview,Bestsellerview,Searchview,Rateduser,Percentageread,Readlocation,ConnectionHistory
 
 
 admin.site.register(Authors)
@@ -29,3 +29,16 @@ admin.site.register(Notefile)
 admin.site.register(Notefileitem)
 admin.site.register(Uploadadmin)
 admin.site.register(Keyvalue)
+admin.site.register(Offer)
+admin.site.register(Bestseller)
+admin.site.register(Detailview)
+admin.site.register(Readview)
+admin.site.register(Sampleview)
+admin.site.register(Genreview)
+admin.site.register(Newreleaseview)
+admin.site.register(Bestsellerview)
+admin.site.register(Searchview)
+admin.site.register(Rateduser)
+admin.site.register(Percentageread)
+admin.site.register(Readlocation)
+admin.site.register(ConnectionHistory)

@@ -171,12 +171,15 @@ EMAIL_PORT = 587
 ADMIN_SITE_HEADER = "Reader Earth"
 DEFAULT_FROM_EMAIL = 'contact@readerearth.com'
 
-
 HAYSTACK_CONNECTIONS = {
-              'default': {
-                    'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-                    'URL': 'http://127.0.0.1:9200/',
-                    'INDEX_NAME': 'haystack_ebooks',
-              },
-    }
+    'default': {
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://127.0.0.1:8983/solr/tester',                 # Assuming you created a core named 'tester' as described in installing search engines.
+        'ADMIN_URL': 'http://127.0.0.1:8983/solr/admin/cores',
+        'INCLUDE_SPELLING': True,
+        # ...or for multicore...
+        # 'URL': 'http://127.0.0.1:8983/solr/mysite',
+    },
+}
+
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'

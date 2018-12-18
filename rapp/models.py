@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from multiselectfield import MultiSelectField
 from django.contrib.auth.models import User
 from datetime import datetime, timezone
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Authors(models.Model):
@@ -45,9 +46,9 @@ class Ebooks(models.Model):
     publishdate = models.DateField(blank=True,null=True)
     price = models.FloatField()
     pages = models.IntegerField()
-    content = models.URLField(default='')
+    content = models.CharField(max_length=255,default='')
     category = models.ForeignKey('Category',on_delete=models.DO_NOTHING,default=1)
-    img = models.URLField(default='')
+    img = models.CharField(max_length=255,default='')
     CHOICES = (
         ('3 days','3 days'),
         ('7 days','7 days'),
@@ -214,11 +215,11 @@ class Notes(models.Model):
 class Lastpage(models.Model):
     user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
     ebook = models.ForeignKey('Ebooks',on_delete=models.DO_NOTHING)
-    page = models.IntegerField()
-    time = models.DateTimeField(default=datetime.now)
+    epubcfi = models.TextField(default='')
+    time = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.page)
+        return str(self.epubcfi)
 
 
 class Uploaded(models.Model):
@@ -361,3 +362,139 @@ class Keyvalue(models.Model):
 
     def __str__(self):
         return self.key
+
+
+class Offer(models.Model):
+    name1 = models.CharField(max_length=255)
+    name2 = models.CharField(max_length=255)
+    ebooks = models.ManyToManyField(Ebooks)
+    percentbool = models.BooleanField(default=True)
+    trueoffer = models.BooleanField(default=False)
+    offerlowlimit = models.IntegerField(null=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    offerhighlimit = models.IntegerField(null=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
+
+    def __str__(self):
+        return str(str(self.name1) + str(self.name2))
+
+
+class Bestseller(models.Model):
+    name = models.CharField(max_length=255)
+    ebooks = models.ManyToManyField(Ebooks)
+
+    def __str__(self):
+        return self.name
+
+
+class Detailview(models.Model):
+    ebook = models.ForeignKey(Ebooks,on_delete=models.DO_NOTHING)
+    user =models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    time = models.DateTimeField(auto_now_add=True)
+    duration = models.IntegerField()
+    profilevector = models.TextField(default='')
+    
+    def __str__(self):
+        return self.ebook.name
+    
+    
+class Readview(models.Model):
+    ebook = models.ForeignKey(Ebooks,on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    time = models.DateTimeField(auto_now_add=True)
+    duration = models.IntegerField()
+    profilevector = models.TextField(default='')
+    
+    def __str__(self):
+        return self.ebook.name
+
+
+class Sampleview(models.Model):
+    ebook = models.ForeignKey(Ebooks, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    time = models.DateTimeField(auto_now_add=True)
+    duration = models.IntegerField()
+    profilevector = models.TextField(default='')
+
+    def __str__(self):
+        return self.ebook.name
+
+
+class Genreview(models.Model):
+    genre = models.ForeignKey(Category,on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    time = models.DateTimeField(auto_now_add=True)
+    duration = models.IntegerField()
+    profilevector = models.TextField(default='')
+
+    def __str__(self):
+        return self.genre.cat
+
+
+class Newreleaseview(models.Model):
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    time = models.DateTimeField(auto_now_add=True)
+    duration = models.IntegerField()
+
+    def __str__(self):
+        return self.user.username
+
+
+class Bestsellerview(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    time = models.DateTimeField(auto_now_add=True)
+    duration = models.IntegerField()
+
+    def __str__(self):
+        return self.user.username
+
+
+class Searchview(models.Model):
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    time = models.DateTimeField(auto_now_add=True)
+    duration = models.IntegerField()
+    profilevector = models.TextField('')
+
+    def __str__(self):
+        return self.user.username
+
+
+class Rateduser(models.Model):
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    ebook = models.ForeignKey(Ebooks,on_delete=models.DO_NOTHING)
+    rating = models.IntegerField()
+
+    def __str__(self):
+        return self.user.username
+
+
+class Percentageread(models.Model):
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    ebook = models.ForeignKey('Ebooks',on_delete=models.DO_NOTHING)
+    percent = models.FloatField(null=True)
+
+    def __str__(self):
+        return str(self.percent)
+
+
+class Readlocation(models.Model):
+    readmodel = models.ForeignKey(Percentageread,on_delete=models.DO_NOTHING)
+    location = models.IntegerField()
+    PHASE_CHOICES = (
+        ('full', 'full'),
+        ('left', 'left'),
+        ('right', 'right'),
+    )
+    phase = models.CharField(max_length=10, choices=PHASE_CHOICES, default='full')
+
+    def __str__(self):
+        return self.phase
+
+
+class ConnectionHistory(models.Model):
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    publicip = models.CharField(max_length=100)
+    localip = models.CharField(max_length=100)
+    status = models.IntegerField(default=0)
+    echo = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.localip

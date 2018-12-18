@@ -5,7 +5,7 @@ from rapp.forms import UserForm,UploadForm,PriceRangeSearchForm
 from django.contrib.auth import authenticate, login,logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from rapp.models import Authors,Publishers,Category,Ebooks,Subscribers,Usercart,Wishlist,Transactions,Dashboard,Notes,Lastpage,Uploaded,UserP,Adminacc,Gmailid,Bookmark,Tag,Musicgenre,Musictag,Music,Musiclis,Playlist,Highlight,Notefile,Notefileitem,Uploadadmin,Keyvalue
+from rapp.models import Authors,Publishers,Category,Ebooks,Subscribers,Usercart,Wishlist,Transactions,Dashboard,Notes,Lastpage,Uploaded,UserP,Adminacc,Gmailid,Bookmark,Tag,Musicgenre,Musictag,Music,Musiclis,Playlist,Highlight,Notefile,Notefileitem,Uploadadmin,Keyvalue,Offer,Bestseller,Detailview,Readview,Sampleview,Genreview,Newreleaseview,Bestsellerview,Searchview,Rateduser,Percentageread,Readlocation,ConnectionHistory
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
@@ -37,7 +37,7 @@ import rapp.constants as constants
 import rapp.config as config
 from random import randint
 import requests as req
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from haystack.generic_views import SearchView
 from haystack.forms import FacetedSearchForm
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -47,6 +47,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 import boto.s3
 from boto.s3.key import Key
+from nltk.corpus import stopwords
 
 
 UserModel = get_user_model()
@@ -342,13 +343,46 @@ def shop(request):
 
 def detail(request,id):
     ebook = Ebooks.objects.filter(id=id)[0]
-    try:
-        Wishlist.objects.filter(user=request.user,ebook=ebook)[0]
-        heart = True
-    except:
-        heart = False
+    if request.user.is_authenticated:
+        profilevector = ''
+        profile_author = str(ebook.author.name).replace(" ","").lower()
+        profilevector = profilevector + profile_author + ' ' + profile_author + ' ' + profile_author
+        profile_publisher = str(ebook.publisher.name).replace(" ","").lower()
+        profilevector = profilevector + ' ' + profile_publisher
+        profile_category = str(ebook.category.cat).replace(" ","").lower()
+        profilevector =  profilevector + ' ' + profile_category + ' ' + profile_category
+        for tag in ebook.tags.all():
+            tag = str(tag).replace(" ","").lower()
+            profilevector = profilevector + ' ' + tag + ' ' + tag + ' ' + tag + ' ' + tag
+        Detailview.objects.create(ebook=ebook,user=request.user,duration=0,profilevector=profilevector)
+        try:
+            rating = Rateduser.objects.filter(user=request.user,ebook=ebook)[0].rating
+        except Exception as e:
+            rating = 0
+    else:
+        rating = 0
+    ebooks = Ebooks.objects.all()
 
-    return render(request,'rapp/detail.html',{'ebook':ebook,'heart':heart})
+    if request.user.is_authenticated:
+        wishlist = Wishlist.objects.filter(user=request.user)
+        wisharray = []
+        for wish in wishlist:
+            wisharray.append(wish.ebook.id)
+    else:
+        wisharray = []
+    sugbooks = Ebooks.objects.filter(author=ebook.author)
+    if sugbooks.count() > 1:
+        sfbooks = sugbooks.exclude(id=ebook.id).order_by('-rating')
+        sftitle = 'Author'
+    elif Ebooks.objects.filter(publisher=ebook.publisher).count() > 1 and ebook.publisher.name != 'None':
+        sfbooks =  Ebooks.objects.filter(publisher=ebook.publisher).exclude(id=ebook.id).order_by('-rating')
+        sftitle = 'Publisher'
+    if sfbooks.count() <= 5:
+        sfless = True
+    else:
+        sfless = False
+
+    return render(request,'rapp/detail.html',{'ebook':ebook,'ebooks':ebooks,'rating':rating,'wisharray':wisharray,'sfbooks':sfbooks,'sfless':sfless,'sftitle':sftitle})
 
 
 @login_required
@@ -374,41 +408,42 @@ def add_cart(request):
     if request.method == 'POST':
         ebooknumber = request.POST['ebooknumber']
         ebook = Ebooks.objects.filter(id=ebooknumber)[0]
-        oprice = ebook.price
-        if ebook.category.cat == ('Engineering' or 'Medical'):
+        nprice = ebook.price
+        if ebook.category.catmodel == '12month':
             def getprice(argument):
                 switcher = {
-                    '3 days': 0.05*oprice,
-                    '7 days': 0.08*oprice,
-                    '14 days': 0.13*oprice,
-                    '21 days': 0.17*oprice,
-                    '1 month': 0.20*oprice,
-                    '1.5 months': 0.26*oprice,
-                    '2 months': 0.30*oprice,
-                    '3 months': 0.35*oprice,
-                    '4 months': 0.40*oprice,
-                    '5 months': 0.45*oprice,
-                    '6 months': 0.50*oprice,
-                    '12 months': 0.65*oprice
+                    '3 days': 0.12*nprice,
+                    '7 days': 0.18*nprice,
+                    '14 days': 0.24*nprice,
+                    '21 days': 0.30*nprice,
+                    '1 month': 0.35*nprice,
+                    '1.5 months': 0.40*nprice,
+                    '2 months': 0.45*nprice,
+                    '3 months': 0.48*nprice,
+                    '4 months': 0.50*nprice,
+                    '5 months': 0.53*nprice,
+                    '6 months': 0.55*nprice,
+                    '12 months': 0.70*nprice
                 }
                 return switcher.get(argument,"nothing")
-            price = getprice('1 month')
+            price = getprice('21 days')
         else:
             def getprice(argument):
                 switcher = {
-                    '3 days': 0.08*oprice,
-                    '7 days': 0.15*oprice,
-                    '14 days': 0.25*oprice,
-                    '21 days': 0.32*oprice,
-                    '1 month': 0.40*oprice,
-                    '1.5 months': 0.50*oprice,
-                    '2 months': 0.60*oprice
+                    '3 days': 0.25*nprice,
+                    '7 days': 0.35*nprice,
+                    '14 days': 0.40*nprice,
+                    '21 days': 0.45*nprice,
+                    '1 month': 0.50*nprice,
+                    '1.5 months': 0.55*nprice,
+                    '2 months': 0.65*nprice,
+                    '3 months':0.70*nprice
                 }
                 return switcher.get(argument,"nothing")
-            price = getprice('1 month')
+            price = getprice('21 days')
         check = Usercart.objects.filter(user=request.user,ebook=ebook)
         if check.count() == 0:
-            usercart = Usercart.objects.get_or_create(user=request.user,ebook=ebook,duration='1 month',nprice=price)
+            usercart = Usercart.objects.get_or_create(user=request.user,ebook=ebook,duration='21 days',nprice=price)
             if usercart:
                 return HttpResponse('Added to cart successfully!')
             else:
@@ -508,7 +543,7 @@ def wishlist(request):
 @login_required
 def delete_wishlist(request):
     if request.method == 'POST':
-        ebookid = request.POST['ebookid']
+        ebookid = int(request.POST['ebookid'])
         ebook = Ebooks.objects.filter(id=ebookid)[0]
         wishlist = Wishlist.objects.filter(user=request.user,ebook=ebook)[0]
         wishlist.delete()
@@ -520,44 +555,46 @@ def mtc(request):
     if request.method == 'POST':
         ebookid = request.POST['ebookid']
         ebook = Ebooks.objects.filter(id=ebookid)[0]
-        wishlist = Wishlist.objects.filter(user=request.user,ebook=ebook)[0]
-        wishlist.delete()
-        oprice = ebook.price
-        if ebook.category.cat == ('Engineering' or 'Medical'):
-            def getprice(argument):
-                switcher = {
-                    '3 days': 0.05 * oprice,
-                    '7 days': 0.08 * oprice,
-                    '14 days': 0.13 * oprice,
-                    '21 days': 0.17 * oprice,
-                    '1 month': 0.20 * oprice,
-                    '1.5 months': 0.26 * oprice,
-                    '2 months': 0.30 * oprice,
-                    '3 months': 0.35 * oprice,
-                    '4 months': 0.40 * oprice,
-                    '5 months': 0.45 * oprice,
-                    '6 months': 0.50 * oprice,
-                    '12 months': 0.65 * oprice
-                }
-                return switcher.get(argument, "nothing")
-
-            nprice = getprice('1 month')
+        if Usercart.objects.filter(user=request.user,ebook=ebook).exists():
+            return HttpResponse('Already in Cart!')
         else:
-            def getprice(argument):
-                switcher = {
-                    '3 days': 0.08 * oprice,
-                    '7 days': 0.15 * oprice,
-                    '14 days': 0.25 * oprice,
-                    '21 days': 0.32 * oprice,
-                    '1 month': 0.40 * oprice,
-                    '1.5 months': 0.50 * oprice,
-                    '2 months': 0.60 * oprice
-                }
-                return switcher.get(argument, "nothing")
-
-            nprice = getprice('1 month')
-        usercart = Usercart.objects.get_or_create(user=request.user, ebook=ebook,duration='1 month',nprice=nprice)
-        return HttpResponse('Success')
+            wishlist = Wishlist.objects.filter(user=request.user,ebook=ebook)[0]
+            wishlist.delete()
+            nprice = ebook.price
+            if ebook.category.catmodel == '12month':
+                def getprice(argument):
+                    switcher = {
+                        '3 days': 0.12*nprice,
+                        '7 days': 0.18*nprice,
+                        '14 days': 0.24*nprice,
+                        '21 days': 0.30*nprice,
+                        '1 month': 0.35*nprice,
+                        '1.5 months': 0.40*nprice,
+                        '2 months': 0.45*nprice,
+                        '3 months': 0.48*nprice,
+                        '4 months': 0.50*nprice,
+                        '5 months': 0.53*nprice,
+                        '6 months': 0.55*nprice,
+                        '12 months': 0.70*nprice
+                    }
+                    return switcher.get(argument,"nothing")
+                price = getprice('21 days')
+            else:
+                def getprice(argument):
+                    switcher = {
+                        '3 days': 0.25*nprice,
+                        '7 days': 0.35*nprice,
+                        '14 days': 0.40*nprice,
+                        '21 days': 0.45*nprice,
+                        '1 month': 0.50*nprice,
+                        '1.5 months': 0.55*nprice,
+                        '2 months': 0.65*nprice,
+                        '3 months':0.70*nprice
+                    }
+                    return switcher.get(argument,"nothing")
+                price = getprice('21 days')
+            usercart = Usercart.objects.create(user=request.user, ebook=ebook,duration='21 days',nprice=price)
+            return HttpResponse('Success')
 
 
 @login_required
@@ -573,11 +610,11 @@ def mtw(request):
 @login_required
 def atw(request):
     if request.method == 'POST':
-        ebookid = request.POST['ebooknumber']
+        ebookid = int(request.POST['ebooknumber'])
         ebook = Ebooks.objects.filter(id=ebookid)[0]
         check = Wishlist.objects.filter(user=request.user,ebook=ebook)
-        if check.count() == 0:
-            wish = Wishlist.objects.get_or_create(user=request.user,ebook=ebook)
+        if not check.exists():
+            wish = Wishlist.objects.create(user=request.user,ebook=ebook)
             if wish:
                 return HttpResponse('Added to wishlist successfully!')
             else:
@@ -652,7 +689,9 @@ def payment_failure(request):
 
 @login_required()
 def dashboard(request):
-    remain = []
+    remaind = []
+    remainh = []
+    remainm = []
     def transformer(duration):
         switcher = {
             '3 days': 3,
@@ -791,13 +830,27 @@ def dashboard(request):
                             seconddif = 60 + seconddif
 
         effective = (yeardif*360) + (monthdif*30) + daydif + (hourdif/24) + (minutedif/1440) + (seconddif/86400)
+        dayu = (yeardif*360) + (monthdif*30) + daydif
+        houru = hourdif
+        minu = minutedif
+        if hourdif < 0:
+            dayu = dayu -1
+            houru = 24 + hourdif
+        if minutedif < 0:
+            houru = houru - 1
+            minu = 60 + minutedif
+        rdayu = transformer(dash.duration) - dayu - 1
+        rhouru = 24 - houru - 1
+        rminu = 60 - minu
         if effective > transformer(dash.duration):
             dash.active = False
         else:
-            remain.append(round(transformer(dash.duration)-effective,1))
+            remaind.append(rdayu)
+            remainh.append(rhouru)
+            remainm.append(rminu)
     bdashes = Dashboard.objects.filter(user=request.user,duration='Buy')
 
-    return render(request,'rapp/dashboard.html',{'dashes':dashes,'remain':remain,'bdashes':bdashes})
+    return render(request,'rapp/dashboard.html',{'dashes':dashes,'remaind':remaind,'remainh':remainh,'remainm':remainm,'bdashes':bdashes})
 
 
 @login_required
@@ -941,7 +994,41 @@ def read(request,id):
     else:
         check = False
 
-    return render(request,'rapp/read.html',{'pages':pages,'id':id,'check':check,'bookmarkarr':bookmarkarr,'musicp':musicp,'musicr':musicrr,'musicgenre':musicgenre,'musiclis':new_lis2,'musiclislen':len(musiclis),'playlist':playlist,'esource':str(esource),'ename':ename,'eauthor':eauthor,'highlightarr':highlightarr,'highlightcolorarr':highlightcolorarr,'highlighttextarr':highlighttextarr,'elang':elang,'bookmarkdataarr':bookmarkdataarr,'notetextarr':notetextarr,'noteselectedtextarr':noteselectedtextarr,'notecfiarr':notecfiarr,'notefilearr':notefilearr})
+    if request.user.is_authenticated:
+        profilevector = ''
+        profile_author = str(book.author.name).replace(" ","").lower()
+        profilevector = profilevector + profile_author + ' ' + profile_author + ' ' + profile_author
+        profile_publisher = str(book.publisher.name).replace(" ","").lower()
+        profilevector = profilevector + ' ' + profile_publisher
+        profile_category = str(book.category.cat).replace(" ","").lower()
+        profilevector =  profilevector + ' ' + profile_category + ' ' + profile_category
+        for tag in book.tags.all():
+            tag = str(tag).replace(" ","").lower()
+            profilevector = profilevector + ' ' + tag + ' ' + tag + ' ' + tag + ' ' + tag
+        Readview.objects.create(ebook=book,user=request.user,duration=0,profilevector=profilevector)
+        if Lastpage.objects.filter(user=request.user,ebook=book).exists():
+            lastcfi = Lastpage.objects.filter(user=request.user,ebook=book)[0].epubcfi
+        else:
+            lastcfi = ''
+        if Rateduser.objects.filter(user=request.user,ebook=book).exists():
+            ratingbox = 0
+        else:
+            ratingbox = 1
+        if ConnectionHistory.objects.filter(user=request.user).exists():
+            conni = ConnectionHistory.objects.filter(user=request.user,status__gte=1)
+            connlen = conni.count()
+            for conn in conni:
+                datethresh = datetime.now() - timedelta(days=1)
+                if conn.filter(echo__gte=datethresh):
+                    conn.status = 0
+                    conn.save()
+            if connlen >= 3:
+                check = False
+    else:
+        lastcfi = ''
+        ratingbox = 0
+
+    return render(request,'rapp/read.html',{'pages':pages,'id':id,'check':check,'bookmarkarr':bookmarkarr,'musicp':musicp,'musicr':musicrr,'musicgenre':musicgenre,'musiclis':new_lis2,'musiclislen':len(musiclis),'playlist':playlist,'esource':str(esource),'ename':ename,'eauthor':eauthor,'highlightarr':highlightarr,'highlightcolorarr':highlightcolorarr,'highlighttextarr':highlighttextarr,'elang':elang,'bookmarkdataarr':bookmarkdataarr,'notetextarr':notetextarr,'noteselectedtextarr':noteselectedtextarr,'notecfiarr':notecfiarr,'notefilearr':notefilearr,'lastcfi':lastcfi,'ratingbox':ratingbox})
 
 
 def sample(request,id):
@@ -979,6 +1066,19 @@ def sample(request,id):
     else:
         lastpage = False
 
+    if request.user.is_authenticated:
+        profilevector = ''
+        profile_author = str(book.author.name).replace(" ","").lower()
+        profilevector = profilevector + profile_author + ' ' + profile_author + ' ' + profile_author
+        profile_publisher = str(book.publisher.name).replace(" ","").lower()
+        profilevector = profilevector + ' ' + profile_publisher
+        profile_category = str(book.category.cat).replace(" ","").lower()
+        profilevector =  profilevector + ' ' + profile_category + ' ' + profile_category
+        for tag in book.tags.all():
+            tag = str(tag).replace(" ","").lower()
+            profilevector = profilevector + ' ' + tag + ' ' + tag + ' ' + tag + ' ' + tag
+        Sampleview.objects.create(ebook=book,user=request.user,duration=0,profilevector=profilevector)
+
     return render(request,'rapp/sample.html',{'pages':pagesfull,'id':id,'notes':notes,'lastpage':lastpage,'pagesaccess':pages})
 
 
@@ -1012,12 +1112,16 @@ def add_notes(request):
 
 def save_page(request):
     if request.method == 'POST':
-        ebookid = request.POST['ebookid']
-        page = request.POST['page']
+        ebookid = int(request.POST['ebookid'])
+        epubcfi = request.POST['epubcfi']
         ebook = Ebooks.objects.filter(id=ebookid)[0]
         if request.user.is_authenticated:
-            delete = Lastpage.objects.filter(user=request.user,ebook=ebook).delete()
-            addpage = Lastpage.objects.get_or_create(user=request.user,ebook=ebook,page=page)
+            if Lastpage.objects.filter(user=request.user,ebook=ebook).exists():
+                last = Lastpage.objects.filter(user=request.user,ebook=ebook)[0]
+                last.epubcfi = epubcfi
+                last.save()
+            else:
+                Lastpage.objects.create(user=request.user,ebook=ebook,epubcfi=epubcfi)
         return HttpResponse('Success')
 
 
@@ -1025,10 +1129,66 @@ def searchi(request):
     return render(request,'rapp/search.html',{})
 
 
+def erecommender(user):
+    musiclis = Musiclis.objects.filter(user=user)
+    tagdict = {}
+    genredict = {}
+    for item in musiclis:
+        yeardiff = (datetime.now().year - item.time.year)*365
+        monthdff = (datetime.now().month - item.time.month)*30
+        daydiff = datetime.now().day - item.time.day
+        diff = datetime.now(timezone.utc) - item.time
+        if diff.days <= 3:
+            alpha = 1
+        elif 3 < diff.days <= 7:
+            alpha = 0.95
+        elif 3 < diff.days <= 7:
+            alpha = 0.90
+        elif 7 < diff.days <= 14:
+            alpha = 0.85
+        elif 14 < diff.days <= 21:
+            alpha = 0.80
+        elif 21 < diff.days <= 28:
+            alpha = 0.75
+        elif 28 < diff.days <= 40:
+            alpha = 0.70
+        elif 40 < diff.days <= 60:
+            alpha = 0.65
+        elif 60 < diff.days <= 100:
+            alpha = 0.60
+        elif diff.days > 100:
+            alpha = 0.55
+        for tag in item.music.tag.all():
+            if tag.name in tagdict:
+                tagdict[tag.name] = tagdict[tag.name] +  (1*alpha)
+            else:
+                tagdict[tag.name] = 1*alpha
+        if item.music.genre.name in genredict:
+            genredict[item.music.genre.name] = genredict[item.music.genre.name] + 1*alpha
+        else:
+            genredict[item.music.genre.name] = 1 * alpha
+    music = Music.objects.all()
+    musdict = {}
+    for mus in music:
+      if not Musiclis.objects.filter(music=mus, user=user).exists():
+        for tag in mus.tag.all():
+            if tag.name in tagdict:
+                if mus in musdict:
+                    musdict[mus] = musdict[mus] + tagdict[tag.name]
+                else:
+                    musdict[mus] = tagdict[tag.name]
+        if mus.genre.name in genredict:
+            if mus in musdict:
+                musdict[mus] = musdict[mus] + genredict[mus.genre.name]
+            else:
+                musdict[mus] = genredict[mus.genre.name]
+
+    return musdict
+
 
 class MySearchView(SearchView):
     """My custom search view."""
-    template_name = 'rapp/searchshop.html'
+    template_name = 'search/search.html'
     form_class = PriceRangeSearchForm
 
     def get_queryset(self):
@@ -1049,11 +1209,15 @@ class MySearchView(SearchView):
         #return pqueryset
         return items'''
         #sqs = SearchQuerySet().load_all().auto_query('English').order_by('-priority')[:3]
-
         return pqueryset
 
     def get_context_data(self, *args, **kwargs):
         context = super(MySearchView, self).get_context_data(*args, **kwargs)
+        print(context)
+        res = SearchQuerySet().auto_query('dilk')
+        spellres = res.spelling_suggestion()
+        print(res)
+        print(spellres)
         books = Ebooks.objects.all()
         priceArr =[]
         pagesArr =[]
@@ -1077,10 +1241,234 @@ class MySearchView(SearchView):
         except EmptyPage:
             # If page is out of range (e.g. 9999), deliver last page of results.
             items = paginator.page(paginator.num_pages)
-        context.update({'lprice':lprice,'hprice':hprice,'lpages':lpages,'hpages':hpages,'pubs':pubs,'books':items,'page':page,'totalBooks':totalBooks})
+        offermp2 = Offer.objects.all()[0]
+        ebooks = Ebooks.objects.all()
+
+        context.update({'lprice':lprice,'hprice':hprice,'lpages':lpages,'hpages':hpages,'pubs':pubs,'books':items,'page':page,'totalBooks':totalBooks,'offermp2':offermp2,'ebooks':ebooks})
         # do something
         return context
 
+
+def search(request):
+    try:
+        q = request.GET['q']
+        query = True
+        sqs = SearchQuerySet().filter(content=AutoQuery(q))
+        if request.user.is_authenticated:
+            stop = set(stopwords.words('english'))
+            tokenarr = [i for i in q.lower().split() if i not in stop]
+            for author in Authors.objects.select_related():
+                autharr = [i for i in str(author.name).lower().split()]
+                if autharr == tokenarr:
+                    print('Yes')
+            profilevector = str(q).replace(" ","").lower()
+            #Searchview.objects.create(user=request.user, duration=0,profilevector=profilevector)
+        try:
+            hl = request.GET['hl']
+            if hl == 'true':
+                sqs = sqs.order_by('-price')
+            elif hl == 'false':
+                sqs = sqs.order_by('price')
+        except Exception as e:
+            pass
+        try:
+            page = request.GET['page']
+            if page == 'l1':
+                sqs = sqs.filter(pages__in=list(range(0,100)))
+            elif page == '12':
+                sqs = sqs.filter(pages__in=list(range(100,201)))
+            elif page == '23':
+                sqs = sqs.filter(pages__in=list(range(200,301)))
+            elif page == 'm3':
+                try:
+                  sqs = sqs.filter(pages__in=list(range(301,1000)))
+                except Exception as e:
+                    sqs = sqs.filter(pages__in=list(range(1000,1700)))
+        except Exception as e:
+            pass
+        try:
+            pub = request.GET['pub']
+            pubarr = pub[pub.index('[')+1:pub.index(']')].split(',')
+            publist = []
+            for i in pubarr:
+                pubid = int(i)
+                publisher = Publishers.objects.filter(id=pubid)[0]
+                publist.append(publisher.name)
+            sqs = sqs.filter(publisher__in=publist)
+        except Exception as e:
+            pass
+        spellres = sqs.spelling_suggestion()
+        searchtitle = q
+    except Exception as e:
+        try:
+            cat = request.GET['cat']
+            category = Category.objects.filter(cat=cat)[0]
+            sqs = Ebooks.objects.filter(category=category)
+            spellres = ''
+            query = True
+            egeneralquery = True
+            if request.user.is_authenticated:
+                profilevector = str(cat).replace(" ", "").lower() + ' ' + str(cat).replace(" ", "").lower()
+                Genreview.objects.create(genre=category,user=request.user, duration=0, profilevector=profilevector)
+            searchtitle = cat
+        except Exception as e:
+            try:
+                nr = request.GET['nr']
+                if nr == 'true':
+                    datethresh = datetime.now() - timedelta(days=365)
+                    sqs = Ebooks.objects.filter(publishdate__gte=datethresh)
+                    spellres = ''
+                    query = True
+                    egeneralquery = True
+                    if request.user.is_authenticated:
+                        Newreleaseview.objects.create(user=request.user, duration=0)
+                    searchtitle = 'New Releases'
+                else:
+                    sqs = ''
+                    spellres = ''
+                    query = False
+                    egeneralquery = ''
+                    searchtitle = ''
+            except Exception as e:
+                try:
+                    bs = request.GET['bs']
+                    if bs == 'true':
+                        sqs0 = Bestseller.objects.filter(name='Bestsellers')[0]
+                        sqs = sqs0.ebooks.all
+                        spellres = ''
+                        query = True
+                        egeneralquery = False
+                        if request.user.is_authenticated:
+                            Bestsellerview.objects.create(user=request.user, duration=0)
+                        searchtitle = 'Bestsellers'
+                    else:
+                        sqs = ''
+                        spellres = ''
+                        query = False
+                        egeneralquery = ''
+                        searchtitle = ''
+                except Exception as e:
+                    sqs = ''
+                    spellres = ''
+                    query = False
+                    egeneralquery = ''
+                    searchtitle = ''
+
+        if egeneralquery == True:
+            try:
+                hl = request.GET['hl']
+                if hl == 'true':
+                    sqs = sqs.order_by('-price')
+                elif hl == 'false':
+                    sqs = sqs.order_by('price')
+            except Exception as e:
+                pass
+            try:
+                page = request.GET['page']
+                if page == 'l1':
+                    sqs = sqs.filter(pages__in=list(range(0,100)))
+                elif page == '12':
+                    sqs = sqs.filter(pages__in=list(range(100,201)))
+                elif page == '23':
+                    sqs = sqs.filter(pages__in=list(range(200,301)))
+                elif page == 'm3':
+                    try:
+                      sqs = sqs.filter(pages__in=list(range(301,1000)))
+                    except Exception as e:
+                        sqs = sqs.filter(pages__in=list(range(1000,1700)))
+            except Exception as e:
+                pass
+            try:
+                pub = request.GET['pub']
+                pubarr = pub[pub.index('[')+1:pub.index(']')].split(',')
+                publist = []
+                for i in pubarr:
+                    pubid = int(i)
+                    publisher = Publishers.objects.filter(id=pubid)[0]
+                    publist.append(publisher.name)
+                sqs = sqs.filter(publisher__name__in=publist)
+            except Exception as e:
+                pass
+        elif egeneralquery ==False:
+            try:
+                hl = request.GET['hl']
+                if hl == 'true':
+                    sqs = sqs0.ebooks.all().order_by('-price')
+                elif hl == 'false':
+                    sqs = sqs0.ebooks.all().order_by('price')
+            except Exception as e:
+                pass
+            try:
+                page = request.GET['page']
+                if page == 'l1':
+                    sqs = sqs0.ebooks.filter(pages__in=list(range(0,100)))
+                elif page == '12':
+                    sqs = sqs0.ebooks.filter(pages__in=list(range(100,201)))
+                elif page == '23':
+                    sqs = sqs0.ebooks.filter(pages__in=list(range(200,301)))
+                elif page == 'm3':
+                    try:
+                      sqs = sqs0.ebooks.filter(pages__in=list(range(301,1000)))
+                    except Exception as e:
+                        sqs = sqs0.ebooks.filter(pages__in=list(range(1000,1700)))
+            except Exception as e:
+                pass
+            try:
+                pub = request.GET['pub']
+                pubarr = pub[pub.index('[')+1:pub.index(']')].split(',')
+                publist = []
+                for i in pubarr:
+                    pubid = int(i)
+                    publisher = Publishers.objects.filter(id=pubid)[0]
+                    publist.append(publisher.name)
+                sqs = sqs0.ebooks.filter(publisher__name__in=publist)
+            except Exception as e:
+                pass
+
+    paginator = Paginator(sqs, 36)
+    page = request.GET.get('pag')
+    try:
+        items = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        items = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        items = paginator.page(paginator.num_pages)
+
+    pubs = Publishers.objects.all()
+    offermp2 = Offer.objects.all()[0]
+    ebooks = Ebooks.objects.all()
+    if request.user.is_authenticated:
+        wishlist = Wishlist.objects.filter(user=request.user)
+        wisharray = []
+        for wish in wishlist:
+            wisharray.append(wish.ebook.id)
+    else:
+        wisharray = []
+
+    return render(request,'rapp/searchshop.html',{'sqs':items,'pubs':pubs,'offermp2':offermp2,'ebooks':ebooks,'spellres':spellres,'query':query,'searchtitle':searchtitle,'wisharray':wisharray})
+
+
+def autocomplete(request):
+    sqs1 = SearchQuerySet().autocomplete(name_auto=request.GET.get('q', ''))
+    sqs2 = SearchQuerySet().autocomplete(author_auto=request.GET.get('q', ''))
+    sqs3 = SearchQuerySet().autocomplete(publisher_auto=request.GET.get('q', ''))
+    sqs4 = SearchQuerySet().autocomplete(category_auto=request.GET.get('q', ''))
+    sqs5 = SearchQuerySet().autocomplete(isbn_auto=request.GET.get('q', ''))
+    sqs6 = SearchQuerySet().autocomplete(tags_auto=request.GET.get('q', ''))
+    suggestions1 = [result.name for result in sqs1]
+    suggestions2 = list(set([result.author for result in sqs2]))
+    suggestions3 = list(set([result.publisher for result in sqs3]))
+    suggestions4 = list(set([result.category for result in sqs4]))
+    suggestions5 = list(set([result.isbn for result in sqs5]))
+    suggestions6 = list(set([result.tags[2:len(result.tags)-2] for result in sqs6]))
+    # Make sure you return a JSON object, not a bare list.
+    # Otherwise, you could be vulnerable to an XSS attack.
+    data = json.dumps({
+        'results1': suggestions1,'results2':suggestions2,'results3': suggestions3,'results4':suggestions4,'results5': suggestions5,'results6':suggestions6
+    })
+    return HttpResponse(data, content_type='application/json')
 
 
 class FacetedSearchView(SearchView):
@@ -1599,12 +1987,13 @@ def addnotefile(request):
         notefilename = request.POST['notefilename']
         notearr = request.POST.getlist('notearr[]')
         textarr = request.POST.getlist('textarr[]')
-        file = Notefile.objects.create(name=notefilename,user=request.user,ebook=ebook)
-
-        for i in range(len(notearr)):
-            Notefileitem.objects.create(notefile=file,note=notearr[i],text=textarr[i])
-
-        return HttpResponse('success')
+        if not Notefile.objects.filter(name=notefilename,user=request.user,ebook=ebook).exists():
+            file = Notefile.objects.create(name=notefilename,user=request.user,ebook=ebook)
+            for i in range(len(notearr)):
+                Notefileitem.objects.create(notefile=file,note=notearr[i],text=textarr[i])
+            return HttpResponse('success')
+        else:
+            return HttpResponse('Exists')
 
 
 def addauthor(request):
@@ -1638,3 +2027,144 @@ def addcategory(request):
         Category.objects.create(cat=categoryname,catmodel=categorymodel)
 
         return HttpResponse('success')
+
+
+def adddurationview(request):
+    if request.method == 'POST':
+        view = request.POST['view']
+        try:
+            ebookid = int(request.POST['ebookid'])
+            ebook = Ebooks.objects.filter(id=ebookid)[0]
+        except Exception as e:
+            pass
+        duration = int(request.POST['duration'])
+        try:
+            genre = request.POST['genre']
+            genrer = Category.objects.filter(cat=genre)[0]
+        except Exception as e:
+            pass
+        if view == 'detail':
+            dv = Detailview.objects.filter(ebook=ebook,user=request.user).latest('id')
+            dv.duration = duration
+            dv.save()
+        elif view == 'read':
+            dv = Readview.objects.filter(ebook=ebook, user=request.user).latest('id')
+            dv.duration = duration
+            dv.save()
+        elif view == 'sample':
+            dv = Sampleview.objects.filter(ebook=ebook, user=request.user).latest('id')
+            dv.duration = duration
+            dv.save()
+        elif view == 'cat':
+            dv = Genreview.objects.filter(genre=genrer, user=request.user).latest('id')
+            dv.duration = duration
+            dv.save()
+        elif view == 'nr':
+            dv = Newreleaseview.objects.filter(user=request.user).latest('id')
+            dv.duration = duration
+            dv.save()
+        elif view == 'bs':
+            dv = Bestsellerview.objects.filter(user=request.user).latest('id')
+            dv.duration = duration
+            dv.save()
+
+        return HttpResponse('success')
+
+
+def addrating(request):
+    if request.method == 'POST':
+        ebookid = int(request.POST['ebookid'])
+        ebook = Ebooks.objects.filter(id=ebookid)[0]
+        rating = int(request.POST['rating'])
+        if request.user.is_authenticated:
+            if Rateduser.objects.filter(user=request.user,ebook=ebook).exists():
+                rateuser = Rateduser.objects.filter(user=request.user,ebook=ebook)[0]
+                prevrating = rateuser.rating
+                rateuser.rating = rating
+                rateuser.save()
+                ebook.rating = (ebook.rating*ebook.ratedusers - prevrating + rating)/ebook.ratedusers
+                atrating = ebook.rating
+                ebook.save()
+                return HttpResponse(json.dumps({'age':'old', 'rating':atrating}), content_type="application/json")
+            else:
+                Rateduser.objects.create(user=request.user,ebook=ebook,rating=rating)
+                ebook.rating = ((ebook.rating*ebook.ratedusers) + rating)/(ebook.ratedusers+1)
+                atrating = ebook.rating
+                ebook.ratedusers = ebook.ratedusers + 1
+                atusers = ebook.ratedusers
+                ebook.save()
+                return HttpResponse(json.dumps({'age':'new','rating':atrating,'users':atusers}), content_type="application/json")
+        else:
+            return HttpResponse('Please login to Rate the Book')
+
+
+def save_percent(request):
+    if request.method == 'POST':
+        ebookid = int(request.POST['ebookid'])
+        ebook = Ebooks.objects.filter(id=ebookid)[0]
+        loccur1 = int(request.POST['loccur1'])
+        loccur2 = int(request.POST['loccur2'])
+        loctotal = int(request.POST['loctotal'])
+        if request.user.is_authenticated:
+            if Percentageread.objects.filter(user=request.user,ebook=ebook).exists():
+                last = Percentageread.objects.filter(user=request.user,ebook=ebook)[0]
+                for i in range(loccur2-loccur1+1):
+                    if i+loccur1 == loccur1:
+                        phase = 'left'
+                        eff = (0.5/loctotal)*100
+                    elif i+loccur1 == loccur2:
+                        phase = 'right'
+                        eff = (0.5/loctotal)*100
+                    else:
+                        phase = 'full'
+                        eff = (1.0/loctotal)*100
+                    if not Readlocation.objects.filter(readmodel=last,location=i+loccur1,phase=phase).exists():
+                        Readlocation.objects.create(readmodel=last, location=i+loccur1, phase=phase)
+                        last.percent = last.percent + eff
+                        last.save()
+            else:
+                readmodel = Percentageread.objects.create(user=request.user,ebook=ebook)
+                readmodel.percent = 0
+                for i in range(loccur2-loccur1+1):
+                    if i+loccur1 == loccur1:
+                        phase = 'left'
+                        eff = (0.5/loctotal)*100
+                    elif i+loccur1 == loccur2:
+                        phase = 'right'
+                        eff = (0.5/loctotal)*100
+                    else:
+                        phase = 'full'
+                        eff = (1.0/loctotal)*100
+                    Readlocation.objects.create(readmodel=readmodel,location=i+loccur1,phase=phase)
+                    readmodel.percent = readmodel.percent + eff
+                    readmodel.save()
+        return HttpResponse('Success')
+
+
+def remove_notefile(request):
+    if request.method == 'POST':
+        filename = request.POST['filename']
+        ebookid = int(request.POST['ebookid'])
+        ebook = Ebooks.objects.filter(id=ebookid)[0]
+        file = Notefile.objects.filter(name=filename,user=request.user,ebook=ebook)[0]
+        Notefileitem.objects.filter(notefile=file).delete()
+        file.delete()
+
+        return HttpResponse('Success')
+
+
+def updateconn(request):
+    if request.method == 'POST':
+        publicip = request.POST['publicip']
+        localip = request.POST['localip']
+        status = request.POST['status']
+        if ConnectionHistory.objects.filter(user=request.user,publicip=publicip,localip=localip).exists():
+            conn = ConnectionHistory.objects.filter(user=request.user,publicip=publicip,localip=localip)[0]
+            if status == 'online':
+                conn.status = conn.status + 1
+            elif status == 'offline':
+                conn.status = conn.status - 1
+            conn.save()
+        else:
+            ConnectionHistory.objects.create(user=request.user,publicip=publicip,localip=localip,status=1)
+        return HttpResponse('Success')

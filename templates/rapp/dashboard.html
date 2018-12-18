@@ -6,61 +6,64 @@
 {% block actived %}class="active"{% endblock %}    
 {% block content %}
   <div class="dash-container">
-		<div class="dash-left">
-			<div class="dl-divmain">{{ user.get_username}}</div>
-			<div class="dl-div dl-rent">Rented</div>
-			<div class="dl-div dl-buy">Bought</div>
-			<div class="dl-div active dl-all" >All</div>
-		</div>
-		<div class="dash-right">
-			<div class="heading">DashBoard</div>
-			<p style="display: none" class="remainArray">{{ remain}}</p>
+  	    <div class="dash-top">
+  	    	<a href="/wishlist" class="dash2wishbtn"><i class="fa fa-heart" style="font-size:13px;color:red;margin-right: 3px"></i>My wishlist</a>
+  	    	<span id="dash-title">My Books</span>
+  	    </div>
+  	    <div class="dash-middle">
+  	    	<button id="dash-rented-btn" class="dashactivebtn">Rented</button>
+  	    	<button id="dash-bought-btn">Bought</button>
+  	    </div>
+		<div class="dash-bottom">
+			<p style="display: none" class="remaindArray">{{ remaind}}</p>
+			<p style="display: none" class="remainhArray">{{ remainh}}</p>
+			<p style="display: none" class="remainmArray">{{ remainm}}</p>
 			<div class="ebooks">
-				<div class="row">
-					{% for dash in dashes %}
-					{% if dash.active == True %}
-					<a href="/read/{{ dash.ebook.id}}/" target="_blank">
-					<div class="col-sm-4 dashes">
-            			<div class="card">
-						  <img src="/media/{{ dash.ebook.img }}" alt="Ebook">
-						  <div class="overlay" data-id={{ forloop.counter}}>
-						  	
-						  </div>
-						  <div class="container">
-						    <p class="title" data-id={{ forloop.counter }}><b>{{ dash.ebook.name }}</b></p> 
-						    <p class="author" data-id={{ forloop.counter }}><b>- {{ dash.ebook.author }}</b></p> 
-						    <p class="publisher" data-id={{ forloop.counter }}>{{dash.ebook.language}}, {{ dash.ebook.publisher }}</p>
-						    
-						  </div>
-						</div>
-            		</div>
-            	    </a>
-            		
-            		{% endif %}
-            		{% endfor %}
-            		{% for dash in bdashes %}
-					{% if dash.active == True %}
-					<a href="/read/{{dash.ebook.id}}" target="_blank">
-					<div class="col-sm-4 bdashes">
-            			<div class="card">
-						  <img src="/media/{{ dash.ebook.img }}" alt="Ebook">
-						  <div class="overlay">
-						  	Buyed
-						  </div>
-						  <div class="container">
-						    <p class="title" data-id={{ forloop.counter }}><b>{{ dash.ebook.name }}</b></p> 
-						    <p class="author" data-id={{ forloop.counter }}><b>- {{ dash.ebook.author }}</b></p> 
-						    <p class="publisher" data-id={{ forloop.counter }}>{{dash.ebook.language}}, {{ dash.ebook.publisher }}</p>
-						    
-						  </div>
-						</div>
-            		</div>
-            	    </a>
-            		
-            		{% endif %}
-            		{% endfor %}
-				</div>
+				{% for dash in dashes %}
+				{% if dash.active == True %}
+				<div class="dashes">
+				  <a href="/read/{{ dash.ebook.id}}/" target="_blank">
+        			<div class="card">
+        			  <div class="overlay">
+        			  </div>
+        			  <span class="dash-tl-title">Time left</span>
+	    			  <span class="dash-dl" data-id={{ forloop.counter}}><span></span><span>Days</span></span>
+	    			  <span class="dash-hl" data-id={{ forloop.counter}}><span></span><span>Hours</span></span>
+	    			  <span class="dash-ml" data-id={{ forloop.counter}}><span></span><span>Mins</span></span>
+					  <img src="/{{ dash.ebook.img }}" alt="Ebook">	
+					  <div class="container">
+					  	<div class="dash-ebook-progress"><span class="dash-ebook-progress-text" data-percent="{{dash.ebook.percentageread_set.all.0.percent}}"></span></div>
+					    <p class="title" data-id={{ forloop.counter }}>{{ dash.ebook.name }}</p> 
+					    <p class="author" data-id={{ forloop.counter }}>{{ dash.ebook.author }}</p> 
+					  </div>
+					</div>
+				  </a>
+        		</div>
+        		{% endif %}
+        		{% endfor %}
+        		{% for dash in bdashes %}
+				{% if dash.active == True %}
+				<a href="/read/{{dash.ebook.id}}" target="_blank">
+				<div class="col-sm-4 bdashes">
+        			<div class="card">
+					  <img src="/{{ dash.ebook.img }}" alt="Ebook">
+					  <div class="overlay">
+					  	Buyed
+					  </div>
+					  <div class="container">
+					    <p class="title" data-id={{ forloop.counter }}><b>{{ dash.ebook.name }}</b></p> 
+					    <p class="author" data-id={{ forloop.counter }}><b>- {{ dash.ebook.author }}</b></p> 
+					    <p class="publisher" data-id={{ forloop.counter }}>{{dash.ebook.language}}, {{ dash.ebook.publisher }}</p>
+					    
+					  </div>
+					</div>
+        		</div>
+        	    </a>
+        		
+        		{% endif %}
+        		{% endfor %}
 			</div>
 		</div>
 	</div>
 {% endblock %}
+

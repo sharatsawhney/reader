@@ -10,8 +10,8 @@
   <script src="{% static 'js/epub.js' %}"></script>
   <link rel="stylesheet" type="text/css" href="{% static 'cs/examples.css' %}">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-  <link rel="stylesheet" type="text/css" href="http://kenwheeler.github.io/slick/slick/slick-theme.css"/>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" type="text/css" href="https://kenwheeler.github.io/slick/slick/slick-theme.css"/>
 
   <style type="text/css">
     body {
@@ -22,7 +22,7 @@
     #viewer{
       width:90% !important;
       margin-top: 90px !important;
-      height: 570px !important;
+      height: 570px;
       z-index: 0 !important;
     }
     .epubjs-container{
@@ -77,7 +77,7 @@
       margin-right: 20px;
     }
     #reader-ulimopt{
-      color: red;
+      color: #f44336;
       font-weight: bold;
     }
     #reader-current-percentage{
@@ -108,10 +108,12 @@
       margin-left: 10px;
     }
     #reader-exitfullscreen-svg{
-        position: absolute;
-        right: 40px;
-        bottom: 70px;
-        color: #999;
+        width: 30px;
+        float:right;
+        margin-left: 10px;
+        position: relative;
+        top:-5px;
+        display: none;
     }
     .search-results {
       display: block !important;
@@ -186,6 +188,12 @@
       position: relative;
       top: 4px;
     }
+    .reader-unav #title-reader{
+        left:35.5%;
+    }
+    .reader-unav #author-reader{
+        left: 35.5%;
+    }
     .reader-fullscreen-heading{
       margin-top: 10px;
       text-align: center;
@@ -201,10 +209,10 @@
       border-radius: 2px;
       border: 1px solid white;
       background-color: white;
-      box-shadow: 0px 0px 8px rgb(128,128,128);
-      -webkit-box-shadow: 0px 0px 8px rgb(128,128,128);
+      box-shadow: 0px 0px 15px rgba(160, 100, 245,0.4);
+      -webkit-box-shadow: 0px 0px 15px rgba(160, 100, 245, 0.4);
       position: absolute;
-      top: 35px;
+      top: 45px;
       right: 30px;
       z-index: 1;
     }
@@ -215,7 +223,7 @@
       margin-top: 10px;
     }
     .reader-do-title i{
-      font-size: 15px;
+      font-size: 20px;
       float: right;
       margin-right: 10px;
       color: rgb(128,128,128);
@@ -342,10 +350,10 @@
       border-radius: 2px;
       border: 1px solid white;
       background-color: white;
-      box-shadow: 0px 0px 8px rgb(128,128,128);
-      -webkit-box-shadow: 0px 0px 8px rgb(128,128,128);
+      box-shadow: 0px 0px 15px rgba(160, 100, 245,0.4);
+      -webkit-box-shadow: 0px 0px 15px rgba(160, 100, 245,0.4);
       position: absolute;
-      top: 35px;
+      top: 45px;
       right: 30px;
       z-index: 1;
     }
@@ -356,7 +364,7 @@
       margin-top: 10px;
     }
     .reader-search-results h3 i{
-      font-size: 15px;
+      font-size: 20px;
       float: right;
       margin-right: 14%;
       color: rgb(128,128,128);
@@ -389,17 +397,17 @@
 
     }
     .reader-search-highlight{
-      color: #7e71c9;
+      color: red;
     }
     .reader-content-menu{
       width: 310px;
       border-radius: 2px;
       border: 1px solid white;
       background-color: white;
-      box-shadow: 0px 0px 8px rgb(128,128,128);
-      -webkit-box-shadow: 0px 0px 8px rgb(128,128,128);
+      box-shadow: 0px 0px 15px rgba(160, 100, 245,0.4);
+      -webkit-box-shadow: 0px 0px 15px rgba(160, 100, 245,0.4);
       position: absolute;
-      top: 35px;
+      top: 45px;
       right: 25px;
       z-index: 1;
     }
@@ -410,7 +418,7 @@
       margin-top: 10px;
     }
     .reader-content-menu h3 i{
-      font-size: 15px;
+      font-size: 20px;
       float: right;
       margin-right: 10px;
       color: rgb(128,128,128);
@@ -481,10 +489,10 @@
       border-radius: 2px;
       border: 1px solid white;
       background-color: white;
-      box-shadow: 0px 0px 8px rgb(128,128,128);
-      -webkit-box-shadow: 0px 0px 8px rgb(128,128,128);
+      box-shadow: 0px 0px 15px rgba(160, 100, 245,0.4);
+      -webkit-box-shadow: 0px 0px 15px rgba(160, 100, 245,0.4);
       position: absolute;
-      top: 35px;
+      top: 45px;
       right: 25px;
       z-index: 1;
     }
@@ -495,7 +503,7 @@
       margin-top: 15px;
     }
     .reader-notes-menu h3 i{
-      font-size: 15px;
+      font-size: 20px;
       float: right;
       margin-right:30px;
       color: rgb(128,128,128);
@@ -506,10 +514,10 @@
       border-radius: 2px;
       border: 1px solid white;
       background-color: white;
-      box-shadow: 0px 0px 8px rgb(128,128,128);
-      -webkit-box-shadow: 0px 0px 8px rgb(128,128,128);
+      box-shadow: 0px 0px 15px rgba(160, 100, 245,0.4);
+      -webkit-box-shadow: 0px 0px 15px rgba(160, 100, 245,0.4);
       position: absolute;
-      top: 35px;
+      top: 45px;
       right: 25px;
       z-index: 1;
     }
@@ -520,7 +528,7 @@
       margin-top: 15px;
     }
     .reader-music-menu h3 i{
-      font-size: 15px;
+      font-size: 20px;
       float: right;
       margin-right:30px;
       color: rgb(128,128,128);
@@ -1075,13 +1083,14 @@
     .selector-div{
         background-color: white;
         width: 100px;
-        height: 55px;
+        height: 72px;
         position: absolute;
         top: 0px;
         left: 0px;
         z-index: 2;
         padding: 2px 0px 2px 0px;
         box-shadow: 0px 0px 4px rgb(77,77,77);
+        border-radius: 4px;
     }
     .selector-ul{
       list-style-type: none;
@@ -1100,6 +1109,13 @@
       padding-left: 5px;
       font-size: 14px;
       cursor: pointer;
+    }
+    .selector-highlight-title{
+    	font-size: 13px;
+    	margin-left: 5px;
+    	margin-top: 2px;
+    	margin-bottom: -2px;
+    	color: rgb(128,128,128);
     }
     .selector-highlight{
       display: flex;
@@ -1142,7 +1158,7 @@
       position: absolute;
       top: 200px;
       left: 200px;
-      border-radius: 2px;
+      border-radius: 4px;
       display: none;
     }
     .note-textarea{
@@ -1403,6 +1419,9 @@
     	margin-top: 5px !important;
     	outline: none;
     }
+    #reader-notes-extract-div button:hover{
+    	background-color: rgb(240,240,240);
+    }
     #reader-notes-extract-div{
     	border-bottom: 1px solid rgb(128,128,128,0.4);
     	width:80%;
@@ -1458,7 +1477,13 @@
         color: #999;
         font-size: 13px;
         position: absolute;
-        right: 30px;
+        right: 40px;
+    }
+    .reader-notes-saved-fileitem .fa-trash{
+    	position: absolute;
+    	font-size: 13px;
+    	right: 20px;
+    	color: #999;
     }
     .notefile-preview-div{
       width: 80%;
@@ -1492,11 +1517,12 @@
     .notefile-preview-div table{
     	width: 90%;
     	margin-left: 3%;
+    	table-layout:fixed;
     }
     .notefile-preview-table-container{
         overflow-x:hidden;
         overflow-y: auto;
-        height: 300px;
+        height: 200px;
         padding-top: 10px;
     }
     .notefile-tr > td{
@@ -1511,14 +1537,16 @@
     }
     .notefile-item-note{
     	color: rgb(100,100,100);
-    	width: 48%;
+    	width: 45% !important;
     	font-size: 15px;
+    	word-wrap: break-word;
     }
     .notefile-item-text{
         color: rgb(247,147,30);
     	padding-left:5%;
-    	width: 48%;
+    	width: 50% !important;
     	font-size: 14px;
+    	word-wrap: break-word;
     }
     .notefile-tr i{
         color: #999;
@@ -1564,6 +1592,48 @@
     	right: 15px;
     	outline: none;
     }
+    .reader-reviews{
+      display: none;
+    	position: absolute;
+    	top: 200px;
+    	left: 40%;
+    	background-color: white;
+    	width: 20%;
+    	height: 180px;
+    	box-shadow: 0px 0px 8px rgb(128,128,128);
+    	padding: 0px 10px 10px 30px;
+    }
+    .reader-reviews h3{
+    	font-size: 18px;
+    	color: rgb(50,50,50);
+    	font-weight: normal;
+    }
+    .reader-reviews h5{
+    	font-weight: normal;
+    	margin-top: 0px;
+    	font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .reader-reviews .fa-star{
+    	color: #B1B1B1;
+      font-size: 35px;
+      margin-right: 10px;
+      margin-top: 0px;
+    }
+    .reader-reviews p{
+      font-size: 12px;
+      font-weight: normal;
+      margin-top: 10px;
+    }
+    .reader-reviews button{
+      border-radius: 20px;
+      padding: 4px 30px 5px 30px;
+      background-color: #7e71c9;
+      color: white;
+      border: none;
+      outline: none;
+      margin-left: 70px;
+    }
   </style>
 </head>
 <body>
@@ -1583,7 +1653,6 @@
     <div class="reader-unav-right">
       {% csrf_token %}
       <svg class="reader-menu-svg" id="reader-bookmark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.29 17.98"><title>Add Bookmark</title><path d="M15.29,1.27V18L7.64,12.26,0,18V1.27C0,.57.76,0,1.7,0H13.59C14.53,0,15.29.57,15.29,1.27Z" fill="#999"/></svg>
-
       <svg class="reader-menu-svg" id="reader-music-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.8 17.97"><title>Study Music</title><ellipse cx="4.52" cy="13.67" rx="4.52" ry="4.3" fill="#999"/><rect x="7.4" width="1.64" height="13.28" fill="#999"/><rect x="9.54" y="-2.14" width="3.13" height="7.4" transform="translate(12.66 -9.54) rotate(90)" fill="#999"/></svg>
 
       <div class="reader-music-menu">
@@ -1789,6 +1858,8 @@
           <div class="reader-notes-saved-fileitem">
           	<span class="reader-notes-filename">{{ file.0 }}</span>
           	<span class="reader-notes-filedate">{{ file.1 }}</span>
+          	{% csrf_token %}
+          	<i class="fa fa-trash" aria-hidden="true"></i>
           	{% for item in file.2 %}
           	<span style="display: none" class="hidden-file-note">{{ item }}</span>
           	{% endfor %}
@@ -1835,6 +1906,7 @@
       {% csrf_token %}
       <li class="selector-note">Add Note</li>
     </ul>
+    <div class="selector-highlight-title">Highlight</div>
     <div class="selector-highlight">
       {% csrf_token %}
       <div class="selector-highlight1"></div>
@@ -1847,7 +1919,7 @@
     </div>
   </div>
   <div class="note-maker">
-    <textarea class="note-textarea"></textarea>
+    <textarea class="note-textarea" placeholder="Write your notes here..." autofocus></textarea>
     <div class="note-control">
       <div class="note-highlighter1"></div>
       <div class="note-highlighter2"></div>
@@ -1870,7 +1942,16 @@
   <div class="notefile-preview-div">
   </div>
   <div class="reader-fullscreen-panel">
-  	<svg id="reader-exitfullscreen-svg" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 18 18"><title>Exit Fullscreen</title><path d="M3 12.5h2.5V15H7v-4H3v1.5zm2.5-7H3V7h4V3H5.5v2.5zM11 15h1.5v-2.5H15V11h-4v4zm1.5-9.5V3H11v4h4V5.5h-2.5z"/></svg>
+  	
+  </div>
+  <div class="reader-reviews">
+  	<h3>Rating</h3>
+  	<h5>Rate the book!</h5>
+    <div class="reader-reviews-stars">
+  	<i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i>
+    </div>
+  	<p>Help other readers!!</p>
+  	<button>Submit</button>
   </div>
   <div id="control">
       <input id="current-percent" size="3" value="0" style="display:none" />
@@ -1880,6 +1961,7 @@
         <span id="reader-current-location"></span>
         <span id="reader-total-locations"></span>
         <i class="fa fa-angle-right right-decor" aria-hidden="true"></i>
+        <svg id="reader-exitfullscreen-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.69 16.77"><title>Exit Fullscreen</title><path d="M3 12.5h2.5V15H7v-4H3v1.5zm2.5-7H3V7h4V3H5.5v2.5zM11 15h1.5v-2.5H15V11h-4v4zm1.5-9.5V3H11v4h4V5.5h-2.5z"/></svg>
         <svg id="reader-fullscreen-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.69 16.77"><title>Fullscreen</title><path d="M8,15.83l-5.86-.12C1.34,15.7.72,14.51.75,13L.94,3.37C1,1.91,1.63.73,2.42.75L8.28.87" fill="none" stroke="#4d4d4d" stroke-miterlimit="10" stroke-width="1.5"/><path d="M11.41,15.9l5.86.12c.79,0,1.45-1.16,1.48-2.62l.19-9.67c0-1.46-.59-2.66-1.37-2.67L11.71.93" fill="none" stroke="#4d4d4d" stroke-miterlimit="10" stroke-width="1.5"/></svg>
         <svg id="reader-nmode-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22.25 16.25"><title>Night-mode</title><rect x="0.13" y="0.13" width="22" height="16" fill="#fff" stroke="#4d4d4d" stroke-miterlimit="10" stroke-width="0.25"/><path d="M22.12,16.12H.13V.13Z" fill="#4d4d4d"/><path d="M22.12,16.12.13.13h22Z" fill="#fff"/></svg>
       </div>
@@ -1892,10 +1974,9 @@
   <span id="hidden-ebook-lang" style="display: none">{{ elang  }}</span>
   <span style="display: none" id="hidden-esource">{{ esource }}</span>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-  <script>
-    $(".selector-div").hide();
-    var bookmarkarr = {{ bookmarkarr|safe }};
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+  <script type="text/javascript">
+  	var bookmarkarr = {{ bookmarkarr|safe }};
     var highlightarr = {{ highlightarr|safe }};
     var highlightcolorarr = {{ highlightcolorarr|safe }};
     var highlighttextarr = {{ highlighttextarr|safe }};
@@ -1903,991 +1984,553 @@
     var notetextarr = {{ notetextarr|safe }};
     var noteselectedtextarr = {{ noteselectedtextarr|safe }};
     var notecfiarr = {{ notecfiarr|safe }};
-    var esource = $("#hidden-esource").html();
-    var controls = document.getElementById("control");
-    var currentPage = document.getElementById("current-percent");
-    var slider = document.createElement("input");
-    var slide = function(){
-        var cfi = book.locations.cfiFromPercentage(slider.value / 100);
-        
-        rendition.display(cfi);
-        $("#rangeSlider").blur();
-    };
-    var mouseDown = false;
-    var params = URLSearchParams && new URLSearchParams(document.location.search.substring(1));
-    var url = params && params.get("url") && decodeURIComponent(params.get("url"));
-    var currentSectionIndex = (params && params.get("loc")) ? params.get("loc") : undefined;
+    var lastcfi = '{{ lastcfi }}';
 
-    // Load the opf
-    esource = "https://s3.ap-south-1.amazonaws.com/readerearth/" +  esource;
-    var book = ePub(url || esource);
-    var rendition = book.renderTo("viewer", {
-      width: "100%",
-      height: 570,
-      spread: 'auto',
-    });
-    var displayed = rendition.display();
-    var title = document.getElementById("title");
-    rendition.display(currentSectionIndex);
-    rendition.themes.override("font-family", "Arial");
-    /*rendition.themes.register("night", { "body": { "background": "#191919","color": "white"}});
-    rendition.themes.select("night");
-    $("body").css('background-color','#191919');*/
-    for(var i=0;i<highlightarr.length;i++){
-        rendition.annotations.highlight(highlightarr[i],String(highlightcolorarr[i]) + '@#$%^-decode##' + String(highlighttextarr[i]));
+
+    var readerheight = 570;
+    var rendition = undefined;
+    var elcfi = undefined;
+    var book = undefined;
+    var nmode = false;
+    var publicip = undefined;
+    var localip = undefined;
+    {% if ratingbox == 1 %}
+    var ratingbox = 1;
+    {% else %}
+    var ratingbox = 0;
+    {% endif %}
+	$.getScript('/static/js/reloadreader.js', function( data, textStatus, jqxhr ) {
+	    readerload(readerheight);
+	    if(lastcfi != ''){
+            rendition.display(lastcfi);
+	    }
+	});
+  	var fullscreenactive = false;
+  $("#reader-fullscreen-svg").click(function(){
+    function launchIntoFullscreen(element) {
+      if(element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if(element.mozRequestFullScreen) {
+        element.mozRequestFullScreen();
+      } else if(element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen();
+      } else if(element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+      }
     }
-    
-    book.ready.then(function(){
-      function doSearch(q) {
-        return Promise.all(
-            book.spine.spineItems.map(item => item.load(book.load.bind(book)).then(item.find.bind(item, q)).finally(item.unload.bind(item)))
-        ).then(results => Promise.resolve([].concat.apply([], results)));
-      };
-
-
-      $("#reader-search i").click(function(){
-        var term = $("#reader-search-input").val();
-        $('.reader-search-results-main').html('');
-        doSearch(term).then(function(results){
-          $(".reader-search-results").show();
-          dialogopen = true;
-          $("#reader-search-number").html(results.length);
-          var searchlength = term.length
-          for(var i in results){
-            var searchindex = results[i].excerpt.toLowerCase().indexOf(term);
-
-            let result = '<div class="reader-search-item" data-link="'+results[i].cfi+'"><div class="reader-search-item-content">' + results[i].excerpt.substring(0,searchindex)+ '<span class="reader-search-highlight">' +results[i].excerpt.substring(searchindex,searchindex+searchlength) + '</span>' + results[i].excerpt.substring(searchindex+searchlength) + '</div><div class="reader-search-item-location">'+book.locations.locationFromCfi(results[i].cfi) +'</div></div>'
-            $('.reader-search-results-main').append(result);
-
-          }
-        })
-      });
-      
-      $(document).keypress(function(e) {
-          if(e.which == 13 && $("#reader-search-input").is(":focus")) {
-              var term = $("#reader-search-input").val();
-              $('.reader-search-results-main').html('');
-              doSearch(term).then(function(results){
-                $(".reader-search-results").show();
-                dialogopen = true;
-                $("#reader-search-number").html(results.length);
-                var searchlength = term.length
-                for(var i in results){
-                  var searchindex = results[i].excerpt.toLowerCase().indexOf(term);
-
-                  let result = '<div class="reader-search-item" data-link="'+results[i].cfi+'"><div class="reader-search-item-content">' + results[i].excerpt.substring(0,searchindex)+ '<span class="reader-search-highlight">' +results[i].excerpt.substring(searchindex,searchindex+searchlength) + '</span>' + results[i].excerpt.substring(searchindex+searchlength) + '</div><div class="reader-search-item-location">'+book.locations.locationFromCfi(results[i].cfi) +'</div></div>'
-                  $('.reader-search-results-main').append(result);
-
-                }
-              })
-          }
-      });
-      
-      var next = document.getElementById("next");
-
-      next.addEventListener("click", function(e){
-        book.package.metadata.direction === "rtl" ? rendition.prev() : rendition.next();
-        var percentage = $("#rangeSlider").val();
-        $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
-        e.preventDefault();
-      }, false);
-
-      var prev = document.getElementById("prev");
-      prev.addEventListener("click", function(e){
-        book.package.metadata.direction === "rtl" ? rendition.next() : rendition.prev();
-        var percentage = $("#rangeSlider").val();
-        $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
-        e.preventDefault();
-      }, false);
-
-      var keyListener = function(e){
-
-        // Left Key
-        if ((e.keyCode || e.which) == 37) {
-          book.package.metadata.direction === "rtl" ? rendition.next() : rendition.prev();
-            var percentage = $("#rangeSlider").val();
-            $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
-        }
-
-        // Right Key
-        if ((e.keyCode || e.which) == 39) {
-          book.package.metadata.direction === "rtl" ? rendition.prev() : rendition.next();
-            var percentage = $("#rangeSlider").val();
-            $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
-        }
-
-      };
-
-      rendition.on("keyup", keyListener);
-      document.addEventListener("keyup", keyListener, false);
-      
-      // Load in stored locations from json or local storage
-      var key = book.key()+'-locations';
-      var stored = localStorage.getItem(key);
-      if (stored) {
-         return book.locations.load(stored);
-      } else {
-        // Or generate the locations on the fly
-        // Can pass an option number of chars to break sections by
-        // default is 150 chars
-        return book.locations.generate(1600);
+    launchIntoFullscreen(document.documentElement);
+  });
+  $("#reader-exitfullscreen-svg").click(function(){
+    function launchIntoFullscreen(element) {
+      if(element.exitFullscreen) {
+        element.exitFullscreen();
+      } else if(element.mozCancelFullScreen) {
+        element.mozCancelFullScreen();
+      } else if(element.webkitExitFullscreen) {
+        element.webkitExitFullscreen();
+      } else if(element.msExitFullscreen) {
+        element.msExitFullscreen();
       }
+    }
+    launchIntoFullscreen(document);
+  });
 
-    })
-    .then(function(locations){
-    	var bookmarkappender = ``;
-    	for(var i in bookmarkarr){
-	      	var bookmarkcfi = book.locations.cfiFromLocation(parseInt(bookmarkarr[i]));
-	      	if(bookmarkdataarr[i].length > 25){
-	      		bookmarkdataarr[i] = bookmarkdataarr[i].substring(0,25) + '...';
-	      	}
-	      	var obj = `<li class="bookmark-li" data-cfi="` + bookmarkcfi + `"><span class="bookmark-data">` + bookmarkdataarr[i] + `</span><span class="bookmark-loc">` + bookmarkarr[i] +`</span></li>`;
-	      	bookmarkappender = bookmarkappender + obj;
-	      }
-	     bookmarkappender = `<ul class="bookmark-ul">` + bookmarkappender + `</ul>`;
-	    $("#bookmark-menu").append(bookmarkappender);
-        var noteappender = ``;
-    	for(var i in notetextarr){
-	      	var noteloc = book.locations.locationFromCfi(notecfiarr[i]);
-	      	var truenotetext = notetextarr[i];
-	      	var truenoteselectedtext = noteselectedtextarr[i];
-	      	if(notetextarr[i].length > 25){
-	      		notetextarr[i] = notetextarr[i].substring(0,25) + '...';
-	      	}
-	      	if(noteselectedtextarr[i].length > 60){
-	      		noteselectedtextarr[i] = noteselectedtextarr[i].substring(0,60) + '...';
-	      	}
-	      	var obj = `<div class="reader-notes-item" data-cfi="` + notecfiarr[i] + `" data-note="` + truenotetext + `" data-text="` + truenoteselectedtext + `"><div class="reader-notes-club-div">
-          	           <div class="reader-notes-note">` + notetextarr[i] + `</div>
-          	           <div class="reader-notes-text">` + noteselectedtextarr[i] + `</div></div>
-          	           <svg class="reader-notetick-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.28 14.28"><title>Tick</title><circle cx="7.14" cy="7.14" r="7.14" fill="#999"/><rect x="7.89" y="3.23" width="1.15" height="7.94" transform="translate(7.57 -3.88) rotate(45)" fill="#fff"/><rect x="4.41" y="6.5" width="1.16" height="4.13" transform="translate(-4.6 6.04) rotate(-45)" fill="#fff"/></svg>
-          	           <div class="reader-notes-loc">`+ noteloc +`</div>
-                       </div>`;
-	      	noteappender = noteappender + obj;
-	      };
-
-	    $("#reader-notes-list").append(noteappender);
-        controls.style.display = "block";
-        slider.setAttribute("type", "range");
-        slider.setAttribute("min", 0);
-        slider.setAttribute("id", 'rangeSlider');
-        slider.setAttribute("max", 100);
-        // slider.setAttribute("max", book.locations.total+1);
-        slider.setAttribute("step", 1);
-        slider.setAttribute("value", 0);
-
-        slider.addEventListener("change", slide, false);
-        slider.addEventListener("input",function(){
-            var percentage = $("#rangeSlider").val();
-            $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
-            $("#reader-current-percentage").html(percentage + "%");
-            $("#reader-total-locations").html(locations.length);
-            $("#reader-current-location").html(Math.floor(locations.length*percentage*0.01)+ '-' + Math.ceil(locations.length*percentage*0.01) + '/');
-        });
-        slider.addEventListener("mousedown", function(){
-            mouseDown = true;
-        }, false);
-        slider.addEventListener("mouseup", function(){
-            mouseDown = false;
-        }, false);
-        
-        // Wait for book to be rendered to get current page
-        displayed.then(function(){
-            // Get the current CFI
-            var currentLocation = rendition.currentLocation();
-            // Get the Percentage (or location) from that CFI
-            var currentPage = book.locations.percentageFromCfi(currentLocation.start.cfi);
-            slider.value = currentPage;
-            currentPage.value = currentPage;
-            var percentage = 0;
-            $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
-        });
-
-        controls.appendChild(slider);
-        currentPage.addEventListener("change", function(){
-          var cfi = book.locations.cfiFromPercentage(currentPage.value/100);
-          rendition.display(cfi);
-        }, false);
-
-        // Listen for location changed event, get percentage from CFI
-        rendition.on('relocated', function(location){
-            var percent = book.locations.percentageFromCfi(location.start.cfi);
-            var percentage = Math.round(percent * 100);
-            if(!mouseDown) {
-                slider.value = percentage;
-                var percenti = $("#rangeSlider").val();
-                $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percenti +'%, rgb(230,230,230) '+ 0 + '%)');
-            }
-            currentPage.value = percentage;
-            $("#reader-current-percentage").html(percentage + "%");
-            $("#reader-total-locations").html(locations.length);
-            $("#reader-current-location").html(location.start.location+ '-' + location.end.location + '/');
-            if($.inArray(parseInt(location.start.location),bookmarkarr) != -1){
-              $("#reader-bookmark-svg path").css({fill:'#7e71c9'});
-            }else{
-              $("#reader-bookmark-svg path").css({fill:'#999'});
-            }
-        });
-
-        /*rendition.on("selected", function(cfiRange, contents) {
-          rendition.annotations.highlight(cfiRange, {}, (e) => {
-            console.log("highlight clicked", e.target);
-          });
-          contents.window.getSelection().removeAllRanges();
-
-        });*/
-        /*function onMouseUp(e) {
-            var selection = book.renderer.render.window.getSelection();
-            var text = selection.toString();
-            console.log("Texto selecionado: %s", text);
-            // $('body #area').highlight(text);
-        }
-      
-        book.on('renderer:mouseup', onMouseUp);*/
-
-        var epubcfi = undefined;
-        var newcfi = undefined;
-        var useselection = undefined;
-        var selected = undefined;
-        rendition.on('mouseup',function(cfiRange,contents){
-          epubcfi = undefined;
-          newcfi = undefined;
-          var range = rendition.getRange(rendition.currentLocation().start.cfi);
-          var endRange = rendition.getRange(rendition.currentLocation().end.cfi);
-          range.setEnd(endRange.startContainer, endRange.startOffset);
-          var cfistring = range.toString();
-          var selection =  rendition.views()._views[0].iframe;
-          var idoc= selection.contentDocument || selection.contentWindow.document;
-          var iwin= selection.contentWindow || selection.contentDocument.defaultView;
-
-          selected = ''+iwin.getSelection();
-          if(selected.length > 0 && selected.replace(/\s+/g, '').length > 0){
-              useselection = iwin.getSelection();
-              var irange = iwin.getSelection().getRangeAt(0);
-              var startcon = irange.startContainer.data;
-              var paraindex = cfistring.indexOf(startcon);
-              var selectionindex = irange.startOffset;
-              
-              var attacher = rendition.currentLocation().start.cfi.substring(8,rendition.currentLocation().start.cfi.indexOf('!'));
-              epubcfi = new ePub.CFI(irange).toString();
-              newcfi = epubcfi.substring(0,8) + attacher + epubcfi.substring(9,);
-              var screenx = String(cfiRange.screenX-80) + 'px';
-              var screeny = String(cfiRange.screenY-70) + 'px';
-              if(selected.indexOf(' ') != -1 && selected.indexOf(' ') != selected.length - 1){
-                  $(".selector-div").show();
-                  $(".selector-div").css({'top':screeny,'left': screenx});
-              }else{
-              	  $(".loading-dict-div").show();
-              	  $(".dictionary-div").empty();
-              	  $.ajax({
-		              url: '/getdict/',
-		              type:'POST',
-		              data:
-		              {
-		                'word': selected,
-		                'lang': $("#hidden-ebook-lang").html(),
-		                'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
-		              },
-		              success: function(data)
-		              {
-		              	/*<div class="dictionary-pronunciation">θɪn</div>
-						<div class="dictionary-part-of-speech">adjective</div>
-						<table class="dictionary-definitions">
-							<tbody>
-								<tr><td class="dictionary-index"><strong>1</strong></td><td class="dictionary-definition">with opposite surfaces or sides that are close or relatively close together.</td></tr>
-								<tr><th></th><td>
-									<div class="dictionary-synonyms">
-										<table><tbody>
-											<tr><td class="dictionary-synonym-label">synonyms:</td><td>narrow, fine, implausible</td></tr>
-										</tbody></table>
-									</div>
-								</td></tr>
-							</tbody>
-						</table>*/
-						var phoneticlist = data['phoneticlist'];
-		                var categorylist = data['categorylist'];
-		                var definelist = data['definelist'];
-		                var syarray = data['syarray'];
-		                if(categorylist.length != 0){
-		                	var appender = ``;
-                            for(var i in categorylist){
-                              var rowarray = ``;
-	                          for(var j in definelist[i]){
-	                          	var index = parseInt(j) + 1;
-	                          	var obj = `<tr><td class="dictionary-index"><strong>` + String(index) + `</strong></td><td class="dictionary-definition">` + definelist[i][j] + `</td></tr>`;
-	                          	rowarray = rowarray + obj;
-	                          };
-	                          if(syarray[i].length != 0){
-	                          	var systr = ``;
-	                          	for(var k in syarray[i]){
-                                  for(var m in syarray[i][k]){
-                                  	systr = systr + syarray[i][k][m] + `, `;
-                                  }
-	                          	}
-	                          	systr = `<tr><th></th><td>
-									      <div class="dictionary-synonyms">
-										  <table><tbody>
-											<tr><td class="dictionary-synonym-label">synonyms:</td><td>` + systr +`</td></tr>
-										  </tbody></table>
-									      </div>
-								          </td></tr>`
-	                          }else{
-	                          	var systr = ``;
-	                          }
-	                          var capp = `<div class="dictionary-pronunciation">` + phoneticlist[i] + `</div>
-						                  <div class="dictionary-part-of-speech">` + categorylist[i] + `</div>
-						                  <table class="dictionary-definitions">
-							              <tbody>` + rowarray + systr + 
-							              `</tbody>
-						                  </table>`;
-	                          appender = appender + capp;
-			                } 
-			                appender = `<div class="dictionary-title">` + selected + `</div>` + appender;
-			                $(".dictionary-div").append(appender);
-			                $(".loading-dict-div").hide();
-			                $('.dictionary-div').show();
-			                $(".selector-div").show();
-		                }else{
-		                	$(".dictionary-div").append('Nothing to show!');
-			                $(".loading-dict-div").hide();
-			                $('.dictionary-div').show();
-			                $(".selector-div").show();
-		                }
-		              },
-		              error: function(xhr,status,error){
-		                  alert(xhr.responseText);
-		                }             
-		          });
-                  var wwidth = $(window).width();
-		          var wheight = $(window).height();
-		          if(cfiRange.screenY +300 < wheight && cfiRange.screenX +387 < wwidth){
-		            $(".dictionary-div").css({'top':cfiRange.screenY-100,'left':cfiRange.screenX-90});
-		            $(".selector-div").css({'top':cfiRange.screenY-100+10,'left':cfiRange.screenX-90+290});
-		          }else if(cfiRange.screenY +300>= wheight || cfiRange.screenX + 387>= wwidth){
-		              if(cfiRange.screenY + 300 >= wheight && cfiRange.screenX + 387 < wwidth){
-		                  var ydiff = cfiRange.screenY + 300- wheight;
-		                  $(".dictionary-div").css({'top':cfiRange.screenY-ydiff -100,'left':cfiRange.screenX-90});
-		                  $(".selector-div").css({'top':cfiRange.screenY-ydiff -100+10,'left':cfiRange.screenX-90+290});
-		              }else if(cfiRange.screenY + 300 < wheight && cfiRange.screenX + 387 >= wwidth){
-		                  var xdiff = cfiRange.screenX + 387 - wwidth;
-		                  $(".dictionary-div").css({'top':cfiRange.screenY-100,'left':cfiRange.screenX-xdiff-90});
-		                  $(".selector-div").css({'top':cfiRange.screenY-100+10,'left':cfiRange.screenX-xdiff-90+290});
-		              }else if(cfiRange.screenY + 300 >= wheight && cfiRange.screenX + 387 >= wwidth){
-		                  var xdiff = cfiRange.screenX + 387 - wwidth;
-		                  var ydiff = cfiRange.screenY + 300- wheight;
-		                  $(".dictionary-div").css({'top':cfiRange.screenY-ydiff-100,'left':cfiRange.screenX-xdiff-90});
-		                  $(".selector-div").css({'top':cfiRange.screenY-ydiff-100+10,'left':cfiRange.screenX-xdiff-90+290});
-		              }
-		              
-		          };
-              }
-          }
-        });
-        rendition.on('mousemove',function(){
-            $(".hmarker-div").hide();
-        });
-        $(".hmarker-delete").click(function(){
-            var cfirange = $(this).parent().attr('data-cfi');
-            $.ajax({
-              url: '/removehighlight/',
-              type:'POST',
-              data:
-              {
-                'ebookid': parseInt($("#hidden-ebook-id").html()),
-                'cfirange': cfirange,
-                'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
-              },
-              success: function(data)
-              {
-                rendition.annotations.remove(cfirange,"highlight");
-                $(".hmarker-note").html('');
-                $(".note-textarea").val('');
-                $(".hmarker-div").hide();
-              },
-              error: function(xhr,status,error){
-                  alert(xhr.responseText);
-                }             
-            });
-        });
-        var hmarkercfi = undefined;
-        var hmarkercolor = undefined;
-        var newnote = false;
-        $(".hmarker-edit").click(function(e){
-        	newnote = false;
-            hmarkercfi = $(".hmarker-div").attr('data-cfi');
-            $(".hmarker-div").hide();
-            $(".note-maker").show();
-            var wwidth = $(window).width();
-            var wheight = $(window).height();
-            if(e.screenY +195 < wheight && e.screenX + 380 < wwidth){
-              $(".note-maker").css({'top':e.screenY-100,'left':e.screenX-90});
-            }else if(e.screenY +195>= wheight || e.screenX + 380>= wwidth){
-              if(e.screenY + 195 >= wheight && e.screenX + 380 < wwidth){
-                  var ydiff = e.screenY + 195- wheight;
-                  $(".note-maker").css({'top':e.screenY-ydiff -100,'left':e.screenX-90});
-              }else if(e.screenY + 195 < wheight && e.screenX + 380 >= wwidth){
-                  var xdiff = e.screenX + 380 - wwidth;
-                  $(".note-maker").css({'top':e.screenY-100,'left':e.screenX-xdiff-90});
-              }else if(e.screenY + 195 >= wheight && e.screenX + 380 >= wwidth){
-                  var xdiff = e.screenX + 380 - wwidth;
-                  var ydiff = e.screenY + 195- wheight;
-                  $(".note-maker").css({'top':e.screenY-ydiff-100,'left':e.screenX-xdiff-90});
-              }
-              
-            }
-            $(".note-control div").css('cssText','border:1px solid #999 !important');
-            $(".note-highlighter1").css('cssText','border:2px solid #999 !important');
-            hmarkercolor = 'rgb(255, 237, 165)';
-            $(".note-textarea").val($(".hmarker-note").attr('data-text'));
-        });
-        $(".note-highlighter1").click(function(){
-          $(".note-control div").css('cssText','border:1px solid #999 !important');
-          $(".note-highlighter1").css('cssText','border:2px solid #999 !important');
-          hmarkercolor = 'rgb(255, 237, 165)';
-        });
-        $(".note-highlighter2").click(function(){
-          $(".note-control div").css('cssText','border:1px solid #999 !important');
-          $(".note-highlighter2").css('cssText','border:2px solid #999 !important');
-          hmarkercolor = 'rgb(219, 255, 183)';
-        });
-        $(".note-highlighter3").click(function(){
-          $(".note-control div").css('cssText','border:1px solid #999 !important');
-          $(".note-highlighter3").css('cssText','border:2px solid #999 !important');
-          hmarkercolor = 'rgb(255, 219, 219)';
-        });
-        $(".note-highlighter4").click(function(){
-          $(".note-control div").css('cssText','border:1px solid #999 !important');
-          $(".note-highlighter4").css('cssText','border:2px solid #999 !important');
-          hmarkercolor = 'rgb(201, 237, 237)';
-        });
-        $(".note-cancel").click(function(){
-          $(".note-maker").hide();
-        });
-        $(".note-save").click(function(){
-        	try{
-        	    useselection.removeAllRanges();
-        	}
-        	catch(err){
-                
-        	}
-            var notetext = $(".note-textarea").val();
-            if(notetext == ''){
-              var notenote = 0;
-            }else{
-              var notenote = 1;
-            }
-            if(newnote== true){
-              var cf = newcfi;
-              var cl = hmarkercolor;
-              var seltext = selected;
-            }else{
-              var cf = hmarkercfi;
-              var cl = hmarkercolor;
-              var seltext = '';
-            }
-
-            $.ajax({
-              url: '/changehighlight/',
-              type:'POST',
-              data:
-              {
-                'ebookid': parseInt($("#hidden-ebook-id").html()),
-                'cfirange': cf,
-                'notenote': notenote,
-                'notetext':notetext,
-                'color': cl,
-                'selected':seltext,
-                'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
-              },
-              success: function(data)
-              {
-                $(".note-maker").hide();
-                if(newnote==false){
-                    rendition.annotations.remove(hmarkercfi,'highlight');
-                }
-                rendition.annotations.highlight(cf,String(cl) + '@#$%^-decode##' + String(notetext));
-                if(newnote== true){
-                	var noteappender = ``;
-			      	var noteloc = book.locations.locationFromCfi(cf);
-			      	var truenotetext = notetext;
-			      	var truenoteselectedtext = seltext;
-			      	if(notetext.length > 25){
-			      		notetext = notetext.substring(0,25) + '...';
-			      	}
-			      	if(seltext.length > 60){
-			      		seltext = seltext.substring(0,60) + '...';
-			      	}
-			      	var obj = `<div class="reader-notes-item" data-cfi="` + cf + `" data-note="` + truenotetext + `" data-text="` + truenoteselectedtext + `"><div class="reader-notes-club-div">
-		          	           <div class="reader-notes-note">` + notetext + `</div>
-		          	           <div class="reader-notes-text">` + seltext + `</div></div>
-		          	           <svg class="reader-notetick-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.28 14.28"><title>Tick</title><circle cx="7.14" cy="7.14" r="7.14" fill="#999"/><rect x="7.89" y="3.23" width="1.15" height="7.94" transform="translate(7.57 -3.88) rotate(45)" fill="#fff"/><rect x="4.41" y="6.5" width="1.16" height="4.13" transform="translate(-4.6 6.04) rotate(-45)" fill="#fff"/></svg>
-		          	           <div class="reader-notes-loc">`+ noteloc +`</div>
-		                       </div>`;
-			      	noteappender = noteappender + obj;
-				    $("#reader-notes-list").append(noteappender);
-                }else{
-                	$(".reader-notes-item").each(function(){
-                		if($(this).attr('data-cfi') == cf){
-                			var truenotetext = notetext;
-					      	if(notetext.length > 25){
-					      		notetext = notetext.substring(0,25) + '...';
-					      	}
-					      	$(this).attr('data-note',truenotetext);
-					      	$(this).find('.reader-notes-note').html(notetext);
-                		}
-                	})
-                }
-              },
-              error: function(xhr,status,error){
-                  alert(xhr.responseText);
-                }             
-            });
-        });
-        $(".selector-highlight div").click(function(){
-            var selclass = String($(this).attr('class'));
-            if(selclass == 'selector-highlight1'){
-              var colora = 'rgb(255, 237, 165)';
-            }
-            else if(selclass == 'selector-highlight2'){
-              var colora = 'rgb(219, 255, 183)';
-            }
-            else if(selclass == 'selector-highlight3'){
-              var colora = 'rgb(255, 219, 219)';
-            }
-            else if(selclass == 'selector-highlight4'){
-              var colora = 'rgb(201, 237, 237)';
-            }
-            $(".selector-div").hide();
-            useselection.removeAllRanges();
-            rendition.annotations.highlight(newcfi,String(colora) + '@#$%^-decode##');
-
-            $.ajax({
-              url: '/addhighlight/',
-              type:'POST',
-              data:
-              {
-                'ebookid': parseInt($("#hidden-ebook-id").html()),
-                'cfirange': newcfi,
-                'colora': colora,
-                'selected':selected,
-                'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
-              },
-              success: function(data)
-              {
-                
-              },
-              error: function(xhr,status,error){
-                  alert(xhr.responseText);
-                }             
-            });
-        });
-        $(".selector-note").click(function(e){
-        	$(".selector-div").hide();
-            $(".note-maker").show();
-            var wwidth = $(window).width();
-            var wheight = $(window).height();
-            newnote = true;
-            if(e.screenY +195 < wheight && e.screenX + 380 < wwidth){
-              $(".note-maker").css({'top':e.screenY-100,'left':e.screenX-90});
-            }else if(e.screenY +195>= wheight || e.screenX + 380>= wwidth){
-              if(e.screenY + 195 >= wheight && e.screenX + 380 < wwidth){
-                  var ydiff = e.screenY + 195- wheight;
-                  $(".note-maker").css({'top':e.screenY-ydiff -100,'left':e.screenX-90});
-              }else if(e.screenY + 195 < wheight && e.screenX + 380 >= wwidth){
-                  var xdiff = e.screenX + 380 - wwidth;
-                  $(".note-maker").css({'top':e.screenY-100,'left':e.screenX-xdiff-90});
-              }else if(e.screenY + 195 >= wheight && e.screenX + 380 >= wwidth){
-                  var xdiff = e.screenX + 380 - wwidth;
-                  var ydiff = e.screenY + 195- wheight;
-                  $(".note-maker").css({'top':e.screenY-ydiff-100,'left':e.screenX-xdiff-90});
-              }
-              
-            }
-            $(".note-control div").css('cssText','border:1px solid #999 !important');
-            $(".note-highlighter1").css('cssText','border:2px solid #999 !important');
-            $(".note-textarea").val('');
-            hmarkercolor = 'rgb(255, 237, 165)';
-        });
-        this.rendition.themes.default({
-          '::selection': {
-            'background': 'rgba(255,255,0, 0.3)'
-          }
-        });
-        rendition.on('mousedown',function(){
-            $(".selector-div").hide();
-            $(".dictionary-div").hide();
-        });
-        $(document).on('click','.reader-notes-club-div',function(){
-        	var cfi = $(this).parent().attr('data-cfi');
-        	rendition.display(cfi);
-        });
-        // Save out the generated locations to JSON
-        localStorage.setItem(book.key()+'-locations', book.locations.save());
-
-    });
-    
-
-    var title = document.getElementById("title");
-
-    rendition.on("rendered", function(section){
-      var current = book.navigation && book.navigation.get(section.href);
-
-      if (current) {
-        var $select = document.getElementById("toc");
-        var $selected = $select.querySelector("div[selected]");
-        if ($selected) {
-          $selected.removeAttribute("selected");
-        }
-
-        var $options = $select.querySelectorAll("div");
-        for (var i = 0; i < $options.length; ++i) {
-          let selected = $options[i].getAttribute("ref") === current.href;
-          if (selected) {
-            $options[i].setAttribute("selected", "");
-          }
-        }
-      }
-
-    });
-
-    rendition.on("relocated", function(location){
-      console.log(location);
-
-      var next = book.package.metadata.direction === "rtl" ?  document.getElementById("prev") : document.getElementById("next");
-      var prev = book.package.metadata.direction === "rtl" ?  document.getElementById("next") : document.getElementById("prev");
-
-      if (location.atEnd) {
-        next.style.visibility = "hidden";
-      } else {
-        next.style.visibility = "visible";
-      }
-
-      if (location.atStart) {
-        prev.style.visibility = "hidden";
-      } else {
-        prev.style.visibility = "visible";
-      }
-
-    });
-
-    rendition.on("layout", function(layout) {
-      let viewer = document.getElementById("viewer");
-
-      if (layout.spread) {
-        viewer.classList.remove('single');
-      } else {
-        viewer.classList.add('single');
-      }
-    });
-    rendition.on("mouseup",function(){
-      if(dialogopen==true){
+  document.addEventListener("fullscreenchange", function() {
+    var screencfi = elcfi;
+      if(fullscreenactive == true){
+      	rendition.destroy();
+	  	var readerheight = 570;
+	  	$('#viewer').attr('style', 'margin-top: 90px !important;width:90% !important');
+	    $.getScript('/static/js/reloadreader.js', function( data, textStatus, jqxhr ) {
+	        readerload(readerheight);
+	        rendition.display(screencfi);
+	        if(nmode == true){
+	          rendition.themes.register("night", { "body": { "background": "#191919","color": "white"}});
+		      rendition.themes.select("night");
+		      $("body").css('background-color','#191919');
+		      $("#reader-search-input").css({'background-color':'#191919','color':'white'});
+		      $('#title-reader').css('color','white');
+		      $("#reader-lnav").css('color','white');
+		      nmode = true;
+	        }else{
+	        	nmode = false;
+	        }
+	    });
+	    $("#reader-lnav").css('bottom','42px');
+	    $("#reader-lnav2").show();
+        $(".reader-unav").show();
+        $(".reader-unav-right").show();
+        $(".reader-fullscreen-heading").hide();
+        $(".reader-fullscreen-panel").hide();
+        $("#reader-fullscreen-svg").show();
+        $("#reader-exitfullscreen-svg").hide();
+        fullscreenactive = false
+      }else{
+      	rendition.destroy();
+	  	var readerheight = 680;
+	  	$('#viewer').attr('style', 'margin-top: 40px !important;width:95% !important');
+	    $.getScript('/static/js/reloadreader.js', function( data, textStatus, jqxhr ) {
+	        readerload(readerheight);
+	        rendition.display(screencfi);
+	        if(nmode == true){
+	          rendition.themes.register("night", { "body": { "background": "#191919","color": "white"}});
+		      rendition.themes.select("night");
+		      $("body").css('background-color','#191919');
+		      $("#reader-search-input").css({'background-color':'#191919','color':'white'});
+		      $('#title-reader').css('color','white');
+		      $("#reader-lnav").css('color','white');
+		      nmode = true;
+	        }else{
+	        	nmode = false;
+	        }
+	    });
+	    $("#viewer.spreads").after().css('height','100%');
+	    $("#reader-lnav").css('bottom','33px');
+	    $("#reader-lnav2").hide();
+        $(".reader-unav").hide();
+        $(".reader-unav-right").hide();
+        $(".reader-fullscreen-heading").show();
+        $(".reader-fullscreen-panel").show();
+        $("#reader-fullscreen-svg").hide();
+        $("#reader-exitfullscreen-svg").show();
+        fullscreenactive = true;
+	}
+  });
+  document.addEventListener("mozfullscreenchange", function() {
+    var screencfi = elcfi;
+      if(fullscreenactive == true){
+      	rendition.destroy();
+	  	var readerheight = 570;
+	  	$('#viewer').attr('style', 'margin-top: 90px !important;width:90% !important');
+	    $.getScript('/static/js/reloadreader.js', function( data, textStatus, jqxhr ) {
+	        readerload(readerheight);
+	        rendition.display(screencfi);
+	        if(nmode == true){
+	          rendition.themes.register("night", { "body": { "background": "#191919","color": "white"}});
+		      rendition.themes.select("night");
+		      $("body").css('background-color','#191919');
+		      $("#reader-search-input").css({'background-color':'#191919','color':'white'});
+		      $('#title-reader').css('color','white');
+		      $("#reader-lnav").css('color','white');
+		      nmode = true;
+	        }else{
+	        	nmode = false;
+	        }
+	    });
+	    $("#reader-lnav").css('bottom','42px');
+	    $("#reader-lnav2").show();
+        $(".reader-unav").show();
+        $(".reader-unav-right").show();
+        $(".reader-fullscreen-heading").hide();
+        $(".reader-fullscreen-panel").hide();
+        $("#reader-fullscreen-svg").show();
+        $("#reader-exitfullscreen-svg").hide();
+        fullscreenactive = false
+      }else{
+      	rendition.destroy();
+	  	var readerheight = 680;
+	  	$('#viewer').attr('style', 'margin-top: 40px !important;width:95% !important');
+	    $.getScript('/static/js/reloadreader.js', function( data, textStatus, jqxhr ) {
+	        readerload(readerheight);
+	        rendition.display(screencfi);
+	        if(nmode == true){
+	          rendition.themes.register("night", { "body": { "background": "#191919","color": "white"}});
+		      rendition.themes.select("night");
+		      $("body").css('background-color','#191919');
+		      $("#reader-search-input").css({'background-color':'#191919','color':'white'});
+		      $('#title-reader').css('color','white');
+		      $("#reader-lnav").css('color','white');
+		      nmode = true;
+	        }else{
+	        	nmode = false;
+	        }
+	    });
+	    $("#viewer.spreads").after().css('height','100%');
+	    $("#reader-lnav").css('bottom','33px');
+	    $("#reader-lnav2").hide();
+        $(".reader-unav").hide();
+        $(".reader-unav-right").hide();
+        $(".reader-fullscreen-heading").show();
+        $(".reader-fullscreen-panel").show();
+        $("#reader-fullscreen-svg").hide();
+        $("#reader-exitfullscreen-svg").show();
+        fullscreenactive = true;
+	}
+  });
+  document.addEventListener("webkitfullscreenchange", function() {
+  	  var screencfi = elcfi;
+      if(fullscreenactive == true){
+      	rendition.destroy();
+	  	var readerheight = 570;
+	  	$('#viewer').attr('style', 'margin-top: 90px !important;width:90% !important');
+	    $.getScript('/static/js/reloadreader.js', function( data, textStatus, jqxhr ) {
+	        readerload(readerheight);
+	        rendition.display(screencfi);
+	        if(nmode == true){
+	          rendition.themes.register("night", { "body": { "background": "#191919","color": "white"}});
+		      rendition.themes.select("night");
+		      $("body").css('background-color','#191919');
+		      $("#reader-search-input").css({'background-color':'#191919','color':'white'});
+		      $('#title-reader').css('color','white');
+		      $("#reader-lnav").css('color','white');
+		      nmode = true;
+	        }else{
+	        	nmode = false;
+	        }
+	    });
+	    $("#reader-lnav").css('bottom','42px');
+	    $("#reader-lnav2").show();
+        $(".reader-unav").show();
+        $(".reader-unav-right").show();
+        $(".reader-fullscreen-heading").hide();
+        $(".reader-fullscreen-panel").hide();
+        $("#reader-fullscreen-svg").show();
+        $("#reader-exitfullscreen-svg").hide();
+        fullscreenactive = false
+      }else{
+      	rendition.destroy();
+	  	var readerheight = 680;
+	  	$('#viewer').attr('style', 'margin-top: 40px !important;width:95% !important');
+	    $.getScript('/static/js/reloadreader.js', function( data, textStatus, jqxhr ) {
+	        readerload(readerheight);
+	        rendition.display(screencfi);
+	        if(nmode == true){
+	          rendition.themes.register("night", { "body": { "background": "#191919","color": "white"}});
+		      rendition.themes.select("night");
+		      $("body").css('background-color','#191919');
+		      $("#reader-search-input").css({'background-color':'#191919','color':'white'});
+		      $('#title-reader').css('color','white');
+		      $("#reader-lnav").css('color','white');
+		      nmode = true;
+	        }else{
+	        	nmode = false;
+	        }
+	    });
+	    $("#viewer.spreads").after().css('height','100%');
+	    $("#reader-lnav").css('bottom','33px');
+	    $("#reader-lnav2").hide();
+        $(".reader-unav").hide();
+        $(".reader-unav-right").hide();
+        $(".reader-fullscreen-heading").show();
+        $(".reader-fullscreen-panel").show();
+        $("#reader-fullscreen-svg").hide();
+        $("#reader-exitfullscreen-svg").show();
+        fullscreenactive = true;
+	}
+  });
+  document.addEventListener("msfullscreenchange", function() {
+    var screencfi = elcfi;
+      if(fullscreenactive == true){
+      	rendition.destroy();
+	  	var readerheight = 570;
+	  	$('#viewer').attr('style', 'margin-top: 90px !important;width:90% !important');
+	    $.getScript('/static/js/reloadreader.js', function( data, textStatus, jqxhr ) {
+	        readerload(readerheight);
+	        rendition.display(screencfi);
+	        if(nmode == true){
+	          rendition.themes.register("night", { "body": { "background": "#191919","color": "white"}});
+		      rendition.themes.select("night");
+		      $("body").css('background-color','#191919');
+		      $("#reader-search-input").css({'background-color':'#191919','color':'white'});
+		      $('#title-reader').css('color','white');
+		      $("#reader-lnav").css('color','white');
+		      nmode = true;
+	        }else{
+	        	nmode = false;
+	        }
+	    });
+	    $("#reader-lnav").css('bottom','42px');
+	    $("#reader-lnav2").show();
+        $(".reader-unav").show();
+        $(".reader-unav-right").show();
+        $(".reader-fullscreen-heading").hide();
+        $(".reader-fullscreen-panel").hide();
+        $("#reader-fullscreen-svg").show();
+        $("#reader-exitfullscreen-svg").hide();
+        fullscreenactive = false
+      }else{
+      	rendition.destroy();
+	  	var readerheight = 680;
+	  	$('#viewer').attr('style', 'margin-top: 40px !important;width:95% !important');
+	    $.getScript('/static/js/reloadreader.js', function( data, textStatus, jqxhr ) {
+	        readerload(readerheight);
+	        rendition.display(screencfi);
+	        if(nmode == true){
+	          rendition.themes.register("night", { "body": { "background": "#191919","color": "white"}});
+		      rendition.themes.select("night");
+		      $("body").css('background-color','#191919');
+		      $("#reader-search-input").css({'background-color':'#191919','color':'white'});
+		      $('#title-reader').css('color','white');
+		      $("#reader-lnav").css('color','white');
+		      nmode = true;
+	        }else{
+	        	nmode = false;
+	        }
+	    });
+	    $("#viewer.spreads").after().css('height','100%');
+	    $("#reader-lnav").css('bottom','33px');
+	    $("#reader-lnav2").hide();
+        $(".reader-unav").hide();
+        $(".reader-unav-right").hide();
+        $(".reader-fullscreen-heading").show();
+        $(".reader-fullscreen-panel").show();
+        $("#reader-fullscreen-svg").hide();
+        $("#reader-exitfullscreen-svg").show();
+        fullscreenactive = true;
+	}
+  });
+  	var dialogopen = false;
+  $(".reader-do").hide();
+  $("#reader-text-svg").click(function(){
+    if(dialogopen==false){
+      $("#reader-text-svg path").css({fill:"#7e71c9"});
+      $(".reader-do").show();
+      dialogopen = true;
+    }else{
+    	if($(".reader-do").css('display') == 'block'){
         $("#reader-text-svg path").css({fill:"#999"});
         $(".reader-do").hide();
-        $(".reader-search-results").hide();
-        $("#reader-submenu-svg rect").css({fill:"#999"});
-        $(".reader-content-menu").hide();
-        $("#reader-music-svg rect").css({fill:"#999"});
-        $("#reader-music-svg ellipse").css({fill:"#999"});
-        $(".reader-music-menu").hide();
-        $(".reader-notes-menu").hide();
-	    $("#reader-notes-svg path").css({fill:"#999"});
         dialogopen = false;
-      }
-    })
-
-    window.addEventListener("unload", function () {
-      console.log("unloading");
-      this.book.destroy();
-    });
-
-    book.loaded.navigation.then(function(toc){
-      var $nav = document.getElementById("toc"),
-      docfrag = document.createDocumentFragment();
-      var addTocItems = function (parent, tocItems) {
-        var $ul = document.createElement("ul");
-        tocItems.forEach(function(chapter) {
-          var item = document.createElement("li");
-          var link = document.createElement("a");
-          item.className = 'reader-toc-items'
-          link.className = 'reader-toc-links';
-          link.textContent = chapter.label;
-          link.href = chapter.href;
-          item.appendChild(link);
-
-          if (chapter.subitems) {
-            addTocItems(item, chapter.subitems)
-          }
-
-          link.onclick = function(){
-            var url = link.getAttribute("href");
-            rendition.display(url);
-            return false;
-          };
-
-          $ul.appendChild(item);
-        });
-        parent.appendChild($ul);
-      };
-
-      addTocItems(docfrag, toc);
-
-      $nav.appendChild(docfrag);
-
-    });
-    
-
-    function getAttributes ( $node ) {
-      $.each( $node[0].attributes, function ( index, attribute ) {
-      console.log(attribute.name+':'+attribute.value);
-   } );
-}
-
-
-    $('div').click(function(){
-      if($(this).data('link')){
-            alert('Hi');
-            getAttributes($(this)); 
-            alert($(this).data('link'));
-            rendition.display($(this).attr('data-link'));
-          }
-          })
-
-  </script>
-  <script type="text/javascript">
-    var fullscreenactive = false;
-    $("#reader-fullscreen-svg").click(function(){
-      function launchIntoFullscreen(element) {
-        if(element.requestFullscreen) {
-          element.requestFullscreen();
-        } else if(element.mozRequestFullScreen) {
-          element.mozRequestFullScreen();
-        } else if(element.webkitRequestFullscreen) {
-          element.webkitRequestFullscreen();
-        } else if(element.msRequestFullscreen) {
-          element.msRequestFullscreen();
-        }
-      }
-      launchIntoFullscreen(document.documentElement);
-    });
-    $("#reader-exitfullscreen-svg").click(function(){
-      function launchIntoFullscreen(element) {
-        if(element.exitFullscreen) {
-          element.exitFullscreen();
-        } else if(element.mozCancelFullScreen) {
-          element.mozCancelFullScreen();
-        } else if(element.webkitExitFullscreen) {
-          element.webkitExitFullscreen();
-        } else if(element.msExitFullscreen) {
-          element.msExitFullscreen();
-        }
-      }
-      launchIntoFullscreen(document);
-    });
-    
-    document.addEventListener("keydown",function(e){
-    	if(e.keyCode == 122){
-    		e.preventDefault();
-    	}
-    	/*console.log(e.keyCode);
-    	console.log(fullscreenactive);
-        if(e.keyCode==122 && fullscreenactive==false){
-          $(".reader-unav").hide();
-          $(".reader-unav-right").hide();
-          $("#control").hide();
-          $(".reader-fullscreen-heading").show();
-          fullscreenactive = true
-        }else if(e.keyCode==122 && fullscreenactive==true){
-          $(".reader-unav").show();
-          $(".reader-unav-right").show();
-          $("#control").show();
-          $(".reader-fullscreen-heading").hide();
-          fullscreenactive = false
-        }*/
-    });
-    var ctrlDown = false;
-    rendition.on('keydown',function(e) {
-        if (e.keyCode == 17){
-          ctrlDown = true;
-        }
-    });
-    rendition.on('keyup',function(e){
-        if (e.keyCode == 17){
-          ctrlDown = false;
-        }
-    });
-    rendition.on("keydown",function(e){
-    	if(e.keyCode == 67 && ctrlDown == true){
-            e.preventDefault();
-    	}
-    });
-    var ctrlDown2 = false;
-    $(document).on('keydown',function(e) {
-        if (e.keyCode == 17){
-          ctrlDown2 = true;
-        }
-    });
-    $(document).on('keyup',function(e){
-        if (e.keyCode == 17){
-          ctrlDown2 = false;
-        }
-    });
-    $(document).on("keydown",function(e){
-    	if(e.keyCode == 67 && ctrlDown2 == true){
-            e.preventDefault();
-    	}
-    });
-
-
-    document.addEventListener("fullscreenchange", function() {
-      if(fullscreenactive == true){
-        $(".reader-unav").show();
-        $(".reader-unav-right").show();
-        $("#control").show();
-        $(".reader-fullscreen-heading").hide();
-        $(".reader-fullscreen-panel").hide();
-        fullscreenactive = false
-      }else{
-        $(".reader-unav").hide();
-        $(".reader-unav-right").hide();
-        $("#control").hide();
-        $(".reader-fullscreen-heading").show();
-        $(".reader-fullscreen-panel").show();
-        fullscreenactive = true
-      }
-    });
-    document.addEventListener("mozfullscreenchange", function() {
-      if(fullscreenactive == true){
-        $(".reader-unav").show();
-        $(".reader-unav-right").show();
-        $("#control").show();
-        $(".reader-fullscreen-heading").hide();
-        $(".reader-fullscreen-panel").hide();
-        fullscreenactive = false
-      }else{
-        $(".reader-unav").hide();
-        $(".reader-unav-right").hide();
-        $("#control").hide();
-        $(".reader-fullscreen-heading").show();
-        $(".reader-fullscreen-panel").show();
-        fullscreenactive = true
-      }
-    });
-    document.addEventListener("webkitfullscreenchange", function() {
-        if(fullscreenactive == true){
-          $(".reader-unav").show();
-          $(".reader-unav-right").show();
-          $("#control").show();
-          $(".reader-fullscreen-heading").hide();
-          $(".reader-fullscreen-panel").hide();
-          fullscreenactive = false
-        }else{
-          $(".reader-unav").hide();
-          $(".reader-unav-right").hide();
-          $("#control").hide();
-          $(".reader-fullscreen-heading").show();
-          $(".reader-fullscreen-panel").show();
-          fullscreenactive = true
-        }
-    });
-    document.addEventListener("msfullscreenchange", function() {
-      if(fullscreenactive == true){
-        $(".reader-unav").show();
-        $(".reader-unav-right").show();
-        $("#control").show();
-        $(".reader-fullscreen-heading").hide();
-        $(".reader-fullscreen-panel").hide();
-        fullscreenactive = false
-      }else{
-        $(".reader-unav").hide();
-        $(".reader-unav-right").hide();
-        $("#control").hide();
-        $(".reader-fullscreen-heading").show();
-        $(".reader-fullscreen-panel").show();
-        fullscreenactive = true
-      }
-    });
-    var dialogopen = false;
-    $(".reader-do").hide();
-    $("#reader-text-svg").click(function(){
-      if(dialogopen==false){
-        $("#reader-text-svg path").css({fill:"#7e71c9"});
+    }else{
+    	$("#reader-text-svg path").css({fill:"#7E71C9"});
         $(".reader-do").show();
-        dialogopen = true;
+        dialogopen = true;;
+    }
+    }
+  $(".reader-search-results").hide();
+  $("#reader-submenu-svg rect").css({fill:"#999"});
+  $(".reader-content-menu").hide();
+  $("#reader-music-svg rect").css({fill:"#999"});
+  $("#reader-music-svg ellipse").css({fill:"#999"});
+  $(".reader-music-menu").hide();
+  $(".reader-notes-menu").hide();
+  $("#reader-notes-svg path").css({fill:"#999"});
+  })
+  $("#reader-text-svg").mouseover(function(){
+      $("#reader-text-svg path").css({fill:"#7e71c9"});
+  })
+  $("#reader-text-svg").mouseleave(function(){
+  	if($(".reader-do").css('display') == 'none'){
+          $("#reader-text-svg path").css({fill:"#999"});
       }else{
-        $("#reader-text-svg path").css({fill:"#999"});
-        $(".reader-do").hide();
-        dialogopen = false;
+      	$("#reader-text-svg path").css({fill:"#7e71c9"});
       }
-    })
-    $(".reader-do-title i").click(function(){
-      $("#reader-text-svg path").css({fill:"#999"});
-      $(".reader-do").hide();
-      dialogopen = false;
-    });
+  })
+  $(".reader-do-title i").click(function(){
+    $("#reader-text-svg path").css({fill:"#999"});
+    $(".reader-do").hide();
+    dialogopen = false;
+  });
 
+  $(".reader-search-results").hide();
+  $(".reader-search-results h3 i").click(function(){
     $(".reader-search-results").hide();
-    $(".reader-search-results h3 i").click(function(){
-      $(".reader-search-results").hide();
-      dialogopen = false;
-    });
+    dialogopen = false;
+  });
 
-    $(".reader-content-menu").hide();
-    $("#reader-submenu-svg").click(function(){
-      if(dialogopen==false){
-        $("#reader-submenu-svg rect").css({fill:"#7e71c9"});
-        $(".reader-content-menu").show();
-        dialogopen = true;
-      }else{
+  $(".reader-content-menu").hide();
+  $("#reader-submenu-svg").click(function(){
+    if(dialogopen==false){
+      $("#reader-submenu-svg rect").css({fill:"#7e71c9"});
+      $(".reader-content-menu").show();
+      dialogopen = true;
+    }else{
+    	if($(".reader-content-menu").css('display') == 'block'){
         $("#reader-submenu-svg rect").css({fill:"#999"});
         $(".reader-content-menu").hide();
         dialogopen = false;
-      }
-    })
-    $(".reader-content-menu h3 i").click(function(){
-      $("#reader-submenu-svg rect").css({fill:"#999"});
-      $(".reader-content-menu").hide();
-      dialogopen = false;
-    });
+    }else{
+    	$("#reader-submenu-svg rect").css({fill:"#7e71c9"});
+          $(".reader-content-menu").show();
+          dialogopen = true;
+    }
+    }
+    $("#reader-text-svg path").css({fill:"#999"});
+    $(".reader-do").hide();
+    $(".reader-search-results").hide();
+    $("#reader-music-svg rect").css({fill:"#999"});
+    $("#reader-music-svg ellipse").css({fill:"#999"});
+    $(".reader-music-menu").hide();
     $(".reader-notes-menu").hide();
-    $("#reader-notes-svg").click(function(){
-    	if(dialogopen==false){
-	        $("#reader-notes-svg path").css({fill:"#7e71c9"});
-	        $(".reader-notes-menu").show();
-	        dialogopen = true;
-	    }else{
+  $("#reader-notes-svg path").css({fill:"#999"});
+  })
+
+  $("#reader-submenu-svg").mouseover(function(){
+      $("#reader-submenu-svg rect").css({fill:"#7e71c9"});
+  })
+  $("#reader-submenu-svg").mouseleave(function(){
+  	if($(".reader-content-menu").css('display') == 'none'){
+          $("#reader-submenu-svg rect").css({fill:"#999"});
+      }else{
+      	$("#reader-submenu-svg rect").css({fill:"#7e71c9"});
+      }
+  })
+  $(".reader-content-menu h3 i").click(function(){
+    $("#reader-submenu-svg rect").css({fill:"#999"});
+    $(".reader-content-menu").hide();
+    dialogopen = false;
+  });
+  $(".reader-notes-menu").hide();
+  $("#reader-notes-svg").click(function(){
+  	if(dialogopen==false){
+        $("#reader-notes-svg path").css({fill:"#7e71c9"});
+        $(".reader-notes-menu").show();
+        dialogopen = true;
+    }else{
+    	if($(".reader-notes-menu").css('display')== 'block'){
 	        $("#reader-notes-svg path").css({fill:"#999"});
 	        $(".reader-notes-menu").hide();
 	        dialogopen = false;
+	    }else{
+	    	$("#reader-notes-svg path").css({fill:"#7e71c9"});
+            $(".reader-notes-menu").show();
+            dialogopen = true;
 	    }
-    });
-    $(".reader-notes-menu h3 i").click(function(){
-	  $("#reader-notes-svg path").css({fill:"#999"});
-      $(".reader-notes-menu").hide();
-      dialogopen = false;
-    });
-    $(".reader-music-menu").hide();
-    $("#reader-music-svg").click(function(){
-      if(dialogopen==false){
-        $("#reader-music-svg rect").css({fill:"#7e71c9"});
+    }
+    $("#reader-text-svg path").css({fill:"#999"});
+      $(".reader-do").hide();
+      $(".reader-search-results").hide();
+      $("#reader-submenu-svg rect").css({fill:"#999"});
+    $(".reader-content-menu").hide();
+      $("#reader-music-svg rect").css({fill:"#999"});
+      $("#reader-music-svg ellipse").css({fill:"#999"});
+      $(".reader-music-menu").hide();
+  });
+
+  $("#reader-notes-svg").mouseover(function(){
+      $("#reader-notes-svg path").css({fill:"#7e71c9"});
+  })
+  $("#reader-notes-svg").mouseleave(function(){
+  	if($(".reader-notes-menu").css('display') == 'none'){
+          $("#reader-notes-svg path").css({fill:"#999"});
+      }else{
+      	$("#reader-notes-svg path").css({fill:"#7e71c9"});
+      }
+  })
+  $(".reader-notes-menu h3 i").click(function(){
+  $("#reader-notes-svg path").css({fill:"#999"});
+    $(".reader-notes-menu").hide();
+    dialogopen = false;
+  });
+  $(".reader-music-menu").hide();
+  $("#reader-music-svg").click(function(){
+    if(dialogopen==false){
+      $("#reader-music-svg rect").css({fill:"#7e71c9"});
+      $("#reader-music-svg ellipse").css({fill:"#7e71c9"});
+      $(".reader-music-menu").show();
+      dialogopen = true;
+      $('.reader-music-recommended').slick({
+        infinite: true,
+        slidesToShow: 3,
+        slidesToScroll: 3,
+      });
+      $('.reader-music-popular').slick({
+        infinite: true,
+        slidesToShow: 3,
+        slidesToScroll: 3,
+      });
+      $('.reader-music-genres').slick({
+        infinite: true,
+        slidesToShow: 3,
+        slidesToScroll: 3,
+      });
+      $('.reader-music-category').slick({
+        infinite: true,
+        slidesToShow: 3,
+        slidesToScroll: 3,
+      });
+      $(".reader-music-recommended .slick-prev").hide();
+      $('.reader-music-recommended').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+        if(nextSlide ==0){
+            $(".reader-music-recommended .slick-prev").hide();
+        }else{
+            $(".reader-music-recommended .slick-prev").show();
+        }
+      });
+      $('.reader-music-recommended').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+        var slidemodulo = {{ musicr|length|safe }}%3;
+        if(slidemodulo == 0){
+          slidemodulo = 3;
+        }
+        if(nextSlide =={{ musicr|length|safe }} -slidemodulo){
+            $(".reader-music-recommended .slick-next").hide();
+        }else{
+            $(".reader-music-recommended .slick-next").show();
+        }
+      });
+      $(".reader-music-popular .slick-prev").hide();
+      $('.reader-music-popular').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+        if(nextSlide ==0){
+            $(".reader-music-popular .slick-prev").hide();
+        }else{
+            $(".reader-music-popular .slick-prev").show();
+        }
+      });
+      $('.reader-music-popular').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+        var slidemodulo = {{ musicp|length|safe }}%3;
+        if(slidemodulo == 0){
+          slidemodulo = 3;
+        }
+        if(nextSlide =={{ musicp|length|safe }} -slidemodulo){
+            $(".reader-music-popular .slick-next").hide();
+        }else{
+            $(".reader-music-popular .slick-next").show();
+        }
+      });
+      $(".reader-music-genres .slick-prev").hide();
+      $('.reader-music-genres').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+        if(nextSlide ==0){
+            $(".reader-music-genres .slick-prev").hide();
+        }else{
+            $(".reader-music-genres .slick-prev").show();
+        }
+      });
+      $('.reader-music-genres').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+        var slidemodulo = {{ musicgenre|length|safe }}%3;
+        if(slidemodulo == 0){
+          slidemodulo = 3;
+        }
+        if(nextSlide =={{ musicgenre|length|safe }} -slidemodulo){
+            $(".reader-music-genres .slick-next").hide();
+        }else{
+            $(".reader-music-genres .slick-next").show();
+        }
+      });
+      $(".reader-music-category .slick-prev").hide();
+      $('.reader-music-category').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+        if(nextSlide ==0){
+            $(".reader-music-category .slick-prev").hide();
+        }else{
+            $(".reader-music-category .slick-prev").show();
+        }
+      });
+    }else{
+    	if($(".reader-music-menu").css('display') == 'block'){
+        $("#reader-music-svg rect").css({fill:"#999"});
+        $("#reader-music-svg ellipse").css({fill:"#999"});
+        $(".reader-music-menu").hide();
+        dialogopen = false;
+    }else{
+    	$("#reader-music-svg rect").css({fill:"#7e71c9"});
         $("#reader-music-svg ellipse").css({fill:"#7e71c9"});
         $(".reader-music-menu").show();
         dialogopen = true;
-        $('.reader-music-recommended').slick({
+        $('.reader-music-recommended').not('.slick-initialized').slick({
           infinite: true,
           slidesToShow: 3,
           slidesToScroll: 3,
         });
-        $('.reader-music-popular').slick({
+        $('.reader-music-popular').not('.slick-initialized').slick({
           infinite: true,
           slidesToShow: 3,
           slidesToScroll: 3,
         });
-        $('.reader-music-genres').slick({
+        $('.reader-music-genres').not('.slick-initialized').slick({
           infinite: true,
           slidesToShow: 3,
           slidesToScroll: 3,
         });
-        $('.reader-music-category').slick({
+        $('.reader-music-category').not('.slick-initialized').slick({
           infinite: true,
           slidesToShow: 3,
           slidesToScroll: 3,
@@ -2957,1014 +2600,157 @@
               $(".reader-music-category .slick-prev").show();
           }
         });
-      }else{
+    }
+    }
+    $("#reader-text-svg path").css({fill:"#999"});
+    $(".reader-do").hide();
+    $(".reader-search-results").hide();
+    $("#reader-submenu-svg rect").css({fill:"#999"});
+    $(".reader-content-menu").hide();
+    $(".reader-notes-menu").hide();
+  $("#reader-notes-svg path").css({fill:"#999"});
+  })
+
+  $("#reader-music-svg").mouseover(function(){
+      $("#reader-music-svg rect").css({fill:"#7e71c9"});
+      $("#reader-music-svg ellipse").css({fill:"#7e71c9"});
+  })
+  $("#reader-music-svg").mouseleave(function(){
+  	if($(".reader-music-menu").css('display') == 'none'){
         $("#reader-music-svg rect").css({fill:"#999"});
         $("#reader-music-svg ellipse").css({fill:"#999"});
-        $(".reader-music-menu").hide();
-        dialogopen = false;
-      }
-    })
-    $(".reader-music-menu h3 i").click(function(){
-      $("#reader-music-svg rect").css({fill:"#999"});
-      $("#reader-music-svg ellipse").css({fill:"#999"});
-      $(".reader-music-menu").hide();
-      dialogopen = false;
-    });
-    /*$(".reader-notes-menu").hide();*/
-    $("#reader-bookmark-svg").click(function(){
-      var curloc = $("#reader-current-location").html();
-      var curindex = curloc.indexOf('-');
-      var bookloc = parseInt(curloc.substring(0,curindex));
-      var data = rendition.getRange(rendition.currentLocation().start.cfi).startContainer.data;
-      var bookmarkcfi = book.locations.cfiFromLocation(parseInt(bookloc));
-      var sucdata = data;
-      bookmarkarr.push(bookloc);
-      $.ajax({
-        url: '/addbookmark/',
-        type:'POST',
-        data:
-        {
-          'ebookid': parseInt($("#hidden-ebook-id").html()),
-          'bookloc': bookloc,
-          'data': data,
-          'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
-        },
-        success: function(data)
-        {
-          if(data=='Deleted'){
-            $("#reader-bookmark-svg path").css({fill:"#999"});
-          }else if(data=='Added'){
-            $("#reader-bookmark-svg path").css({fill:"#7e71c9"});
-          }
-          if(sucdata.length > 25){
-          	sucdata = sucdata.substring(0,25) + '...';
-          }
-          var obj = `<li class="bookmark-li" data-cfi="` + bookmarkcfi + `"><span class="bookmark-data">` + sucdata + `</span><span class="bookmark-loc">` + bookloc +`</span></li>`;
-          $(".bookmark-ul").append(obj);
-        },
-        error: function(xhr,status,error){
-            alert(xhr.responseText);
-          }             
-      });
-    })
-    var zoom = 1;
-    $("#reader-zoompbtn").click(function(){
-      if(zoom <= 2.2){
-        var newzoom = (zoom + 0.1)*100;
-        rendition.themes.fontSize(newzoom+"%");
-        zoom = zoom + 0.1;
-      }
-    });
-    $("#reader-zoommbtn").click(function(){
-      if(zoom>=0.5){
-        var newzoom = (zoom - 0.1)*100;
-        rendition.themes.fontSize(newzoom+"%");
-        zoom = zoom - 0.1;
-      }
-    });
-    $("#reader-fontfamily").change(function(){
-      var newfont = $(this).val();
-      rendition.themes.override("font-family", newfont,true);
-    })
-    $(".reader-1page-svg").click(function(){
-      rendition.spread("none");
-    });
-    $(".reader-2page-svg").click(function(){
-      rendition.spread("auto");
-    });
-    $(document).on('click','.reader-search-item',function(){
-      rendition.display($(this).data('link'));
-    })
-    
-    $("#reader-music-playlist").hide();
-    $(".music-playlist-item").hide();
-    $("#reader-music-playlistbtn").click(function(){
-      $("#reader-music-home").hide();
-      $("#reader-music-selected").hide();
-      $(this).css('border-bottom','2px solid #7e71c9');
-      $(this).css("color",'#7e71c9');
-      $("#reader-music-homebtn").css("border-bottom","2px solid rgb(204,204,204)");
-      $("#reader-music-homebtn").css("color","black");
-      $("#reader-music-playlist").show();
-      $(".reader-music-lower-svg").hide();
-      $(".reader-music-lifter-svg").show();
-      $('.playlist-carousel').slick({
-        accessibility: true,
-        adaptiveHeight: true,
-        centerMode: true,
-        centerPadding: '0px',
-        slidesPerRow: 3,
-        slidesToShow: 3,
-        variableWidth: true,
-      });
-      $(".music-queue").append($(".reader-music-playlist-box:first").children('.music-playlist-item').clone());
-      $('.music-queue .music-playlist-item').show();
-    });
-    $(".reader-music-playlist-box").click(function(){
-      $(".music-queue").empty();
-      $(".music-queue").append($(this).children('.music-playlist-item').clone());
-      $('.music-queue .music-playlist-item').show();
-      $(".reader-music-playlist-box").removeClass('playlist-box-selected')
-      $(this).addClass('playlist-box-selected');
-    })
-    $("#reader-music-homebtn").click(function(){
-      $("#reader-music-home").show();
-      $(this).css('border-bottom','2px solid #7e71c9');
-      $(this).css("color",'#7e71c9');
-      $("#reader-music-playlistbtn").css("border-bottom","2px solid rgb(204,204,204)");
-      $("#reader-music-playlistbtn").css("color","black");
-      $("#reader-music-playlist").hide();
-      $("#reader-music-selected").hide();
-      $(".reader-music-lower-svg").hide();
-      $(".reader-music-lifter-svg").show();
-    });
-    $(".reader-music-item-box").each(function(){
-      var title = $(this).find("h5").html();
-      $(this).prop('title',title);
-    });
-    $(".reader-music-item-box h5").each(function(){
-      var itemstrlength = $(this).html().length;
-      if(itemstrlength >= 30){
-        var newitemstr = $(this).html().substr(0,30) + '...';
-        $(this).html(newitemstr);
-      }
-    });
-    $(".reader-current-music-div").hide();
-    $("#reader-music-selected").hide();
-    $(".reader-music-lower-svg").hide();
-    var musicmenu = 'home';
-    $(".reader-music-lifter-svg").click(function(){
-      if($("#reader-music-home").css('display') == 'block'){
-          $("#reader-music-home").hide();
-          musicmenu = 'home';
-
-      }else if($("#reader-music-playlist").css('display') == 'block'){
-          $("#reader-music-playlist").hide();
-          musicmenu = 'playlist';
-      }
-      $("#reader-music-selected").show();
-      $(".reader-music-lower-svg").show();
-      $(".reader-music-lifter-svg").hide();
-    })
-    $(".reader-music-lower-svg").click(function(){
-      if(musicmenu == 'home'){
-          $("#reader-music-home").show();
-      }else if(musicmenu == 'playlist'){
-          $("#reader-music-playlist").show();
-      }
-      $("#reader-music-selected").hide();
-      $(".reader-music-lower-svg").hide();
-      $(".reader-music-lifter-svg").show();
-    });
-    
-    function BufferLoader(context, urlList, callback) {
-      this.context = context;
-      this.urlList = urlList;
-      this.onload = callback;
-      this.bufferList = new Array();
-      this.loadCount = 0;
-    }
-    $(".music-queue-item-name").each(function(){
-      $(this).html($(this).html().substr(0,20) + '...');
-    })
-    $(".music-queue-item-duration").each(function(){
-      var queuemin = Math.floor(parseInt($(this).html())/60);
-      var queuesec = parseInt($(this).html())%60;
-      if(queuesec < 10){
-        queuesec = '0' + String(queuesec);
-      }
-      $(this).html(String(queuemin) + ':' + String(queuesec));
-    })
-    BufferLoader.prototype.loadBuffer = function(url, index) {
-      // Load buffer asynchronously
-      var request = new XMLHttpRequest();
-      request.open("GET", url, true);
-      request.responseType = "arraybuffer";
-
-      var loader = this;
-
-      request.onload = function() {
-        // Asynchronously decode the audio file data in request.response
-        loader.context.decodeAudioData(
-          request.response,
-          function(buffer) {
-            if (!buffer) {
-              alert('error decoding file data: ' + url);
-              return;
-            }
-            loader.bufferList[index] = buffer;
-            if (++loader.loadCount == loader.urlList.length)
-              loader.onload(loader.bufferList);
-          },
-          function(error) {
-            console.error('decodeAudioData error', error);
-          }
-        );
-      }
-
-      request.onerror = function() {
-        alert('BufferLoader: XHR error');
-      }
-
-      request.send();
-    }
-
-    BufferLoader.prototype.load = function() {
-      for (var i = 0; i < this.urlList.length; ++i)
-      this.loadBuffer(this.urlList[i], i);
-    }
-
-    BufferLoader.prototype.updatePosition = function() {
-      this.position = this.playing ? 
-        this.ac.currentTime - this.startTime : this.position;
-      if ( this.position >= this.buffer.duration ) {
-        this.position = this.buffer.duration;
-        this.pause();
-      }
-      return this.position;
-    };
-  
-    var is_chrome = /chrome/.test( navigator.userAgent.toLowerCase() );
-    var context;
-    var chromerecorder;
-    var intervalcleared = false;
-    if(is_chrome== 'gh'){
-        function musicplayer(musicid,nowmusic){
-          var bufferLoader;
-          init();
-          function init() {
-            var curmusic = '/media/' + nowmusic;
-            window.AudioContext = window.AudioContext || window.webkitAudioContext;
-            context = new AudioContext();
-
-            bufferLoader = new BufferLoader(
-              context,
-              [
-                curmusic,
-              ],
-              finishedLoading
-              );
-
-            bufferLoader.load();
-          }
-          function finishedLoading(bufferList) {
-            // Create two sources and play them both together.
-            var source1 = context.createBufferSource();
-            source1.buffer = bufferList[0];
-
-            source1.connect(context.destination);
-            source1.start(0);
-            var audiochange = false;
-            var audioduration = Math.round(source1.buffer.duration);
-            var delay = 0;
-            var vu = 0;
-            $(".reader-music-play").hide();
-            $(".reader-music-pause").show();
-            $('.reader-music-progress').attr('max',audioduration);
-            var audiomin = Math.floor(audioduration/60);
-            var audiosec = audioduration % 60;
-            if(parseInt(audiosec) < 10){
-                  audiosec = '0' + String(audiosec);
-                }
-            $(".reader-current-music-duration").html(String(audiomin) + ':' + String(audiosec));
-            $.ajax({
-              url: '/addmusiclis/',
-              type:'POST',
-              data:
-              {
-                'musicid': musicid,
-                'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
-              },
-              success: function(data)
-              {
-              },
-              error: function(xhr,status,error){
-                  alert(xhr.responseText);
-                }             
-            });
-            chromerecorder = setInterval(crecorder,1000);
-            function crecorder(){ 
-              if(delay == 0){
-                var nowtime = parseInt(delay) + parseInt(vu);
-                var audiocmin = Math.floor(nowtime/60);
-                var audiocsec = nowtime % 60;
-                if(parseInt(audiocsec) < 10){
-                  audiocsec = '0' + String(audiocsec);
-                }
-                $(".reader-current-music-location").html(String(audiocmin) + ':' + String(audiocsec));
-              }else{
-                var nowtime = parseInt(delay) + parseInt(vu);
-                var audiocmin = Math.floor(nowtime/60);
-                var audiocsec = nowtime % 60;
-                if(parseInt(audiocsec) < 10){
-                  audiocsec = '0' + String(audiocsec);
-                }
-                $(".reader-current-music-location").html(String(audiocmin) + ':' + String(audiocsec));
-              }
-              
-              console.log(nowtime);
-              console.log(audioduration);
-              vu = vu + 1;
-              if(audiochange == false){
-                  $(".reader-music-progress").val(nowtime);
-              }
-              if(nowtime >= audioduration){
-                console.log('ji');
-                clearInterval(chromerecorder);
-                intervalcleared = true;
-              }
-            };
-            $(".reader-music-progress").on('input',function(){
-                audiochange = true;
-                var progresstime = $(this).val();
-                var audiocmin = Math.floor(progresstime/60);
-                var audiocsec = progresstime % 60;
-                if(parseInt(audiocsec) < 10){
-                  audiocsec = '0' + String(audiocsec);
-                }
-                $(".reader-current-music-location").html(String(audiocmin) + ':' + String(audiocsec));
-
-            })
-            $(".reader-music-progress").on('change',function(){
-                source1.stop();
-                source1 = context.createBufferSource();
-                source1.buffer = bufferList[0];
-
-                source1.connect(context.destination);
-                source1.start(0,$(this).val());
-                $(".reader-music-progress").val($(this).val());
-                var progresstime = $(this).val();
-                var audiocmin = Math.floor(progresstime/60);
-                var audiocsec = progresstime % 60;
-                if(parseInt(audiocsec) < 10){
-                  audiocsec = '0' + String(audiocsec);
-                }
-                $(".reader-current-music-location").html(String(audiocmin) + ':' + String(audiocsec));
-                if(intervalcleared == true){
-                  chromerecorder = setInterval(crecorder,1000);
-                  intervalcleared = false;
-                }
-                delay = $(this).val();
-                vu = 0;
-                audiochange = false;
-            });
-            $(".reader-music-pause").click(function(){
-              $(".reader-music-pause").hide();
-              $(".reader-music-play").show();
-              context.suspend();
-              clearInterval(chromerecorder);
-              intervalcleared = true
-            })
-            $(".reader-music-play").click(function(){
-              $(".reader-music-pause").show();
-              $(".reader-music-play").hide();
-              context.resume();
-              if(intervalcleared == true){
-                chromerecorder = setInterval(crecorder,1000);
-                intervalcleared = false;
-              }  
-            })
-          }
-        }
     }else{
-        var audio;
-        function musicplayer(musicid,nowmusic){
-          audio = new Audio('/media/'+ nowmusic);
-          audio.oncanplaythrough = function(){
-              var audiochange = false;
-              var audioduration = Math.round(audio.duration);
-              audio.play();
-              $(".reader-music-play").hide();
-              $(".reader-music-pause").show();
-              $('.reader-music-progress').attr('max',audioduration);
-              var audiomin = Math.floor(audioduration/60);
-              var audiosec = audioduration % 60;
-              if(parseInt(audiosec) < 10){
-                    audiosec = '0' + String(audiosec);
-                  }
-              $(".reader-current-music-duration").html(String(audiomin) + ':' + String(audiosec));
-              $.ajax({
-                url: '/addmusiclis/',
-                type:'POST',
-                data:
-                {
-                  'musicid': musicid,
-                  'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
-                },
-                success: function(data)
-                {
-                },
-                error: function(xhr,status,error){
-                    alert(xhr.responseText);
-                  }             
-              });
-              audio.addEventListener('timeupdate',function(){
-                var nowtime = Math.round(audio.currentTime);
-                if(audiochange == false){
-                    $(".reader-music-progress").val(nowtime);
-                }
-                var audiocmin = Math.floor(nowtime/60);
-                var audiocsec = nowtime % 60;
-                if(parseInt(audiocsec) < 10){
-                  audiocsec = '0' + String(audiocsec);
-                }
-                $(".reader-current-music-location").html(String(audiocmin) + ':' + String(audiocsec));
-              });
-              $(".reader-music-progress").on('input',function(){
-                audiochange = true;
-                var progresstime = $(this).val();
-                var audiocmin = Math.floor(progresstime/60);
-                var audiocsec = progresstime % 60;
-                if(parseInt(audiocsec) < 10){
-                  audiocsec = '0' + String(audiocsec);
-                }
-                $(".reader-current-music-location").html(String(audiocmin) + ':' + String(audiocsec));
-              })
-              $(".reader-music-progress").on('change',function(){
-                  audio.currentTime = $(this).val();
-                  var progresstime = $(this).val();
-                  var audiocmin = Math.floor(progresstime/60);
-                  var audiocsec = progresstime % 60;
-                  if(parseInt(audiocsec) < 10){
-                    audiocsec = '0' + String(audiocsec);
-                  }
-                  $(".reader-current-music-location").html(String(audiocmin) + ':' + String(audiocsec));
-                  audiochange = false;
-              })
-              $(".reader-music-pause").click(function(){
-                $(".reader-music-pause").hide();
-                $(".reader-music-play").show();
-                audio.pause();
-              })
-              $(".reader-music-play").click(function(){
-                $(".reader-music-pause").show();
-                $(".reader-music-play").hide();
-                audio.play();
-              })
-          }
-        }
+    	$("#reader-music-svg rect").css({fill:"#7e71c9"});
+          $("#reader-music-svg ellipse").css({fill:"#7e71c9"});
     }
-    var currentzone;
-    $(".reader-music-item-box").click(function(){
-      $(".reader-music-prev").css('background-color','rgb(255,255,255)');
-      $(".reader-music-next").css('background-color','rgb(255,255,255)');
-      $("#reader-music-home").hide();
-      $("#reader-music-selected").show();
-      $(".music-queue-item-control .fa-pause").hide();
-      $(".music-queue-item-control .fa-play").show();
-      var backurl = $(this).find('.reader-music-item-pic').css('background-image');
-      $(".reader-music-selected-pic").css('background-image',backurl);
-      $(".reader-music-selected-pic").css('background-size','100% 100%');
-      $(".reader-music-selected-name").html($(this).data('name'));
-      $(".reader-current-music-name").html($(this).data('name'))
-      $(".reader-current-music-details").data('id',$(this).data('id'));
-      if($(this).data('artist') != 'None'){
-        $(".reader-music-selected-artist").html($(this).data('artist'));
-        $(".reader-current-music-artist").html($(this).data('artist'));
-      }
-      var musicid = $(this).data("id");
-      $(".reader-current-music-div").show();
-      $(".reader-music-lifter-svg").hide();
-      $(".reader-music-lower-svg").show();
-      var nowmusic = $(this).data('media');
-      if(audio != undefined){
-          audio.pause();
-          audio = undefined;
-      }
-      musicplayer(musicid,nowmusic);
-      if($(this).parent().parent().parent().hasClass('reader-music-recommended')){
-        currentzone = 'recommended';
-      }else if($(this).parent().parent().parent().hasClass('reader-music-popular')){
-        currentzone = 'popular';
-      }else if($(this).parent().parent().parent().hasClass('reader-music-category')){
-        currentzone = 'category';
-        $(".reader-music-prev").css('background-color','rgb(159,159,159)');
-      }
+  })
+  $(".reader-music-menu h3 i").click(function(){
+    $("#reader-music-svg rect").css({fill:"#999"});
+    $("#reader-music-svg ellipse").css({fill:"#999"});
+    $(".reader-music-menu").hide();
+    dialogopen = false;
+  });
+  /*$(".reader-notes-menu").hide();*/
+  $("#reader-bookmark-svg").click(function(){
+    var curloc = $("#reader-current-location").html();
+    var curindex = curloc.indexOf('-');
+    var bookloc = parseInt(curloc.substring(0,curindex));
+    var data = rendition.getRange(rendition.currentLocation().start.cfi).startContainer.data;
+    var bookmarkcfi = book.locations.cfiFromLocation(parseInt(bookloc));
+    var sucdata = data;
+    bookmarkarr.push(bookloc);
+    $.ajax({
+      url: '/addbookmark/',
+      type:'POST',
+      data:
+      {
+        'ebookid': parseInt($("#hidden-ebook-id").html()),
+        'bookloc': bookloc,
+        'data': data,
+        'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+      },
+      success: function(data)
+      {
+        if(data=='Deleted'){
+          $("#reader-bookmark-svg path").css({fill:"#999"});
+        }else if(data=='Added'){
+          $("#reader-bookmark-svg path").css({fill:"#7e71c9"});
+        }
+        if(sucdata.length > 25){
+        	sucdata = sucdata.substring(0,25) + '...';
+        }
+        var obj = `<li class="bookmark-li" data-cfi="` + bookmarkcfi + `"><span class="bookmark-data">` + sucdata + `</span><span class="bookmark-loc">` + bookloc +`</span></li>`;
+        $(".bookmark-ul").append(obj);
+      },
+      error: function(xhr,status,error){
+          alert(xhr.responseText);
+        }             
     });
+  })
 
-    $(document).on('click','.music-queue-item-control',function(){
-      if($(this).parent().is(':first-child')){
-        if($(this).parent().is(':last-child')){
-          $(".reader-music-prev").css('background-color','rgb(159,159,159)');
-          $(".reader-music-next").css('background-color','rgb(159,159,159)');
-        }else{
-           $(".reader-music-prev").css('background-color','rgb(159,159,159)');
-           $(".reader-music-next").css('background-color','rgb(255,255,255)');
-        }
-      }else if($(this).parent().is(':last-child')){
-        $('.reader-music-next').css('background-color','rgb(159,159,159)');
-        $(".reader-music-prev").css('background-color','rgb(255,255,255)');
-      }else{
-        $(".reader-music-prev").css('background-color','rgb(255,255,255)');
-        $(".reader-music-next").css('background-color','rgb(255,255,255)');
-      }
-      if($(this).find('.fa-play').css('display') == 'block'){
-        var backurl = $(this).parent().data('image');
-        if(!$(this).parent().hasClass('music-playlist-item')){
-          $(".reader-music-selected-pic").css('background-image','url(/media/'+ backurl + ')');
-          $(".reader-music-selected-pic").css('background-size','100% 100%');
-          $(".reader-music-selected-name").html($(this).parent().data('name'));
-            currentzone = 'queue'
-        }else{
-          $(".reader-current-music-div").show();
-          currentzone = 'playlist';
-        }
-        $(".reader-current-music-name").html($(this).parent().data('name'))
-        $(".reader-current-music-details").data('id',$(this).parent().data('id'));
-        if($(this).data('artist') != 'None'){
-          if(!$(this).parent().hasClass('music-playlist-item')){
-            $(".reader-music-selected-artist").html($(this).parent().data('artist'));
-          }
-          $(".reader-current-music-artist").html($(this).parent().data('artist'));
-        }
-        $(".music-queue-item-control .fa-play").show();
-        $(".music-queue-item-control .fa-pause").hide();
-        $(this).find('.fa-play').hide();
-        $(this).find('.fa-pause').show();
-        var musicid = $(this).parent().data("id");
-        var nowmusic = $(this).parent().data('media');
-        if(audio != undefined){
-            audio.pause();
-            audio = undefined;
-        }
-        musicplayer(musicid,nowmusic);
-        
-      }else{
-        $(this).find('.fa-play').show();
-        $(this).find('.fa-pause').hide();
-        $(".reader-music-play").show();
-        $(".reader-music-pause").hide();
-        audio.pause();
-      }
-    });
-    $(".music-queue-item-options-div").hide();
-    $(document).on('click','.music-queue-item-options i',function(){
-      if($(this).parent().find('.music-queue-item-options-div').css('display') == 'block'){
-        $(this).parent().find('.music-queue-item-options-div').hide();
-      }else{
-        $(this).parent().find('.music-queue-item-options-div').show();
-      }
-    });
-    $(".reader-remove-queue").click(function(){
-      var queueid = $(this).parent().parent().parent().parent().parent().data('id');
+  function rateduser(rating){
+      var rating = parseInt(rating);
+      var ebookid = parseInt($("#hidden-ebook-id").html());
       $.ajax({
-        url: '/removequeue/',
+        url: '/addrating/',
         type:'POST',
         data:
         {
-          'queueid': queueid,
+          'ebookid': ebookid,
+          'rating': rating,
           'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
         },
         success: function(data)
         {
+          $(".reader-reviews").hide();
+          rendition.themes.register("normal", { "body": { "opacity": "1.0"}});
+          rendition.themes.select("normal");
         },
         error: function(xhr,status,error){
-            alert(xhr.responseText);
+        alert(xhr.responseText);
           }             
       });
-      $(this).parent().parent().parent().parent().parent().remove();
-    });
-    $(document).on('click','.reader-removefrom-playlist',function(){
-      var musicid = $(this).parent().parent().parent().parent().data('id');
-      var playlistid = $(this).parent().parent().parent().parent().data('pid');
-      $.ajax({
-        url: '/removeplaylist/',
-        type:'POST',
-        data:
-        {
-          'playlistid': playlistid,
-          'musicid': musicid,
-          'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
-        },
-        success: function(data)
-        {
-        },
-        error: function(xhr,status,error){
-            alert(xhr.responseText);
-          }             
-      });
-      $(this).parent().parent().parent().parent().remove();
-    });
-    $(document).on('click','.reader-addto-playlist',function(){
-      var musicid = $(this).parent().parent().parent().parent().parent().data('id');
-      var musicname = $(this).parent().parent().parent().parent().parent().data('name');
-      var musicartist = $(this).parent().parent().parent().parent().parent().data('artist');
-      var musicduration = $(this).parent().parent().parent().parent().parent().data('duration');
-      var musicmedia = $(this).parent().parent().parent().parent().parent().data('media');
-      var musicimage = $(this).parent().parent().parent().parent().parent().data('image');
-      if($(this).parent().find('.select-playlist-name').val() != null || $(this).parent().find('.new-playlist-name').val() != ''){
-        if($(this).parent().find('.select-playlist-name').val() != null){
-          var playlist = $(this).parent().find('.select-playlist-name').val();
-          var playlistid = $(this).parent().find('.select-playlist-name option[value="' + playlist + '"]').data('pid');
-          var add = 0;
-        }else{
-          var playlist = $(this).parent().find('.new-playlist-name').val();
-          var playlistid = 0;
-          var add = 1;
-
+    }
+    var rating = undefined;
+    $(".reader-reviews button").click(function(){
+        if(rating != undefined){
+          rateduser(rating);
         }
-         $.ajax({
-          url: '/addplaylist/',
-          type:'POST',
-          data:
-          {
-            'musicid': musicid,
-            'playlist': playlist,
-            'playlistid': playlistid,
-            'add': add,
-            'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
-          },
-          success: function(data)
-          {
-          	$(".music-queue-item-options-div").hide();
-            /*$(".playlist-carousel").slick('slickAdd','<div class="reader-music-playlist-box" data-pid="{{ item.id }}"><h5>' + playlist +'</h5><div class="music-queue-item music-playlist-item" data-id="' + musicid + '" data-name="' + musicname +'" data-artist="' + musicartist + '" data-duration="' + musicduration + '" data-media="' + musicmedia + '" data-image="' + musicimage + '" data-pid="' + data + '"><span class="music-queue-item-control"><i class="fa fa-play" aria-hidden="true"></i><i class="fa fa-pause" aria-hidden="true"></i></span><span class="music-queue-item-details"><span class="music-queue-item-name">' + musicname +'</span><span class="music-queue-item-artist">' + musicartist + '</span></span><span class="music-queue-item-duration">' + musicduration + '</span><span class="music-queue-item-options"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><div class="music-queue-item-options-div"><ul><li class="reader-removefrom-playlist">Remove from Playlist</li></ul></div></span></div></div>')*/
-          },
-          error: function(xhr,status,error){
-              alert(xhr.responseText);
-            }             
-        });
-      }
-      
+    })
+    $(".reader-reviews-stars i:nth-child(1)").click(function(){
+      {% if user.is_authenticated %}
+      $(".reader-reviews-stars i:nth-child(2)").css('color','#B2B2B2');
+      $(".reader-reviews-stars i:nth-child(3)").css('color','#B2B2B2');
+      $(".reader-reviews-stars i:nth-child(4)").css('color','#B2B2B2');
+      $(".reader-reviews-stars i:nth-child(5)").css('color','#B2B2B2');
+      $(this).css('color','#FF8E19');
+      rating = 1;
+      {% endif %}
     });
-    $(".reader-music-next").click(function(){
-      if($(".reader-music-next").css('background-color')!='rgb(159, 159, 159)'){
-        $(".reader-music-prev").css('background-color','rgb(255,255,255)');
-        var currentsongid = $(".reader-current-music-details").data('id'); 
-        $(".music-queue-item-control .fa-pause").hide();
-        $(".music-queue-item-control .fa-play").show();
-        if(currentzone == 'recommended'){
-            var fclass = $(".reader-music-recommended .reader-music-item-box[data-id='" + currentsongid + "']");
-        }else if(currentzone == 'popular'){
-            var fclass = $(".reader-music-popular .reader-music-item-box[data-id='" + currentsongid + "']");
-        }else if(currentzone == 'queue'){
-            console.log('queue');
-            var fclass = $(".music-queue-item[data-id='" + currentsongid + "']");
-            fclass.next().find('.music-queue-item-control .fa-pause').show();
-            fclass.next().find('.music-queue-item-control .fa-play').hide();
-        }else if(currentzone == 'category'){
-            var fclass = $(".reader-music-category .reader-music-item-box[data-id='" + currentsongid + "']");
-        }else if(currentzone == 'playlist'){
-            var fclass = $(".music-queue .music-playlist-item[data-id='" + currentsongid + "']");
-            fclass.next().find('.music-queue-item-control .fa-pause').show();
-            fclass.next().find('.music-queue-item-control .fa-play').hide();
-        }
-        var nextid = fclass.next().data('id');
-        var nextnextid = fclass.next().next().data('id');
-        
-        if(nextnextid == undefined){
-          $(".reader-music-next").css('background-color','rgb(159,159,159)');
-        }
-        var nextname = fclass.next().data('name');
-        var nextartist = fclass.next().data('artist');
-        var nextduration = fclass.next().data('duration');
-        var nextmedia = fclass.next().data('media');
-        var nextimage = fclass.next().data('image');
-        $(".reader-music-selected-pic").css('background-image','url(/media/'+ nextimage + ')');
-        $(".reader-music-selected-pic").css('background-size','100% 100%');
-        $(".reader-music-selected-name").html(nextname);
-        $(".reader-current-music-name").html(nextname);
-        if($(this).data('artist') != 'None'){
-          $(".reader-music-selected-artist").html(nextartist);
-          $(".reader-current-music-artist").html(nextartist);
-        };
-        $(".reader-current-music-details").data('id',nextid);
-
-        if(audio != undefined){
-            audio.pause();
-            audio = undefined;
-        }
-        musicplayer(nextid,nextmedia);
-      }
-      
+    $(".reader-reviews-stars i:nth-child(2)").click(function(){
+      {% if user.is_authenticated %}
+      $(".reader-reviews-stars i:nth-child(1)").css('color','#FF8E19');
+      $(".reader-reviews-stars i:nth-child(3)").css('color','#B2B2B2');
+      $(".reader-reviews-stars i:nth-child(4)").css('color','#B2B2B2');
+      $(".reader-reviews-stars i:nth-child(5)").css('color','#B2B2B2');
+      $(this).css('color','#FF8E19');
+      rating = 2;
+      {% endif %}
     });
-    $(".reader-music-prev").click(function(){
-      if($(".reader-music-prev").css('background-color')!='rgb(159, 159, 159)'){
-        $(".reader-music-next").css('background-color','rgb(255,255,255)');
-        var currentsongid = $(".reader-current-music-details").data('id'); 
-        $(".music-queue-item-control .fa-pause").hide();
-        $(".music-queue-item-control .fa-play").show();
-        if(currentzone == 'recommended'){
-            var fclass = $(".reader-music-recommended .reader-music-item-box[data-id='" + currentsongid + "']");
-        }else if(currentzone == 'popular'){
-            var fclass = $(".reader-music-popular .reader-music-item-box[data-id='" + currentsongid + "']");
-        }else if(currentzone == 'queue'){
-            var fclass = $(".music-queue-item[data-id='" + currentsongid + "']");
-            fclass.prev().find('.music-queue-item-control .fa-pause').show();
-            fclass.prev().find('.music-queue-item-control .fa-play').hide();
-        }else if(currentzone == 'category'){
-            var fclass = $(".reader-music-category .reader-music-item-box[data-id='" + currentsongid + "']");
-        }else if(currentzone == 'playlist'){
-            var fclass = $(".music-queue .music-playlist-item[data-id='" + currentsongid + "']");
-            fclass.prev().find('.music-queue-item-control .fa-pause').show();
-            fclass.prev().find('.music-queue-item-control .fa-play').hide();
-        }
-        var nextid = fclass.prev().data('id');
-        var nextnextid = fclass.prev().prev().data('id');
-        if(nextnextid == undefined){
-          $(".reader-music-prev").css('background-color','rgb(159,159,159)');
-        }
-        var nextname = fclass.prev().data('name');
-        var nextartist = fclass.prev().data('artist');
-        var nextduration = fclass.prev().data('duration');
-        var nextmedia = fclass.prev().data('media');
-        var nextimage = fclass.prev().data('image');
-        $(".reader-music-selected-pic").css('background-image','url(/media/'+ nextimage + ')');
-        $(".reader-music-selected-pic").css('background-size','100% 100%');
-        $(".reader-music-selected-name").html(nextname);
-        $(".reader-current-music-name").html(nextname);
-        if($(this).data('artist') != 'None'){
-          $(".reader-music-selected-artist").html(nextartist);
-          $(".reader-current-music-artist").html(nextartist);
-        };
-        $(".reader-current-music-details").data('id',nextid); 
-        $(this).find('.fa-play').hide();
-        $(this).find('.fa-pause').show();
-        if(audio != undefined){
-            audio.pause();
-            audio = undefined;
-        }
-        musicplayer(nextid,nextmedia);
-      }
+    $(".reader-reviews-stars i:nth-child(3)").click(function(){
+      {% if user.is_authenticated %}
+      $(".reader-reviews-stars i:nth-child(1)").css('color','#FF8E19');
+      $(".reader-reviews-stars i:nth-child(2)").css('color','#FF8E19');
+      $(".reader-reviews-stars i:nth-child(4)").css('color','#B2B2B2');
+      $(".reader-reviews-stars i:nth-child(5)").css('color','#B2B2B2');
+      $(this).css('color','#FF8E19');
+      rating = 3;
+      {% endif %}
     });
-    $(".reader-music-category").hide();
-    $(".reader-music-genre-box").click(function(){
-      $(".reader-music-category").show();
-      $(".reader-music-category-box").removeClass('reader-category-filtered');
-      $(".reader-music-category").slick('slickUnfilter').slick('refresh');
-      var genre = $(this).find('h5').html();
-      $("#reader-music-header4").html(genre);
-
-      $(".reader-music-category-box").each(function(){
-        if($(this).data('genre') == genre){
-          $(this).addClass('reader-category-filtered');
-        }
-      })
-      console.log(genre);
-      $(".reader-music-category").slick('slickFilter','.reader-category-filtered').slick('refresh');
-      
-      /*$(".reader-music-category-box").not(".slick-cloned").each(function(){
-          console.log('Jii');
-          var datagenre = $(this).data('genre');
-          console.log(datagenre);
-          if(datagenre != genre){
-            console.log('Deleted');
-            $(".reader-music-category .slick-cloned").hide();
-            $(this).hide();
-            console.log();
-          }
-      })*/
+    $(".reader-reviews-stars i:nth-child(4)").click(function(){
+      {% if user.is_authenticated %}
+      $(".reader-reviews-stars i:nth-child(1)").css('color','#FF8E19');
+      $(".reader-reviews-stars i:nth-child(2)").css('color','#FF8E19');
+      $(".reader-reviews-stars i:nth-child(3)").css('color','#FF8E19');
+      $(".reader-reviews-stars i:nth-child(5)").css('color','#B2B2B2');
+      $(this).css('color','#FF8E19');
+      rating = 4;
+      {% endif %}
     });
-    $("#reader-content-contentsbtn").click(function(){
-    	$("#toc").show();
-    	$("#bookmark-menu").hide();
-    	$(this).css({'color':'#7e71c9','border-bottom':'2px solid #7e71c9'});
-    	$("#reader-content-bookmarksbtn").css({'color':'black','border-bottom':'2px solid rgb(204,204,204'});
+    $(".reader-reviews-stars i:nth-child(5)").click(function(){
+      {% if user.is_authenticated %}
+      $(".reader-reviews-stars i:nth-child(1)").css('color','#FF8E19');
+      $(".reader-reviews-stars i:nth-child(2)").css('color','#FF8E19');
+      $(".reader-reviews-stars i:nth-child(3)").css('color','#FF8E19');
+      $(".reader-reviews-stars i:nth-child(4)").css('color','#FF8E19');
+      $(this).css('color','#FF8E19');
+      rating = 5;
+      {% endif %}
     });
-    $("#reader-content-bookmarksbtn").click(function(){
-    	$("#toc").hide();
-    	$("#bookmark-menu").show();
-    	$(this).css({'color':'#7e71c9','border-bottom':'2px solid #7e71c9'});
-    	$("#reader-content-contentsbtn").css({'color':'black','border-bottom':'2px solid rgb(204,204,204'});
-    });
-    $(document).on('click','.bookmark-li',function(){
-    	var cfi = $(this).attr('data-cfi');
-    	rendition.display(cfi);
-    });
-    $(document).on('click','.reader-notetick-svg',function(){
-    	if($(this).find('circle').css('fill') == 'rgb(153, 153, 153)'){
-            $(this).find('circle').css('fill','rgb(126, 113, 201)');
-            $(this).parent().css('border','2px solid rgb(126,113,201,0.5');
-    	}else if($(this).find('circle').css('fill') == 'rgb(126, 113, 201)'){
-    		$(this).find('circle').css('fill','rgb(153, 153, 153)');
-    		$(this).parent().css('border','2px solid rgb(153,153,153,0.4');
-    	}
-    });
-    $("#reader-notes-extract-all").click(function(){
-    	var j = 1;
-    	var notefilestr= ``;
-    	$(".reader-notes-item").each(function(){
-    		var note = $(this).attr('data-note');
-    		var text = $(this).attr('data-text');
-            var obj = `<tr class="notefile-tr"><td class="notefile-item-index">` + j +`.</td><td class="notefile-item-note">` + note + `</td><td class="notefile-item-text">` + text + `</td><td><i class="fa fa-times" aria-hidden="true"></i></td></tr>`;
-            notefilestr = notefilestr + obj;
-            j = j + 1;
-    	});
-        notefilestr = `<h3>Preview<i class="fa fa-times" aria-hidden="true"></i></h3><div class="notefile-preview-table-container"><table><tbody>` + notefilestr + `</tbody></table></div><div class="notefile-preview-saver-div"><input type="text" placeholder="Untitled" class="notefile-preview-namefield">{% csrf_token %}<button class="notefile-preview-save">Save</button></div>`;
-        $(".notefile-preview-div").empty();
-        $(".notefile-preview-div").append(notefilestr);
-        $(".notefile-preview-table-container").css('height','300px');
-        $(".notefile-preview-div").show();
-        rendition.themes.register("opaque", { "body": { "opacity": "0.1"}});
-        rendition.themes.select("opaque");
-        $(".reader-notes-menu").hide();
-        $("#reader-notes-svg path").css({fill:"#999"});
-    });
-    $("#reader-notes-extract-selected").click(function(){
-    	var j = 1;
-    	var notefilestr= ``;
-    	$(".reader-notes-item").each(function(){
-    	  if($(this).css('border') == '2px solid rgba(126, 113, 201, 0.5)'){
-            var note = $(this).attr('data-note');
-    		var text = $(this).attr('data-text');
-            var obj = `<tr class="notefile-tr"><td class="notefile-item-index">` + j +`.</td><td class="notefile-item-note">` + note + `</td><td class="notefile-item-text">` + text + `</td><td><i class="fa fa-times" aria-hidden="true"></i></td></tr>`;
-            notefilestr = notefilestr + obj;
-            j = j + 1;
-    	  }
-    	});
-        notefilestr = `<h3>Preview<i class="fa fa-times" aria-hidden="true"></i></h3><div class="notefile-preview-table-container"><table><tbody>` + notefilestr + `</tbody></table></div><div class="notefile-preview-saver-div"><input type="text" placeholder="Untitled" class="notefile-preview-namefield">{% csrf_token %}<button class="notefile-preview-save">Save</button></div>`;
-        $(".notefile-preview-div").empty();
-        $(".notefile-preview-div").append(notefilestr);
-        $(".notefile-preview-table-container").css('height','300px');
-        $(".notefile-preview-div").show();
-        rendition.themes.register("opaque", { "body": { "opacity": "0.1"}});
-        rendition.themes.select("opaque");
-        $(".reader-notes-menu").hide();
-        $("#reader-notes-svg path").css({fill:"#999"});
-    });
-    $(document).on('click','.notefile-tr i',function(){
-         $(this).parent().parent().remove();
-         var curindex = parseInt($(this).parent().parent().find('.notefile-item-index').html());
-         $(".notefile-item-index").each(function(){
-         	var sindex = parseInt($(this).html());
-         	if(sindex > curindex){
-         		sindex = sindex - 1;
-         		$(this).html(sindex);
-         	}
-         });
-    });
-    $(document).on('click','.notefile-preview-save',function(){
-    	var notefilename = $(".notefile-preview-namefield").val();
-    	if(notefilename != ''){
-    		var notearr = [];
-    		var textarr = [];
-    		$(".notefile-tr").each(function(){
-    			var note = $(this).find('.notefile-item-note').html();
-    			var text = $(this).find('.notefile-item-text').html();
-                notearr.push(note);
-                textarr.push(text);
-    		});
-    		$.ajax({
-              url: '/addnotefile/',
-              type:'POST',
-              data:
-              {
-                'ebookid': parseInt($("#hidden-ebook-id").html()),
-                'notefilename': notefilename,
-                'notearr[]': notearr,
-                'textarr[]': textarr,
-                'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
-              },
-              success: function(data)
-              {
-                $(".notefile-preview-div").hide();
-                rendition.themes.register("normal", { "body": { "opacity": "1.0"}});
-                rendition.themes.select("normal");
-                $("#reader-notes-svg").trigger('click');
-		        var obj1 = ``;
-		        var obj2 = ``;
-		        for(var k in notearr){
-                  obj1 = obj1 + `<span style="display: none" class="hidden-file-note">` + notearr[k] + `</span>`;
-		        }
-		        for(var k in textarr){
-                  obj2 = obj2 + `<span style="display: none" class="hidden-file-text">` + textarr[k] + `</span>`;
-		        }
-		        var curdate = new Date();
-		        var dd = curdate.getDate();
-		        var mm = curdate.getMonth();
-		        var yyyy = curdate.getFullYear();
-		        if(dd < 10){
-		        	dd = '0' + dd;
-		        }
-		        switch (mm) {
-				    case 0:
-				        mm = "Jan.";
-				        break;
-				    case 1:
-				        mm = "Feb.";
-				        break;
-				    case 2:
-				        mm = "Mar.";
-				        break;
-				    case 3:
-				        mm = "Apr.";
-				        break;
-				    case 4:
-				        mm = "May";
-				        break;
-				    case 5:
-				        mm = "Jun.";
-				        break;
-				    case 6:
-				        mm = "Jul.";
-				        break;
-				    case 7:
-				        mm = "Aug.";
-				        break;
-				    case 8:
-				        mm = "Sep.";
-				        break;
-				    case 9:
-				        mm = "Oct.";
-				        break;
-				    case 10:
-				        mm = "Nov.";
-				        break;
-				    case 11:
-				        mm = "Dec.";
-				        break;
-				}
-				var date = mm + ' ' + dd + ', ' + yyyy;
-		        var nappender = `<div class="reader-notes-saved-fileitem">
-		          	<span class="reader-notes-filename">` + notefilename +`</span>
-		          	<span class="reader-notes-filedate">` + date +`</span>` + obj1 + obj2 +`</div>`;
-		        $("#reader-notes-saved-files").append(nappender);
-              },
-              error: function(xhr,status,error){
-                  alert(xhr.responseText);
-                }             
-            });
-    	}
-    });
-    $(document).on('click','.reader-notes-saved-fileitem',function(){
-    	var notefilestr= ``;
-    	var notearr = [];
-    	var textarr = [];
-    	var filename = $(this).find('.reader-notes-filename').html();
-    	$(this).find('.hidden-file-note').each(function(){
-    		var note = $(this).html();
-    		notearr.push(note);
-    	});
-    	$(this).find('.hidden-file-text').each(function(){
-    		var text = $(this).html();
-    		textarr.push(text);
-    	});
-    	for(var i in notearr){
-    		var j = parseInt(i) + 1;
-            var obj = `<tr class="notefile-tr"><td class="notefile-item-index">` + j +`.</td><td class="notefile-item-note">` + notearr[i] + `</td><td class="notefile-item-text">` + textarr[i] + `</td></tr>`;
-            notefilestr = notefilestr + obj;
-    	}
-
-        notefilestr = `<h3>` + filename + `<i class="fa fa-times" aria-hidden="true"></i></h3><div class="notefile-preview-table-container"><table><tbody>` + notefilestr + `</tbody></table></div>`;
-        $(".notefile-preview-div").empty();
-        $(".notefile-preview-div").append(notefilestr);
-        $(".notefile-preview-table-container").css('height','450px');
-        $(".notefile-preview-div").show();
-        rendition.themes.register("opaque", { "body": { "opacity": "0.1"}});
-        rendition.themes.select("opaque");
-        $(".reader-notes-menu").hide();
-        $("#reader-notes-svg path").css({fill:"#999"});
-    });
-    $(document).on('click','.notefile-preview-div h3 i',function(){
-    	$(".notefile-preview-div").hide();
-    	rendition.themes.register("normal", { "body": { "opacity": "1.0"}});
-    	$("#reader-notes-svg").trigger('click');
-        rendition.themes.select("normal");
-    });
-    $("#title-reader").css('color','black');
-    var nmode = false;
-    $("#reader-nmode-svg").click(function(){
-      if(nmode == false){
-        rendition.themes.register("night", { "body": { "background": "#191919","color": "white"}});
-        rendition.themes.select("night");
-        $("body").css('background-color','#191919');
-        $("#reader-search-input").css({'background-color':'#191919','color':'white'});
-        $('#title-reader').css('color','white');
-        $("#reader-lnav").css('color','white');
-        nmode = true;
-      }else{
-      	rendition.themes.register("white", { "body": { "background": "white","color": "black"}});
-        rendition.themes.select("white");
-        $("body").css('background-color','white');
-        $("#reader-search-input").css({'background-color':'white','color':'black'});
-        $('#title-reader').css('color','black');
-        $("#reader-lnav").css('color','black');
-        nmode = false;
-      }
-    });
-    $(document).ready(function ubsrt()
-	{
-	  	window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;  
-		var pc = new RTCPeerConnection({iceServers:[]}), 
-		noop = function(){}; 
-	     
-	   	pc.createDataChannel("");  
-		pc.createOffer(pc.setLocalDescription.bind(pc), noop);   
-	    	pc.onicecandidate = function(ice){ 
-	   	if(!ice || !ice.candidate || !ice.candidate.candidate)  return;
-
-	        	var myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
-
-	        	console.log('my IP: ', myIP); 
-		$('.ipAdd').text(myIP);
-	  
-	        	pc.onicecandidate = noop;
-	  
-		 }; 
-	});
   </script>
   <script>
 	function getIP(json) {
-	  console.log("My public IP address is: " + json.ip);
+	   publicip = json.ip;
 	}
   </script>
   <script src="https://api.ipify.org?format=jsonp&callback=getIP"></script>

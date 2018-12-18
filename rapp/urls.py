@@ -45,7 +45,7 @@ urlpatterns = [
     url(r'^add_notes/$',views.add_notes,name='add_notes'),
     url(r'^save_page/$',views.save_page,name='save_page'),
     url(r'^searchi/$',views.searchi,name='searchi'),
-    url(r'^search/', MySearchView.as_view(), name='search_view'),
+    url(r'^search/', views.search, name='search_view'),
     url(r'^publisher',views.publisher,name='publisher'),
     url(r'^secure/',views.secure,name='secure'),
     url(r'^bookrequest/',views.bookrequest,name='bookrequest'),
@@ -68,6 +68,12 @@ urlpatterns = [
     url(r'^addpublisher/$',views.addpublisher,name='addpublisher'),
     url(r'^addtag/$',views.addtag,name='addtag'),
     url(r'^addcategory/$',views.addcategory,name='addcategory'),
+    url(r'^autocomplete/$',views.autocomplete,name='autocomplete'),
+    url(r'^adddurationview/$',views.adddurationview,name='adddurationview'),
+    url(r'^addrating/$',views.addrating,name='addrating'),
+    url(r'^save_percent/$',views.save_percent,name='save_percent'),
+    url(r'^remove_notefile/$',views.remove_notefile,name='remove_notefile'),
+    url(r'^updateconn/$',views.updateconn,name='updateconn'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG is True:

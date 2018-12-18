@@ -22,10 +22,12 @@
     <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://kenwheeler.github.io/slick/slick/slick-theme.css"/>
     <link href="{% static 'cs/main.css' %}" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
     <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css" rel="stylesheet">
     <meta name="google-signin-client_id" content="18205974359-scm2ogghtt91dkgfb9id3lpprfnvd3f4.apps.googleusercontent.com">
     <style type="text/css">
     	.g-signin2{
@@ -49,22 +51,25 @@
 	        <span class="icon-bar"></span>
 	        <span class="icon-bar"></span>
 	      </button>
-	      <a class="navbar-brand" href="/"><img src="{% static 'images/logo.png' %}" height="30px"><span class="brand-span">ReaderEarth</span></a>
+	      <a class="navbar-brand" href="/"></a>
 	    </div>
 
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	      <ul class="nav navbar-nav navbar-right">
 	        <li {% block activeh %}{% endblock %}><a href="/">Home</a></li>
-	        <li {% block activee %}{% endblock %}><a href="/search/?q=bookActive">Ebooks</a></li>
-	        <li {% block activeco %}{% endblock %}><a href="/contact/">Contact</a></li>
+	        <li {% block activee %}{% endblock %}><a href="/search/">Shop</a></li>
 	        {% if user.is_authenticated %}
-	        <li {% block activew %}{% endblock %}><a href="/wishlist/">Wishlist</a></li>
-	        <li {% block activeca %}{% endblock %}><a href="/cart/">Cart</a></li>
-	        <li {% block actived %}{% endblock %}><a href="/dashboard/">Dashboard</a></li>
+	        <li {% block actived %}{% endblock %}><a href="/dashboard/">My Books</a></li>
+	        {% endif %}
+	        <li class="reader-shop-search-li"><input type="text" name="reader-shop-search-input" placeholder="Search" class="reader-shop-search-input">
+	        <svg class="reader-shop-search-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/><path d="M0 0h24v24H0z" fill="none"/></svg></li>
+	        {% if user.is_authenticated %}
 	        <li class="nav-logout"><a href="/logout/" onclick="signOut();" class="logout-btn">LOGOUT</a></li>
 	        {% else %}
             <li><a data-toggle="modal" data-target="#loginModal" href="">Login/Register</a></li>
 			{% endif %}
+			<li {% block activeca %}{% endblock %}><a href="/cart/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/><path d="M0 0h24v24H0z" fill="none"/></svg></a></li>
+
 	      </ul>
 	    </div><!-- /.navbar-collapse -->
 	  </div><!-- /.container-fluid -->
@@ -179,8 +184,9 @@
 
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.js"></script>
     <script src="{% static 'js/main.js' %}"></script>
     <script>
 
@@ -292,11 +298,9 @@
         }
     });
 
-    $(".cart-btn").click(function(){
+    $(".detail-atc i,.detail-atc span").click(function(){
         if($(".logout-btn").html() == "LOGOUT"){
-            var pathname = window.location.pathname;
-            var number1 = pathname.substr(pathname.indexOf("/detail/") + 8);
-            var ebooknumber = number1.substr(0,number1.indexOf("/"));
+            var ebooknumber = parseInt($(".hidden-detail-ebook-id").html());
             $.ajax({
 				url: '/add_cart/',
 				type:'POST',
@@ -415,9 +419,9 @@
 				});
     });
 
-    $(".wremove").click(function(){
-        var productid = $(this).attr('data-id');
-        var ebookid = $(".hiddenidw[data-id=" + productid + "]").html();
+    $(".wl-remove").click(function(){
+    	var curelem = $(this);
+        var ebookid = parseInt($(this).parent().parent().attr('data-eid'));
         $.ajax({
 					url: '/delete_wishlist/',
 					type:'POST',
@@ -429,7 +433,7 @@
 					success: function(data)
 					{
 	                    if(data == 'Success'){
-	                    	location.reload();
+	                    	curelem.parent().parent().remove();
 	                    }
 						
 					},
@@ -439,9 +443,9 @@
 				});
     });
 
-    $(".mtc").click(function(){
-        var productid = $(this).attr('data-id');
-        var ebookid = $(".hiddenidw[data-id=" + productid + "]").html();
+    $(".wl-atc").click(function(){
+    	curelem = $(this);
+        var ebookid = parseInt($(this).parent().parent().attr('data-eid'));
         $.ajax({
 					url: '/mtc/',
 					type:'POST',
@@ -453,7 +457,7 @@
 					success: function(data)
 					{
 	                    if(data == 'Success'){
-	                    	location.reload();
+	                    	curelem.parent().parent().remove();
 	                    }
 						
 					},
@@ -620,7 +624,13 @@
     if($(document.body)[0].scrollHeight < $(window).height()){
     	$(".footer").css('position','absolute');
     	$(".footer").css('bottom','0px');
-    }
+    };
+    $(".dash-bottom .card").mouseover(function(){
+    	$(this).css({'height':'330px','width':'110%','margin-top':'-5%','margin-left':'-5%','box-shadow':'0px 0px 4px rgb(128,128,128)','z-index':'3'});
+    });
+    $(".dash-bottom .card").mouseleave(function(){
+    	$(this).css({'height':'310px','width':'99%','margin-top':'0%','margin-left':'0%','box-shadow':'none','z-index':'1'});
+    });
     $(".wl-cards .card .container").css('height','120px');
     $(".wl-cards .card").mouseover(function(){
         $(this).find('.container').css('height','auto');
@@ -699,29 +709,61 @@
     	$(".publisherUploadReply").html('The Ebooks were uploaded successfully! Your Ebooks will be live soon!');
     }
         
-    if($(".remainArray").length > 0 ){
-	    var remainArray = $(".remainArray").html();
+    if($(".remaindArray").length > 0 ){
+	    var remainArray = $(".remaindArray").html();
 	    var leftArray = remainArray.slice(1,remainArray.length-1)
 	    var array = JSON.parse("[" + leftArray + "]");
 	    for(var i=1;i<=array.length;i++){
-	    	$(".dash-right .ebooks .card .overlay[data-id=" + i + "]").html(array[i-1] + " days");
+	    	$(".dash-bottom .ebooks .card .dash-dl[data-id=" + i + "] span:nth-child(1)").html(array[i-1]);
+	    };
+    }
+    if($(".remainhArray").length > 0 ){
+	    var remainArray = $(".remainhArray").html();
+	    var leftArray = remainArray.slice(1,remainArray.length-1)
+	    var array = JSON.parse("[" + leftArray + "]");
+	    for(var i=1;i<=array.length;i++){
+	    	$(".dash-bottom .ebooks .card .dash-hl[data-id=" + i + "] span:nth-child(1)").html(array[i-1]);
+	    };
+    }
+    if($(".remainmArray").length > 0 ){
+	    var remainArray = $(".remainmArray").html();
+	    var leftArray = remainArray.slice(1,remainArray.length-1)
+	    var array = JSON.parse("[" + leftArray + "]");
+	    for(var i=1;i<=array.length;i++){
+	    	$(".dash-bottom .ebooks .card .dash-ml[data-id=" + i + "] span:nth-child(1)").html(array[i-1]);
 	    };
     }
 
-    
-    $(".dash-left .dl-rent").click(function(){
-    	$(".dash-right .dashes").show();
-    	$(".dash-right .bdashes").hide();
-    	$(this).addClass("active");
-    	$(".dash-left .dl-buy").removeClass('active');
-    	$(".dash-left .dl-all").removeClass('active');
+    var dasheslength = {{ dashes|length }};
+    var bdasheslength = {{ bdashes|length }};
+ 
+    $(".dash-middle #dash-rented-btn").click(function(){
+    	$(".dash-bottom .dashes").show();
+    	$(".dash-bottom .bdashes").hide();
+    	$(this).addClass("dashactivebtn");
+    	$(".dash-middle #dash-bought-btn").removeClass('dashactivebtn');
+    	if($(document.body)[0].scrollHeight < $(window).height() && dasheslength == 0){
+	    	$(".footer").css('position','absolute');
+	    	$(".footer").css('bottom','0px');
+	    	$("body").css('overflow-y','hidden');
+	    }else{
+	    	$(".footer").css('position','static');
+	    	$("body").css('overflow-y','auto');
+	    }
     });
-    $(".dash-left .dl-buy").click(function(){
-    	$(".dash-right .dashes").hide();
-    	$(".dash-right .bdashes").show();
-    	$(this).addClass("active");
-    	$(".dash-left .dl-rent").removeClass('active');
-    	$(".dash-left .dl-all").removeClass('active');
+    $(".dash-middle #dash-bought-btn").click(function(){
+    	$(".dash-bottom .dashes").hide();
+    	$(".dash-bottom .bdashes").show();
+    	$(this).addClass("dashactivebtn");
+    	$(".dash-middle #dash-rented-btn").removeClass('dashactivebtn');
+    	if($(document.body)[0].scrollHeight < $(window).height() && bdasheslength == 0){
+	    	$(".footer").css('position','absolute');
+	    	$(".footer").css('bottom','0px');
+	    	$("body").css('overflow-y','hidden');
+	    }else{
+	    	$(".footer").css('position','static');
+	    	$("body").css('overflow-y','auto');
+	    }
     });
     $(".dash-left .dl-all").click(function(){
     	$(".dash-right .dashes").show();
@@ -916,7 +958,804 @@
 	$("#upload-book-form").submit(function(){
         $("#upload-description-input").val($("#upload-description").summernote('code'));
 		return true;
-	})
+	});
+
+	$(".reader-shop-search-input").keypress(function(e){
+    	if(e.keyCode== '13'){
+    		var text = $(this).val();
+    		if(text!=''){
+    			window.location.href = '/search/?q=' + text;
+    		}
+    	}
+    });
+
+    function lisearchfunc(query){
+    	window.location.href= '/search/?q=' + query;
+    }
+    $(".reader-shop-search-input").keyup(function(e){
+        if(e.keyCode != '13'){
+        	q = $(this).val();
+        	if(q!= ''){
+                $.ajax({
+					url: '/autocomplete/?q=' + q,
+					type:'GET',
+					success: function(data)
+					{   
+						$(".ul-autocomplete").remove();
+						appender = ``;
+	                    for(var i in data['results1']){
+                            var obj = `<li onClick="lisearchfunc('` + data['results1'][i] +`')">` + data['results1'][i] + `</li>`;
+                            appender = appender + obj;
+	                    }
+	                    for(var i in data['results2']){
+                            var obj = `<li onClick="lisearchfunc('` + data['results2'][i] +`')">` + data['results2'][i] + `</li>`;
+                            appender = appender + obj;
+	                    }
+	                    for(var i in data['results3']){
+                            var obj = `<li onClick="lisearchfunc('` + data['results3'][i] +`')">` + data['results3'][i] + `</li>`;
+                            appender = appender + obj;
+	                    }
+	                    for(var i in data['results4']){
+                            var obj = `<li onClick="lisearchfunc('` + data['results4'][i] +`')">` + data['results4'][i] + `</li>`;
+                            appender = appender + obj;
+	                    }
+	                    for(var i in data['results5']){
+                            var obj = `<li onClick="lisearchfunc('` + data['results5'][i] +`')">` + data['results5'][i] + `</li>`;
+                            appender = appender + obj;
+	                    }
+	                    for(var i in data['results6']){
+                            var obj = `<li onClick="lisearchfunc('` + data['results6'][i] +`')">` + data['results6'][i] + `</li>`;
+                            appender = appender + obj;
+	                    }
+	                    appender = `<ul class="ul-autocomplete">` + appender + `</ul>`;
+	                    $(".reader-shop-search-li").append(appender);
+	                    $(".ul-autocomplete").css({'position':'absolute','top':'40px','left':'0px','background-color':'white','list-style-type':'none','width':'300px','border':'none','border-radius':'0px 0px 20px 20px','z-index':'2'});
+	                    $(".ul-autocomplete li").css({'cursor':'pointer','width':'100%','padding-left':'20px'});
+	                    if($(".ul-autocomplete li").length > 0){
+                            $(".mp-1 span:nth-child(5)").css('z-index','0');
+                            $(".reader-shop-search-input").css('border-radius','20px 20px 0px 0px');
+                            $(".ul-autocomplete").css({'box-shadow':'1px 1px 4px rgb(128,128,128)','border-top':'1px solid rgb(204,204,204)','padding':'0px 0px 20px 0px'});
+	                    }else{
+	                    	$(".reader-shop-search-input").css('border-radius','20px 20px 20px 20px');
+	                    }
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+        	}else{
+        		$(".reader-shop-search-input").css('border-radius','20px 20px 20px 20px');
+        	}
+        }
+    });
+    $('body').click(function(e){
+	      if ( !$(e.target).is('.reader-shop-search-input') ) {
+	            $(".ul-autocomplete").hide();
+	            $(".mp-1 span:nth-child(5)").css('z-index','1');
+	            $(".reader-shop-search-input").css('border-radius','20px 20px 20px 20px');
+	      }else{
+	      	    $(".ul-autocomplete").show();
+	      	    if($(".ul-autocomplete li").length > 0){
+                    $(".mp-1 span:nth-child(5)").css('z-index','0');
+	      	    }else{
+	      	    	$(".reader-shop-search-input").css('border-radius','20px 20px 20px 20px');
+	      	    }
+	      }
+	});
+    var pagetimer = 0;
+    var pageinterval = setInterval(timer,1000);
+    function timer(){
+    	pagetimer = pagetimer + 1;
+    }
+
+    $(window).on("beforeunload", function() { 
+    	var pathname = String(window.location.pathname);
+    	if(pathname.indexOf('detail') != -1){
+            $.ajax({
+				url: '/adddurationview/',
+				type:'POST',
+				async: false,
+				data:
+				{
+					'view': 'detail',
+					'duration': pagetimer,
+					'ebookid': parseInt($(".hidden-detail-ebook-id").html()),
+					'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{
+				},
+				error: function(xhr,status,error){
+				alert(xhr.responseText);
+			    }             
+			});
+    	}
+	});
+
+	$(".mp-1 span:first-child").click(function(){
+        	if($(".mp-1 .shop-genre-list").css('display') == 'none'){
+                $(".mp-1 .fa-angle-up").show();
+        	    $(".mp-1 .fa-angle-down").hide();
+        	    $(".mp-1 .shop-genre-list").show();
+        	}else{
+        		$(".mp-1 .fa-angle-up").hide();
+        	    $(".mp-1 .fa-angle-down").show();
+        	    $(".mp-1 .shop-genre-list").hide();
+        	}
+        })
+	var detailimg = $(".detail-img").attr('data-img');
+	$(".detail-img").css({'background-image':'url('+detailimg+')','background-size':'100% 100%'});
+	var detailrating = $(".detail-stars").attr('data-rating');
+	var detailfrac = parseFloat(detailrating%1);
+	var detailint = detailrating - detailfrac;
+	var appender= ``;
+	if(detailfrac < 0.25){
+		detailint = detailint;
+		for(var i=1;i<=detailint;i++){
+			var obj = `<i class="fa fa-star" aria-hidden="true"></i>`;
+			appender = appender + obj;
+		}
+		for(var i=1;i<=5-detailint;i++){
+			var obj = `<i class="fa fa-star-o" aria-hidden="true"></i>`;
+			appender = appender + obj;
+		}
+	}else if(detailfrac < 0.75 && detailfrac >= 0.25){
+		detailint  = detailint;
+		for(var i=1;i<=detailint;i++){
+			var obj = `<i class="fa fa-star" aria-hidden="true"></i>`;
+			appender = appender + obj;
+		}
+		appender = appender + `<i class="fa fa-star-half-o" aria-hidden="true"></i>`;
+		for(var i=1;i<=4-detailint;i++){
+			var obj = `<i class="fa fa-star-o" aria-hidden="true"></i>`;
+			appender = appender + obj;
+		}
+	}else if(detailfrac < 1.0 && detailfrac >= 0.75){
+		detailint  = detailint + 1;
+		for(var i=1;i<=detailint;i++){
+			var obj = `<i class="fa fa-star" aria-hidden="true"></i>`;
+			appender = appender + obj;
+		}
+		for(var i=1;i<=5-detailint;i++){
+			var obj = `<i class="fa fa-star-o" aria-hidden="true"></i>`;
+			appender = appender + obj;
+		}
+	}
+	$(".detail-stars").append(appender);
+
+
+	var detailprice = parseFloat($('.detail-nprice').attr('data-price'));
+	var detailid = parseInt($(".hidden-detail-ebook-id").html());
+	if(detailid == 0){
+		detailid = 80;
+	}
+	if(detailid<=40){
+        var detaily = 30 - Math.sqrt((225/(Math.log(1/80)))*Math.log(detailid/80));
+	}else{
+		var detaily = 30 + Math.sqrt((225/(Math.log(1/80)))*Math.log(detailid/80));
+	}
+    var fnprice = (detailprice + detailprice*(detaily/100)).toFixed(1);
+    $(".detail-oprice").html('&#x20b9; ' + fnprice);
+    if(fnprice > 0.0){
+        $(".detail-discount").html(Math.round(detaily) + '% Off');
+    }else{
+        $(".detail-discount").html(0 + '% Off');
+    }
+
+    $(".detail-similar-img").each(function(){
+        var detailimg = $(this).attr('data-img');
+	    $(this).css({'background-image':'url('+detailimg+')','background-size':'100% 100%'});
+    });
+    $(".detail-similar-name").each(function(){
+    	var name = $(this).html();
+    	if(name.length > 22){
+    		name = name.substring(0,22) + '...';
+    	}
+    	$(this).html(name);
+    });
+    $(".detail-similar-author").each(function(){
+    	var name = $(this).html();
+    	if(name.length > 30){
+    		name = name.substring(0,30) + '...';
+    	}
+    	$(this).html(name);
+    });
+    $(".detail-similar-description").each(function(){
+    	var name = $(this).text();
+    	if(name.length > 100){
+    		name = name.substring(0,100) + '...';
+    	}
+    	$(this).html(name);
+    });
+    
+    $(".detail-similar-oprice").each(function(){
+        var detailprice = parseFloat($(this).parent().find('.detail-similar-nprice').attr('data-price'));
+		var detailid = parseInt($(this).parent().parent().parent().parent().attr('data-id'));
+		if(detailid == 0){
+			detailid = 80;
+		}
+		if(detailid<=40){
+	        var detaily = 30 - Math.sqrt((225/(Math.log(1/80)))*Math.log(detailid/80));
+		}else{
+			var detaily = 30 + Math.sqrt((225/(Math.log(1/80)))*Math.log(detailid/80));
+		}
+	    var fnprice = (detailprice + detailprice*(detaily/100)).toFixed(1);
+	    $(this).html('&#x20b9; ' + fnprice);
+	    if(fnprice > 0.0){
+            $(this).parent().find('.detail-similar-discount').html(Math.round(detaily) + '% Off');
+	    }else{
+	    	$(this).parent().find('.detail-similar-discount').html(0 + '% Off');
+	    }
+	});
+
+    $(".detail-similar-stars").each(function(){
+    	var detailrating = $(this).attr('data-rating');
+		var detailfrac = parseFloat(detailrating%1);
+		var detailint = detailrating - detailfrac;
+		var appender= ``;
+		if(detailfrac < 0.25){
+			detailint = detailint;
+			for(var i=1;i<=detailint;i++){
+				var obj = `<i class="fa fa-star" aria-hidden="true"></i>`;
+				appender = appender + obj;
+			}
+			for(var i=1;i<=5-detailint;i++){
+				var obj = `<i class="fa fa-star-o" aria-hidden="true"></i>`;
+				appender = appender + obj;
+			}
+		}else if(detailfrac < 0.75 && detailfrac >= 0.25){
+			detailint  = detailint;
+			for(var i=1;i<=detailint;i++){
+				var obj = `<i class="fa fa-star" aria-hidden="true"></i>`;
+				appender = appender + obj;
+			}
+			appender = appender + `<i class="fa fa-star-half-o" aria-hidden="true"></i>`;
+			for(var i=1;i<=4-detailint;i++){
+				var obj = `<i class="fa fa-star-o" aria-hidden="true"></i>`;
+				appender = appender + obj;
+			}
+		}else if(detailfrac < 1.0 && detailfrac >= 0.75){
+			detailint  = detailint + 1;
+			for(var i=1;i<=detailint;i++){
+				var obj = `<i class="fa fa-star" aria-hidden="true"></i>`;
+				appender = appender + obj;
+			}
+			for(var i=1;i<=5-detailint;i++){
+				var obj = `<i class="fa fa-star-o" aria-hidden="true"></i>`;
+				appender = appender + obj;
+			}
+		}
+		$(this).append(appender);
+    });
+    $(".detail-atc span,.detail-atc i").mouseover(function(){
+    	$(".detail-atc i").css('color','rgb(130,130,130)');
+    });
+    $(".detail-atc span,.detail-atc i").mouseleave(function(){
+    	$(".detail-atc i").css('color','rgb(160,160,160)');
+    });
+
+    var detaildesc = $(".detail-description-text").text();
+    var detaildesctrue = detaildesc;
+    if(detaildesc.length > 650){
+    	detaildesc = detaildesc.substring(0,550) + '...';
+    }
+    $(".detail-description-text").html(detaildesc);
+    
+    $(".detail-rmore").click(function(){
+    	var rmore = $(".detail-rmore").html();
+    	if(rmore == 'Read More'){
+    	    $(".detail-description-text").html(detaildesctrue);
+            $(".detail-rmore").html('Read Less');
+    	}else if(rmore == 'Read Less'){
+    		$(".detail-description-text").html(detaildesc);
+            $(".detail-rmore").html('Read More');
+    	}
+    });
+
+    function rateduser(rating){
+        var rating = parseInt(rating);
+        var ebookid = parseInt($(".hidden-detail-ebook-id").html());
+        $.ajax({
+			url: '/addrating/',
+			type:'POST',
+			data:
+			{
+				'ebookid': ebookid,
+				'rating': rating,
+				'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+			},
+			success: function(data)
+			{
+				if(data['age'] == 'new'){
+					$(".detail-nrating").html('(' + data['users'] + ' reviews)');
+					$(".detail-rating-text").html(parseFloat(data['rating']).toFixed(2));
+				}else if(data['age'] == 'old'){
+					$(".detail-rating-text").html(parseFloat(data['rating']).toFixed(2));
+				}else if(data == 'Please login to Rate the Book'){
+
+				}
+			},
+			error: function(xhr,status,error){
+			alert(xhr.responseText);
+		    }             
+		});
+    }
+
+    $(".detail-rstars i:nth-child(1)").click(function(){
+    	{% if user.is_authenticated %}
+    	$(".detail-rstars i:nth-child(2)").css('color','#B2B2B2');
+    	$(".detail-rstars i:nth-child(3)").css('color','#B2B2B2');
+    	$(".detail-rstars i:nth-child(4)").css('color','#B2B2B2');
+    	$(".detail-rstars i:nth-child(5)").css('color','#B2B2B2');
+    	$(this).css('color','#FF8E19');
+    	rateduser(1);
+    	{% endif %}
+    });
+    $(".detail-rstars i:nth-child(2)").click(function(){
+    	{% if user.is_authenticated %}
+    	$(".detail-rstars i:nth-child(1)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(3)").css('color','#B2B2B2');
+    	$(".detail-rstars i:nth-child(4)").css('color','#B2B2B2');
+    	$(".detail-rstars i:nth-child(5)").css('color','#B2B2B2');
+    	$(this).css('color','#FF8E19');
+    	rateduser(2);
+    	{% endif %}
+    });
+    $(".detail-rstars i:nth-child(3)").click(function(){
+    	{% if user.is_authenticated %}
+    	$(".detail-rstars i:nth-child(1)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(2)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(4)").css('color','#B2B2B2');
+    	$(".detail-rstars i:nth-child(5)").css('color','#B2B2B2');
+    	$(this).css('color','#FF8E19');
+    	rateduser(3);
+    	{% endif %}
+    });
+    $(".detail-rstars i:nth-child(4)").click(function(){
+    	{% if user.is_authenticated %}
+    	$(".detail-rstars i:nth-child(1)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(2)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(3)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(5)").css('color','#B2B2B2');
+    	$(this).css('color','#FF8E19');
+    	rateduser(4);
+    	{% endif %}
+    });
+    $(".detail-rstars i:nth-child(5)").click(function(){
+    	{% if user.is_authenticated %}
+    	$(".detail-rstars i:nth-child(1)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(2)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(3)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(4)").css('color','#FF8E19');
+    	$(this).css('color','#FF8E19');
+    	rateduser(5);
+    	{% endif %}
+    });
+    var detailbookrating = parseInt({{ rating|safe }});
+    if(detailbookrating == 1){
+    	$(".detail-rstars i:nth-child(1)").css('color','#FF8E19');
+    }else if(detailbookrating == 2){
+    	$(".detail-rstars i:nth-child(1)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(2)").css('color','#FF8E19');
+    }else if(detailbookrating == 3){
+    	$(".detail-rstars i:nth-child(1)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(2)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(3)").css('color','#FF8E19');
+    }
+    else if(detailbookrating == 4){
+    	$(".detail-rstars i:nth-child(1)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(2)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(3)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(4)").css('color','#FF8E19');
+    }
+    else if(detailbookrating == 5){
+    	$(".detail-rstars i:nth-child(1)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(2)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(3)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(4)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(5)").css('color','#FF8E19');
+    }
+
+    $(".detail-rating-text").html(parseFloat($(".detail-rating-text").html()).toFixed(2));
+
+    $(".wl-cards .card .container .title").each(function(){
+        var text  = $(this).html();
+        if(text.length > 28){
+        	text = text.substring(0,28) + '...';
+        	$(this).html(text);
+        }
+    });
+    $(".wl-cards .card .container .author").each(function(){
+        var text  = $(this).html();
+        if(text.length > 22){
+        	text = text.substring(0,22) + '...';
+        	$(this).html(text);
+        }
+    });
+
+    $(".wl-cards .card .oprice").each(function(){
+    	var nprice = parseFloat($(this).parent().find('.nprice').html().substring(5,$(this).parent().find('.nprice').html().indexOf('</b>')));
+    	var x = parseInt($(this).parent().parent().attr('data-eid'))%80;
+    	if(x == 0){
+    		x = 80;
+    	}
+    	if(x<=40){
+            var y = 30 - Math.sqrt((225/(Math.log(1/80)))*Math.log(x/80));
+    	}else{
+    		var y = 30 + Math.sqrt((225/(Math.log(1/80)))*Math.log(x/80));
+    	}
+        var fnprice = (nprice + nprice*(y/100)).toFixed(1);
+        $(this).html('&#x20b9; ' + fnprice);
+    });
+    $(".wl-cards .card").mouseover(function(){
+    	$(this).css({'height':'330px','width':'16.5%','z-index':'3','margin-top':'-10px','border-radius':'5px','box-shadow':'10px 0 15px -4px rgba(160, 100, 245, 0.4),-10px 0 15px -4px rgba(160, 100, 245, 0.4),0px 6px 15px -4px rgba(160, 100, 245, 0.4),0px -6px 15px -4px rgba(160, 100, 245, 0.4)','margin-left':'-0.05%','margin-right':'-0.05%','margin-bottom':'-55px'});
+    	$(this).find('img').css('height','170px');
+    	$(this).find('.fa-heart').css({'font-size':'17px','top':'11px','margin-left':'145px'});
+    	$(this).find('.wl-atc').css('display','block');
+    	$(this).find('.wl-remove').css('display','block');
+    });
+    $(".wl-cards .card").mouseleave(function(){
+    	$(this).css({'height':'265px','width':'16.4%','z-index':'0','margin-top':'0px','border-radius':'0px','box-shadow':'none','margin-left':'0%','margin-right':'0%','margin-bottom':'0px'});
+
+    	$(this).find('img').css('height','150px');
+    	$(this).find('.fa-heart').css({'font-size':'16px','top':'10px','margin-left':'145px'});
+    	$(this).find('.wl-atc').css('display','none');
+    	$(this).find('.wl-remove').css('display','none');
+    });
+
+    var wishlistlength = $(".wl-cards .card").length;
+    if(wishlistlength == 0 && String(window.location.href).indexOf('/wishlist') != -1){
+    	$(".footer").css({'position':'absolute','bottom':'0px'});
+    }
+    
+    if(String(window.location.href).indexOf('/detail') != -1){
+        var wisharray = {{ wisharray|safe }}
+ 
+	    $(".detail-similar-book").each(function(){
+	    	if(wisharray.indexOf(parseInt($(this).attr('data-id'))) != -1){
+	    		$(this).find('.fa-heart').css('color','red');
+	    	}
+	    });
+	    var curdetailid = parseInt($(".hidden-detail-ebook-id").html());
+	    if(wisharray.indexOf(curdetailid) != -1){
+	    		$('.detail-img .fa-heart').css('color','red');
+	    	}
+    }
+    $(".detail-similar-book .fa-heart").click(function(){
+    	if($(".logout-btn").html() == "LOGOUT"){
+    		var ebooknumber = parseInt($(this).parent().attr('data-id'));
+            var curelem = $(this);
+    		if($(this).css('color') != 'rgb(255, 0, 0)'){
+                $.ajax({
+					url: '/atw/',
+					type:'POST',
+					data:
+					{
+						'ebooknumber': ebooknumber,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".cart-reply").html(data);
+	                    curelem.css('color','red')
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    		}else{
+    			$.ajax({
+					url: '/delete_wishlist/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebooknumber,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".cart-reply").html(data);
+	                    curelem.css('color','rgb(178, 178, 178)');
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    		}
+        }else{
+        	$(".cart-reply").html("You must login to continue!");
+        }
+    })
+
+
+
+    $(".detail-img .fa-heart").click(function(){
+    	if($(".logout-btn").html() == "LOGOUT"){
+    		var ebooknumber = parseInt($(".hidden-detail-ebook-id").html());
+            var curelem = $(this);
+    		if($(this).css('color') != 'rgb(255, 0, 0)'){
+                $.ajax({
+					url: '/atw/',
+					type:'POST',
+					data:
+					{
+						'ebooknumber': ebooknumber,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".cart-reply").html(data);
+	                    curelem.css('color','red')
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    		}else{
+    			$.ajax({
+					url: '/delete_wishlist/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebooknumber,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".cart-reply").html(data);
+	                    curelem.css('color','rgb(178, 178, 178)');
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    		}
+        }else{
+        	$(".cart-reply").html("You must login to continue!");
+        }
+    });
+
+    $(".detail-sug-wrapper .card .container .title").each(function(){
+        var text  = $(this).html();
+        if(text.length > 28){
+        	text = text.substring(0,28) + '...';
+        	$(this).html(text);
+        }
+    });
+    $(".detail-sug-wrapper .card .container .author").each(function(){
+        var text  = $(this).html();
+        if(text.length > 22){
+        	text = text.substring(0,22) + '...';
+        	$(this).html(text);
+        }
+    });
+
+    $(".detail-sug-wrapper2 .card .container .title").each(function(){
+        var text  = $(this).html();
+        if(text.length > 28){
+        	text = text.substring(0,28) + '...';
+        	$(this).html(text);
+        }
+    });
+    $(".detail-sug-wrapper2 .card .container .author").each(function(){
+        var text  = $(this).html();
+        if(text.length > 22){
+        	text = text.substring(0,22) + '...';
+        	$(this).html(text);
+        }
+    });
+    
+
+    $('.detail-sug-wrapper').slick({
+          infinite: true,
+          slidesToShow: 5,
+          slidesToScroll: 5,
+          variableWidth: true,
+        });
+
+    $(".detail-sug-wrapper .slick-prev").hide();
+
+    $('.detail-sug-wrapper').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+          var slidemodulo = {{ sfbooks|length|safe }}%5;
+          if(slidemodulo == 0){
+            slidemodulo = 5;
+          }
+          if(nextSlide =={{ sfbooks|length|safe }} -slidemodulo){
+              $(".detail-sug-wrapper .slick-next").hide();
+              $(".detail-sug-wrapper .slick-prev").show();
+          }else if(nextSlide == 0){
+              $(".detail-sug-wrapper .slick-next").show();
+              $(".detail-sug-wrapper .slick-prev").hide();
+          }else{
+          	$(".detail-sug-wrapper .slick-next").show();
+          	$(".detail-sug-wrapper .slick-prev").show();
+          }
+        });
+
+    $(".detail-sug-wrapper .card .oprice").each(function(){
+    	var nprice = parseFloat($(this).parent().find('.nprice').html().substring(5,$(this).parent().find('.nprice').html().indexOf('</b>')));
+    	var x = parseInt($(this).parent().parent().parent().attr('data-eid'))%80;
+    	if(x == 0){
+    		x = 80;
+    	}
+    	if(x<=40){
+            var y = 30 - Math.sqrt((225/(Math.log(1/80)))*Math.log(x/80));
+    	}else{
+    		var y = 30 + Math.sqrt((225/(Math.log(1/80)))*Math.log(x/80));
+    	}
+        var fnprice = (nprice + nprice*(y/100)).toFixed(1);
+        $(this).html('&#x20b9; ' + fnprice);
+    });
+
+    $(".detail-sug-wrapper2 .card .oprice").each(function(){
+    	var nprice = parseFloat($(this).parent().find('.nprice').html().substring(5,$(this).parent().find('.nprice').html().indexOf('</b>')));
+    	var x = parseInt($(this).parent().parent().parent().attr('data-eid'))%80;
+    	if(x == 0){
+    		x = 80;
+    	}
+    	if(x<=40){
+            var y = 30 - Math.sqrt((225/(Math.log(1/80)))*Math.log(x/80));
+    	}else{
+    		var y = 30 + Math.sqrt((225/(Math.log(1/80)))*Math.log(x/80));
+    	}
+        var fnprice = (nprice + nprice*(y/100)).toFixed(1);
+        $(this).html('&#x20b9; ' + fnprice);
+    });
+    $(".detail-sug-wrapper .card").mouseover(function(){
+    	$(".mp-4").css('margin-top','-10px');
+    	$(this).css({'height':'285px','width':'0.54%','z-index':'3','margin-top':'-10px','border-radius':'5px','box-shadow':'10px 0 15px -4px rgba(160, 100, 245, 0.4),-10px 0 15px -4px rgba(160, 100, 245, 0.4),0px 6px 15px -4px rgba(160, 100, 245, 0.4),0px -6px 15px -4px rgba(160, 100, 245, 0.4)','margin-left':'-0.01%','margin-right':'-0.01%'});
+    	if(parseInt($(this).attr('data-slick-index'))%5 == 0){
+    		$(this).css({'margin-left':'0.032%','margin-right':'-0.052%'});
+    	}
+    	$(this).find('img').css('height','170px');
+    	$(this).find('.fa-heart').css({'font-size':'17px','top':'11px','margin-left':'135px'});
+    });
+    $(".detail-sug-wrapper .card").mouseleave(function(){
+    	$(".mp-4").css('margin-top','20px');
+    	$(this).css({'height':'265px','width':'0.52%','z-index':'0','margin-top':'0px','border-radius':'0px','box-shadow':'none','margin-left':'0%','margin-right':'0%'});
+
+    	$(this).find('img').css('height','150px');
+    	$(this).find('.fa-heart').css({'font-size':'16px','top':'10px','margin-left':'135px'});
+    });
+
+    $(".detail-sug-wrapper2 .card").mouseover(function(){
+    	$(".mp-4").css('margin-top','-10px');
+    	$(this).css({'height':'285px','width':'22%','z-index':'3','margin-top':'-10px','border-radius':'5px','box-shadow':'10px 0 15px -4px rgba(160, 100, 245, 0.4),-10px 0 15px -4px rgba(160, 100, 245, 0.4),0px 6px 15px -4px rgba(160, 100, 245, 0.4),0px -6px 15px -4px rgba(160, 100, 245, 0.4)','margin-left':'-1%','margin-right':'-1%'});
+    	$(this).find('img').css('height','170px');
+    	$(this).find('.fa-heart').css({'font-size':'17px','top':'11px','margin-left':'150px'});
+    });
+    $(".detail-sug-wrapper2 .card").mouseleave(function(){
+    	$(".mp-4").css('margin-top','20px');
+    	$(this).css({'height':'265px','width':'20%','z-index':'0','margin-top':'0px','border-radius':'0px','box-shadow':'none','margin-left':'0%','margin-right':'0%'});
+
+    	$(this).find('img').css('height','150px');
+    	$(this).find('.fa-heart').css({'font-size':'16px','top':'10px','margin-left':'135px'});
+    });
+
+    if(String(window.location.href).indexOf('/detail') != -1){
+        var wisharray = {{ wisharray|safe }}
+ 
+	    $(".detail-sug-wrapper2 .card").each(function(){
+	    	if(wisharray.indexOf(parseInt($(this).attr('data-eid'))) != -1){
+	    		$(this).find('.fa-heart').css('color','red');
+	    	}
+	    });
+    }
+    $(".detail-sug-wrapper2 .card .fa-heart").click(function(){
+    	if($(".logout-btn").html() == "LOGOUT"){
+    		var ebooknumber = parseInt($(this).parent().attr('data-eid'));
+            var curelem = $(this);
+    		if($(this).css('color') != 'rgb(255, 0, 0)'){
+                $.ajax({
+					url: '/atw/',
+					type:'POST',
+					data:
+					{
+						'ebooknumber': ebooknumber,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".cart-reply").html(data);
+	                    curelem.css('color','red')
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    		}else{
+    			$.ajax({
+					url: '/delete_wishlist/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebooknumber,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".cart-reply").html(data);
+	                    curelem.css('color','rgb(178, 178, 178)');
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    		}
+        }else{
+        	$(".cart-reply").html("You must login to continue!");
+        }
+    })
+
+    if(String(window.location.href).indexOf('/detail') != -1){
+        var wisharray = {{ wisharray|safe }}
+ 
+	    $(".detail-sug-wrapper .card").each(function(){
+	    	if(wisharray.indexOf(parseInt($(this).attr('data-eid'))) != -1){
+	    		$(this).find('.fa-heart').css('color','red');
+	    	}
+	    });
+    }
+    $(".detail-sug-wrapper .card .fa-heart").click(function(){
+    	if($(".logout-btn").html() == "LOGOUT"){
+    		var ebooknumber = parseInt($(this).parent().attr('data-eid'));
+            var curelem = $(this);
+    		if($(this).css('color') != 'rgb(255, 0, 0)'){
+                $.ajax({
+					url: '/atw/',
+					type:'POST',
+					data:
+					{
+						'ebooknumber': ebooknumber,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".cart-reply").html(data);
+	                    curelem.css('color','red')
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    		}else{
+    			$.ajax({
+					url: '/delete_wishlist/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebooknumber,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".cart-reply").html(data);
+	                    curelem.css('color','rgb(178, 178, 178)');
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    		}
+        }else{
+        	$(".cart-reply").html("You must login to continue!");
+        }
+    })
+
+    $(".dash-ebook-progress-text").each(function(){
+    	var percent = parseFloat($(this).attr('data-percent'));
+    	var lpercent = 100 - percent.toFixed(2);
+    	$(this).html(percent.toFixed(2) + '%');
+    	$(this).parent().css('background','linear-gradient(to right,#7F70C9 '+percent.toFixed(2)+'%,#F2F2F2 0%)');
+    });
     </script>
     
     

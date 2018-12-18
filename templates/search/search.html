@@ -18,8 +18,10 @@
            {{ result.object.pages }}
            {{ result.object.category }}
            {{ result.object.description }}
+           {{ result.object.bookActive }}
         {% empty %}           
              No results found.
+             {{ suggestion }}
         {% endfor %}
     {% endif %}
 
