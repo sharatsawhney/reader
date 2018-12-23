@@ -1252,8 +1252,10 @@ $(".selector-div").hide();
             });
             audio.addEventListener('timeupdate',function(){
               var nowtime = Math.round(audio.currentTime);
+              var percentagem = (nowtime/audioduration)*100;
               if(audiochange == false){
                   $(".reader-music-progress").val(nowtime);
+                  $(".reader-music-progress").css('background','linear-gradient(to right, #7e71c9 '+ percentagem +'%, rgb(255,255,255) '+ 0 + '%)');
               }
               var audiocmin = Math.floor(nowtime/60);
               var audiocsec = nowtime % 60;
@@ -1846,16 +1848,18 @@ $(".selector-div").hide();
       rendition.themes.select("night");
       $("body").css('background-color','#2F2F2F');
       $("#reader-search-input").css({'background-color':'#2F2F2F','color':'white'});
-      $('#title-reader').css('color','white');
       $("#reader-lnav").css('color','white');
+      $("#logosvg").hide();
+      $("#logosvgw").show();
       nmode = true;
     }else{
     	rendition.themes.register("white", { "body": { "background": "white","color": "black"}});
       rendition.themes.select("white");
       $("body").css('background-color','white');
       $("#reader-search-input").css({'background-color':'white','color':'black'});
-      $('#title-reader').css('color','black');
       $("#reader-lnav").css('color','black');
+      $("#logosvgw").hide();
+      $("#logosvg").show();
       nmode = false;
     }
   });

@@ -1520,6 +1520,14 @@ html{
 }
 .cart-right .sub-head .total{
 	color: #4D4D4D;
+	background-color: #F0ED8B;
+	margin-left: 0%;
+	width: 100%;
+	padding-left:20px;
+	height: 40px;
+}
+.cart-right .sub-head .total .ordertotal{
+	margin-left: -15px;
 }
 .cart-right .sub-head .checkout{
 	margin:auto;
@@ -1530,7 +1538,11 @@ html{
     margin-top: 20px;
     padding-top: 7px;
     padding-bottom: 7px;
-    text-align: center
+    text-align: center;
+    cursor: pointer;
+}
+.cart-right .sub-head .checkout:hover{
+	background-color: #4286B6;
 }
 .cart-right .safety{
 	margin-top: 30px;
@@ -4015,3 +4027,303 @@ only screen and (min-device-pixel-ratio: 1.5){
   }
 
 }
+
+/* Payment Starts */
+#payment-container{
+	width: 100%;
+	display: flex;
+	margin-left: 2%;
+	margin-right: 2%;
+	margin-top: -10px !important;
+}
+#payment-l{
+	width: 71%;
+}
+#payment-r{
+	width: 24%;
+	margin-left: 1.5%;
+	background-color: white;
+	height: 170px;
+	margin-top: 10px;
+	padding-top: 5px;
+}
+#payment-details{
+	background-color: white;
+	height: 110px;
+	margin-top: -10px;
+	margin-bottom: 30px;
+}
+#pd-header{
+	background-color: #00B6AB;
+	height: 30px;
+}
+#pd-header h3{
+	color: white;
+	font-size: 18px;
+	padding-top: 6px;
+	padding-left: 20px;
+}
+#pd-email{
+	background-color: white;
+	border: 2px solid rgb(190,190,190);
+	color: #7F7F7F;
+	width: 22%;
+	padding-left: 10px;
+	border-radius: 3px;
+	outline: none;
+	margin-top: 25px;
+	margin-left: 10%;
+	margin-right: 5%;
+}
+#phonepayment{
+    outline: none;
+    width: 82%;
+    border:2px solid rgb(190,190,190);
+    color: #7F7F7F;
+}
+#pd-continue{
+	background-color: #3A8FF1;
+	outline: none;
+	border: none;
+	color: white;
+	width: 20%;
+	height: 30px;
+	font-size: 18px;
+}
+#payment-methods{
+	background-color: white;
+	height: 480px;
+	margin-bottom: 30px;
+}
+#pm-header{
+	background-color: #00B6AB;
+	height: 30px;
+}
+#pm-header h3{
+	color: white;
+	font-size: 18px;
+	padding-top: 6px;
+	text-align: center;
+}
+#pm-core{
+	display: flex;
+}
+#pm-options{
+	width: 35%;
+	background-color: #F2F2F2;
+}
+#pm-options div{
+	padding-left: 14%;
+	height: 75px;
+	border-bottom: 2px solid #d9d9d9;
+	color: black;
+	padding-top: 10px;
+	font-size: 17px;
+	cursor: pointer;
+}
+#pm-options div:nth-child(6){
+	border-bottom: none;
+}
+#pm-options div:nth-child(1){
+	border-bottom: none;
+}
+#pm-options div:nth-child(2){
+	background-color: white;
+	border-bottom: none;
+}
+#pm-options div svg{
+	width:50px;
+	height: 50px;
+}
+#pm-options div span{
+	margin-left: 25px;
+	position: relative;
+	bottom: 17px;
+}
+#pm-main{
+	width: 65%;
+	padding-top: 10px;
+	position: relative;
+}
+#pm-nb{
+	
+}
+#pm-nb span{
+	position: relative;
+}
+#pm-nb span .pbordersvg{
+	width: 26%;
+	padding: 10px;
+	border: 2px dashed #00EBB4;
+	margin-top: 10px;
+	margin-left: 16%;
+	height: 70px;
+}
+#pm-nb span .pselectsvg{
+	width: 20px;
+	position: absolute;
+	right: -3px;
+	bottom:58px;
+	display: none;
+}
+#pm-nb-hdfc .pselectsvg{
+	right: -7px !important;
+}
+#pm-nb-or{
+	text-align: center;
+	color: #7F7F7F;
+	font-size: 17px;
+	margin-top: 10px;
+}
+#netbank-select{
+	margin-top: 10px;
+	margin-left: 25%;
+	height: 30px;
+	width: 50%;
+	background-color: white;
+	border: 2px solid rgb(190,190,190);
+	outline: none;
+	color: rgb(127,127,127);
+}
+#payment-pay{
+	color: white;
+	background-color: #3A8FF1;
+	outline: none;
+	border: none;
+	font-weight: bold;
+	font-size: 17px;
+	position: absolute;
+	bottom: 30px;
+	width: 50%;
+	left: 25%;
+	height: 30px;
+}
+#pm-up{
+	text-align: center;
+}
+#pm-up h3{
+	color: black;
+	font-size: 28px;
+	font-weight: normal;
+	padding-bottom: 10px;
+}
+#pm-bhimsvg{
+	width: 25px;
+}
+#pm-paytmsvg{
+	width: 70px;
+	position: relative;
+	bottom: 9px;
+}
+#pm-whatsappsvg{
+	width: 35px;
+	position: relative;
+	bottom: 4px;
+}
+#pm-upi-text{
+	color: #4E4E4E;
+	margin-top: 25px;
+}
+#pm-upi-input{
+	margin-top: 60px;
+	border:none;
+	border-bottom: 1px solid #7F7F7F;
+	background-color: white;
+	outline: none;
+	width: 50%;
+	color: #4E4E4E;
+}
+#pm-wa{
+	width: 100%;
+	
+}
+#pm-wa .row div{
+    border: 2px dashed #00EBB4;
+    padding:10px;
+    width: 26%;
+    margin-left: 16%;
+    height: 60px;
+    margin-top: 10px;
+    font-size: 14px;
+    position: relative;
+    cursor: pointer;
+}
+#pm-wa .row div img{
+	width: 40px;
+	position: relative;
+	bottom: 2px;
+}
+#pm-wa .row div span{
+	position: relative;
+	bottom: 2px;
+}
+#pm-wa .row .col-sm-6 .pselectsvg{
+	width: 20px;
+	position: absolute;
+	right: -8px;
+	top: -8px;
+	display: none;
+}
+#pm-wa-vodafone span:nth-child(2){
+	position: relative;
+	bottom: 10px !important;
+}
+#pm-wa-vodafone span:nth-child(3){
+	position: relative;
+	bottom: 25px !important;
+	left: 45px;
+}
+#pm-wa-amazon{
+	padding-top: 15px !important;
+}
+#pm-wa-paytm{
+	padding-top: 18px !important;
+}
+#pm-wa-paytmsvg{
+	width: 40px;
+}
+#pm-qp{
+	
+}
+#pm-qp #pm-qp-pay{
+	width:26%;
+	margin-left: 16%;
+	margin-top: 10px;
+	border: 2px dashed #00EBB4;
+	padding: 10px;
+	height: 60px;
+	position: relative;
+}
+#pm-qp #pm-qp-pay .pselectsvg{
+	width: 20px;
+	position: absolute;
+	right: -8px;
+	top: -8px;
+	display: none;
+}
+#payment-r .row{
+	padding-top:10px;
+	margin-left: 20px;
+	color:#2e2e2e;
+}
+#payment-r .row .col-sm-5{
+	text-align: right;
+	margin-left: -10%;
+}
+#payment-r .blue-hr{
+	margin-left: 5%;
+	margin-top: 5px;
+}
+#payment-r .total{
+	color: #4D4D4D;
+	background-color: #F0ED8B;
+	margin-left: 0%;
+	width: 100%;
+	padding-left:20px;
+	height: 40px;
+	margin-top: 10px;
+}
+#payment-r .total .ordertotal{
+	margin-left: -15px;
+}
+/* Payment Ends */

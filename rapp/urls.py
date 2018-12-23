@@ -74,6 +74,9 @@ urlpatterns = [
     url(r'^save_percent/$',views.save_percent,name='save_percent'),
     url(r'^remove_notefile/$',views.remove_notefile,name='remove_notefile'),
     url(r'^updateconn/$',views.updateconn,name='updateconn'),
+    url(r'^catchpayment/$',views.catchpayment,name='catchpayment'),
+    url(r'^paypalcreate/$',views.paypalcreate,name='paypalcreate'),
+    url(r'^paypalexecute/$',views.paypalexecute,name='paypalexecute'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG is True:

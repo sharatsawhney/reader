@@ -224,7 +224,7 @@ class Lastpage(models.Model):
 
 class Uploaded(models.Model):
     publisher = models.ForeignKey('Publishers',on_delete=models.DO_NOTHING)
-    file = models.FileField(upload_to='media/')
+    file = models.CharField(max_length=255)
     handled = models.BooleanField(default=False)
 
     def __str__(self):
@@ -498,3 +498,42 @@ class ConnectionHistory(models.Model):
 
     def __str__(self):
         return self.localip
+
+
+class Payment(models.Model):
+    paymentid = models.CharField(max_length=40)
+    amount = models.FloatField()
+    ebook = models.ForeignKey(Ebooks,on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    time = models.DateTimeField(auto_now_add=True)
+    CHOICES = (
+        ('3 days', '3 days'),
+        ('7 days', '7 days'),
+        ('14 days', '14 days'),
+        ('21 days', '21 days'),
+        ('1 month', '1 month'),
+        ('1.5 months', '1.5 months'),
+        ('2 months', '2 months'),
+        ('3 months', '3 months'),
+        ('4 months', '4 months'),
+        ('5 months', '5 months'),
+        ('6 months', '6 months'),
+        ('12 months', '12 months'),
+        ('18 months', '18 months'),
+        ('24 months', '24 months'),
+        ('Buy', 'Buy'),
+    )
+    duration = models.CharField(max_length=255, choices=CHOICES, default='21 days')
+
+    def __str__(self):
+        return self.paymentid
+
+
+class Publisherpayment(models.Model):
+    paymentid = models.CharField(max_length=40)
+    publisher = models.ForeignKey(Publishers,on_delete=models.DO_NOTHING)
+    amount = models.FloatField()
+    time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.paymentid

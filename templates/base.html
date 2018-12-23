@@ -28,6 +28,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'cs/intlTelInput.css' %}">
     <meta name="google-signin-client_id" content="18205974359-scm2ogghtt91dkgfb9id3lpprfnvd3f4.apps.googleusercontent.com">
     <style type="text/css">
     	.g-signin2{
@@ -188,6 +189,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.js"></script>
     <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/intlTelInput.js' %}"></script>
+    <script type="text/javascript" src="https://checkout.razorpay.com/v1/razorpay.js"></script>
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
     <script>
 
       $(".loginchangebtn").click(function(){
@@ -1756,6 +1760,202 @@
     	$(this).html(percent.toFixed(2) + '%');
     	$(this).parent().css('background','linear-gradient(to right,#7F70C9 '+percent.toFixed(2)+'%,#F2F2F2 0%)');
     });
+
+    var paymentphone = document.querySelector("#phonepayment");
+    var iti = window.intlTelInput(paymentphone,{
+        initialCountry:'in',
+        preferredCountries: ['in','us','gb'],
+        separateDialCode: true,
+        nationalMode: false,
+    });
+
+    $("#pm-nb").show();
+    $("#pm-qp").hide();
+    $("#pm-up").hide();
+    $("#pm-wa").hide();
+    $("#pm-options div").click(function(){
+        $("#pm-options div").css({'border-bottom':'2px solid #d9d9d9','background-color':'#F2F2F2'});
+        $("#pm-options div:nth-child(6)").css('border-bottom','none');
+        $(this).css({'background-color':'white','border-bottom':'none'});
+        $(this).prev().css({'border-bottom':'none'});
+        $("#pm-nb").hide();
+	    $("#pm-qp").hide();
+	    $("#pm-up").hide();
+	    $("#pm-wa").hide();
+        var thisid = $(this).attr('id');
+        var newid = thisid.substring(0,2) +thisid.substring(3,);
+        $("#" + newid).show();
+    })
+    $("#phonepayment").change(function(){
+    	var val = $(this).val();
+    	var code = $(".selected-dial-code").html();
+    	if(val.indexOf(code) != -1){
+    		var vali = val.substring(code.length,);
+    		$(this).val(vali);
+    	}
+    })
+    var paymentemail = undefined;
+    var paymentnumber = undefined;
+    $("#pd-continue").click(function(){
+    	paymentemail = $("#pd-email").val();
+    	var number = $("#phonepayment").val();
+    	var code = $(".selected-dial-code").html();
+    	if(number.indexOf(code) != -1){
+    		var vali = number.substring(code.length,);
+    	}else{
+    		var vali = number;
+    	}
+    	paymentnumber = code + vali;
+    })
+
+    $("#pm-nb span").click(function(){
+    	if($(this).find('.pselectsvg').css('display') == 'none'){
+    		$("#pm-nb span .pselectsvg").hide();
+    		$("#pm-nb span .pbordersvg").css({'background-color':'white'});
+    		$(this).find('.pselectsvg').show();
+	    	$(this).find('.pbordersvg').css({'background-color':'#D0FFFF'});
+	    	if($(this).attr('id') == 'pm-nb-sbi'){
+                $("#netbank-select").val('SBIN');
+	    	}else if($(this).attr('id') == 'pm-nb-axis'){
+                $("#netbank-select").val('UTIB');
+	    	}else if($(this).attr('id') == 'pm-nb-icici'){
+                $("#netbank-select").val('ICIC');
+	    	}else if($(this).attr('id') == 'pm-nb-central'){
+                $("#netbank-select").val('CBIN');
+	    	}else if($(this).attr('id') == 'pm-nb-baroda'){
+                $("#netbank-select").val('BARB_R');
+	    	}else if($(this).attr('id') == 'pm-nb-hdfc'){
+                $("#netbank-select").val('HDFC');
+	    	}
+	    }
+        else{
+        	$(this).find('.pselectsvg').hide();
+    	    $(this).find('.pbordersvg').css({'background-color':'white'});
+    	    $("#netbank-select").val('');
+        }
+    })
+    var walletpayment = undefined;
+    $("#pm-wa .row .col-sm-6").click(function(){
+    	if($(this).find('.pselectsvg').css('display') == 'none'){
+    		$("#pm-wa .row .col-sm-6 .pselectsvg").hide();
+    		$("#pm-wa .row .col-sm-6").css({'background-color':'white'});
+    		$(this).find('.pselectsvg').show();
+    		$(this).css({'background-color':'#D0FFFF'});
+    		walletpayment = $(this).attr('data-wallet');
+    		if(walletpayment == 'paytm'){
+    			walletpayment = undefined;
+    		}
+    	}else{
+    		$(this).find('.pselectsvg').hide();
+    		$(this).css({'background-color':'white'});
+    	}
+    });
+    var paypalpayment= false;
+    $("#pm-qp div").click(function(){
+    	if($(this).find('.pselectsvg').css('display') == 'none'){
+    		$(this).find('.pselectsvg').show();
+    		$(this).css({'background-color':'#D0FFFF'});
+    		paypalpayment = true;
+    	}else{
+    		$(this).find('.pselectsvg').hide();
+    		$(this).css({'background-color':'white'});
+    		paypalpayment = false;
+    	}
+    });
+
+    var razorpay = new Razorpay({
+	    key: 'rzp_test_R9MS4y8dG93IWT',
+	      // logo, we'll display it in payment processing popup
+	    image: 'https://i.imgur.com/n5tjHFD.png',
+	});
+	razorpay.once('ready', function(response) {
+        console.log(response.methods);
+    })
+    razorpay.on('payment.success', function(response) {
+	    alert(response.razorpay_payment_id)
+	  }).on('payment.error', function(response) {
+	    alert(response.error.description)
+	})
+    $("#payment-pay").click(function(e){
+    	if($("#pm-nb").css('display')== 'block'){
+            var data = {
+		      amount: parseFloat($("#payment-r .ordertotal").html().substring(2,))*100,
+		      email: paymentemail,
+		      contact: paymentnumber,
+		      method: 'netbanking',
+		      'bank':$("#netbank-select").val(),
+		    }
+		    
+		    razorpay.createPayment(data);
+		    e.preventDefault();
+    	}else if($("#pm-wa").css('display')== 'block'){
+            var data = {
+		      amount: parseFloat($("#payment-r .ordertotal").html().substring(2,))*100,
+		      email: paymentemail,
+		      contact: paymentnumber,
+		      method: 'wallet',
+		      'wallet':walletpayment,
+		    }
+		    
+		    razorpay.createPayment(data);
+		    e.preventDefault();
+    	}else if($("#pm-up").css('display')== 'block'){
+            var data = {
+		      amount: parseFloat($("#payment-r .ordertotal").html().substring(2,))*100,
+		      email: paymentemail,
+		      contact: paymentnumber,
+		      method: 'upi',
+		      'vpa':$("#pm-upi-input").val(),
+		    }
+		    
+		    razorpay.createPayment(data);
+		    e.preventDefault();
+    	}else if($("#pm-qp").css('display')== 'block'){
+            $("#paypal-button").trigger('click');
+    	}
+    })
+
+
+    paypal.Button.render({
+	    env: 'sandbox', // Or 'production'
+	    // Set up the payment:
+	    // 1. Add a payment callback
+	    payment: function(data, actions) {
+	      // 2. Make a request to your server
+	      return actions.request({
+	      	method: 'POST',
+	      	url: '/paypalcreate/',
+	      	headers:{
+	      		'X-CSRFToken': '{{ csrf_token }}'
+	      	}
+	      })
+	        .then(function(res) {
+	          // 3. Return res.id from the response
+	          return res.id;
+	        });
+	    },
+	    // Execute the payment:
+	    // 1. Add an onAuthorize callback
+	    onAuthorize: function(data, actions) {
+	      console.log(data)
+	      console.log('Jkk');
+	      // 2. Make a request to your server
+	      return actions.request({
+	      	method: 'POST',
+	      	url: '/paypalexecute/',
+	      	headers:{
+	      		'X-CSRFToken': '{{ csrf_token }}'
+	      	},
+	      	data: {
+	      		paymentID: data.paymentID,
+	            payerID:   data.payerID
+	      	}
+	      })
+	        .then(function(res) {
+	          // 3. Show the buyer a confirmation message.
+	        });
+	    }
+	  }, '#paypal-button');
     </script>
     
     
