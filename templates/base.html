@@ -1773,6 +1773,7 @@
     $("#pm-qp").hide();
     $("#pm-up").hide();
     $("#pm-wa").hide();
+    $("#pm-ca").hide();
     $("#pm-options div").click(function(){
         $("#pm-options div").css({'border-bottom':'2px solid #d9d9d9','background-color':'#F2F2F2'});
         $("#pm-options div:nth-child(6)").css('border-bottom','none');
@@ -1782,6 +1783,7 @@
 	    $("#pm-qp").hide();
 	    $("#pm-up").hide();
 	    $("#pm-wa").hide();
+	    $("#pm-ca").hide();
         var thisid = $(this).attr('id');
         var newid = thisid.substring(0,2) +thisid.substring(3,);
         $("#" + newid).show();
@@ -1796,16 +1798,63 @@
     })
     var paymentemail = undefined;
     var paymentnumber = undefined;
-    $("#pd-continue").click(function(){
-    	paymentemail = $("#pd-email").val();
-    	var number = $("#phonepayment").val();
-    	var code = $(".selected-dial-code").html();
-    	if(number.indexOf(code) != -1){
-    		var vali = number.substring(code.length,);
+    var paymentemailon = false;
+    var paymentphoneon = false;
+    $("#pd-continue").css('cursor','not-allowed');
+    $("#pd-email").change(function(){
+    	if($(this).val() != ''){
+    		paymentemailon = true;
+    		if(paymentphoneon == true){
+                $("#pd-continue").css('cursor','pointer');
+    		}else{
+    			$("#pd-continue").css('cursor','not-allowed');
+    		}
     	}else{
-    		var vali = number;
+    		$("#pd-continue").css('cursor','not-allowed');
     	}
-    	paymentnumber = code + vali;
+    })
+    $("#phonepayment").change(function(){
+    	if($(this).val() != ''){
+            paymentphoneon = true;
+            if(paymentemailon == true){
+                $("#pd-continue").css('cursor','pointer');
+    		}else{
+    			$("#pd-continue").css('cursor','not-allowed');
+    		}
+    	}else{
+    		$("#pd-continue").css('cursor','not-allowed');
+    	}
+    })
+    $("#pd-continue").click(function(){
+    	if(paymentemailon == true && paymentphoneon == true){
+            paymentemail = $("#pd-email").val();
+	    	var number = $("#phonepayment").val();
+	        var code = $(".selected-dial-code").html();
+	    	if(number.indexOf(code) != -1){
+	    		var vali = number.substring(code.length,);
+	    	}else{
+	    		var vali = number;
+	    	}
+	    	paymentnumber = code + vali;
+	    	$('#payment-methods').fadeTo('slow',1.0);
+		    $("#paymentmethodcover").remove();
+            $("#pd-core").hide();
+            $("#payment-details").css('height','30px');
+            $("#pd-header .fa-angle-up").show();
+            $("#pd-header .fa-angle-down").hide();   
+	    }
+    });
+    $("#pd-header .fa-angle-down").click(function(){
+    	$("#pd-core").hide();
+        $("#payment-details").css('height','30px');
+        $("#pd-header .fa-angle-up").show();
+        $("#pd-header .fa-angle-down").hide(); 
+    })
+    $("#pd-header .fa-angle-up").click(function(){
+    	$("#pd-core").show();
+        $("#payment-details").css('height','110px');
+        $("#pd-header .fa-angle-up").hide();
+        $("#pd-header .fa-angle-down").show(); 
     })
 
     $("#pm-nb span").click(function(){
@@ -1956,6 +2005,10 @@
 	        });
 	    }
 	  }, '#paypal-button');
+
+   $('#payment-methods').fadeTo('slow',.4);
+   $('#payment-methods').append('<div id="paymentmethodcover" style="position: absolute;top:0;left:0;width: 100%;height:100%;z-index:2;opacity:0.4;filter: alpha(opacity = 50)"></div>');
+
     </script>
     
     

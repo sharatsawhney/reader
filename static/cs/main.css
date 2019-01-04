@@ -4094,6 +4094,7 @@ only screen and (min-device-pixel-ratio: 1.5){
 	background-color: white;
 	height: 480px;
 	margin-bottom: 30px;
+	position: relative;
 }
 #pm-header{
 	background-color: #00B6AB;
