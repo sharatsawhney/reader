@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Search</h2>
+
+    <form method="get" action=".">
+        <input name="q" type="text">
+        <button type="submit">Search</button>
+    </form>
+  
+    {% if query %}
+       {% for result in object_list %}
+           {{ result.object.name }}
+           {{ result.object.author }}
+           {{ result.object.language }}
+           {{ result.object.publisher }}
+           {{ result.object.price }}
+           {{ result.object.pages }}
+           {{ result.object.category }}
+           {{ result.object.description }}
+           {{ result.object.bookActive }}
+        {% empty %}           
+             No results found.
+             {{ suggestion }}
+        {% endfor %}
+    {% endif %}
+
+
+
+{% endblock %}

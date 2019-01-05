@@ -1,0 +1,15 @@
+{{ object.name}}
+{{ object.author }}
+{{ object.language }}
+{{ object.publisher }}
+{{ object.price }}
+{{ object.pages }}
+{{ object.category }}
+{{ object.description }}
+{{ object.priority }}
+{{ object.bookActive }}
+{{ object.isbn }}
+{{ object.rating }}
+{% for tag in object.tags.all %}
+    {{ tag.name }}
+{% endfor %}

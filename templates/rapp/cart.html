@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Cart{% endblock %}
+{% block style %}
+	
+{% endblock %}
+{% block activeca %}class="active"{% endblock %}    
+{% block content %}
+  {% if response == 'Success' %}
+	
+     <div class="cart-container container-fluid">
+    	<div class="row">
+    		<div class="col-sm-9 cart-left">
+    			<div class="heading"><i class="fa fa-shopping-cart" aria-hidden="true"></i><span>My Cart (<span class="itemsCart"></span>)</span></div>
+    			<div class="sub-head">
+    				<span>Product</span>
+    				<span>Buy/Rent</span>
+    				<span>Duration</span>
+    				<span>Price</span>
+    			</div>
+                {% for product in products %}
+    			<div class="product">
+    				<span><img src="/{{ product.ebook.img }}">
+                    </span>
+    				<span><div>{{ product.ebook.name }}</div><div>By: {{ product.ebook.author }}</div></span>
+    				<span>
+                        {% csrf_token %}
+    					<select data-id={{ forloop.counter}} class="buycartselect">
+                            {% if product.buyrent == 'Rent' %}
+    						<option value="{{ product.buyrent }}">{{ product.buyrent }}</option>
+    						<option value="Buy">Buy</option>
+                            {% else %}
+                            <option value="{{ product.buyrent }}">{{ product.buyrent }}</option>
+                            <option value="Rent">Rent</option>
+                            {% endif %}
+    					</select>
+    				</span>
+    				<span>
+                        {% csrf_token %}
+    					<select data-id={{ forloop.counter}} class="durationcartselect">
+    						<option value="{{ product.duration }}" disabled selected>{{ product.duration }}</option>
+                            {% for i in product.ebook.dayopt %}
+                            <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+    					</select>
+    				</span>
+    				<span>&#8377;<span class="price-span" data-id={{ forloop.counter }}>{% if product.buyrent == 'Rent' %}{{ product.nprice }}{% else %}{{ product.ebook.price }}{% endif %}</span></span>
+    				<span>
+    					<div data-id={{ forloop.counter }} class="towishlist" name="wsubmit">Move to Wishlist</div>
+    					<div data-id={{ forloop.counter }} class="deletecart" name="remove">Remove</div>
+    				</span>
+    				<h2 class="hiddenid" data-id={{ forloop.counter }} style="display:none">{{ product.ebook.id }}</h2>
+    			</div>
+                {% endfor %}
+    			
+    			<div class="continue"><div><a href="/search/?q=bookActive">CONTINUE SHOPPING</a></div></div>
+    		</div>
+    		<div class="col-sm-3 cart-right">
+    			<div class="heading">Price Details</div>
+    			<div class="sub-head">
+    				<div class="price row">
+    					<div class="col-sm-7">Price</div>
+    					<div class="col-sm-5 totalprice">&#8377; {{ tprice }}</div>
+    				</div>
+    				<div class="tax row">
+    					<div class="col-sm-7">Tax</div>
+    					<div class="col-sm-5">&#8377; 0.00</div>
+    				</div>
+    				<img src="{% static 'images/bue-hr.png' %}" class="blue-hr">
+                    <div class="total row">
+    					<div class="col-sm-7">Amount Payable</div>
+    					<div class="col-sm-5 ordertotal">&#8377; {{ tprice }}</div>
+    				</div>
+    				<div class="checkout">CHECKOUT</div>
+    			</div>
+    			<div class="safety">
+    			    <img src="{% static 'images/secure.png' %}">
+    			    <span>Safe and Secure Payments.</span>
+    		    </div>
+    		</div>
+    	</div>
+    </div>
+  {% else %}
+    <h1 class="response">{{ response }}</h1>
+  {% endif %}
+{% endblock %}
+
+	
+	

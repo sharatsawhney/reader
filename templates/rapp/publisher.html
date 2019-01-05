@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head>
+    <title>Publisher Dashboard</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'cs/jquery.fileupload.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'cs/publisherstyle.css' %}">
+</head>
+<body>
+    <span class="welcome-span">Welcome <span class="pubname">{{ publisherName }}</span></span>
+    <div class="pubpane">
+        <svg id="publogo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 81 149"><defs><style>.logo-1{isolation:isolate;}.logo-2{fill:#aa1e4c;}.logo-3{opacity:0.75;mix-blend-mode:multiply;}.logo-4{fill:url(#linear-gradient);}.logo-5{fill:#cccbcb;}</style><linearGradient id="linear-gradient" x1="7.68" y1="71.92" x2="69.26" y2="71.92" gradientUnits="userSpaceOnUse"><stop offset="0.02" stop-color="#c75fa3"/><stop offset="0.04" stop-color="#be5b9f"/><stop offset="0.14" stop-color="#944a8b"/><stop offset="0.25" stop-color="#703b7a"/><stop offset="0.37" stop-color="#522e6c"/><stop offset="0.49" stop-color="#3c2561"/><stop offset="0.62" stop-color="#2c1e5a"/><stop offset="0.76" stop-color="#221a55"/><stop offset="0.96" stop-color="#1f1954"/></linearGradient></defs><g class="logo-1"><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path class="logo-2" d="M27.8,78.54A37.5,37.5,0,0,1,33,90.48a35,35,0,0,1,.44,12.76c-.55,4.22-2.09,8.2-3.4,12.14a32.82,32.82,0,0,0-1.9,12.29,0,0,0,0,1,0,0,0,0,0,0,1,0,0,37,37,0,0,1,1.54-12.41c.57-2,1.21-4,1.74-6a35.58,35.58,0,0,0,1-6.11A29.78,29.78,0,0,0,25,80.61a1.73,1.73,0,0,1,.19-2.46,1.77,1.77,0,0,1,2.48.19l.14.19Z"/><path class="logo-2" d="M27.49,79.28a2,2,0,0,1,2,.23c.56.31,1.12.63,1.67,1a28.67,28.67,0,0,1,3.2,2.24,18.72,18.72,0,0,1,4.91,6.12,24.07,24.07,0,0,1,2,14.9,46.36,46.36,0,0,1-2.1,7.17c-.81,2.33-1.81,4.61-2.73,6.9s-1.95,4.54-2.64,6.89a20.16,20.16,0,0,0-1.1,7.22.08.08,0,0,1-.07.09.09.09,0,0,1-.1-.07c-.52-5,1.55-9.83,3.22-14.39s3.75-9.18,4.62-14a20.5,20.5,0,0,0-2.87-13.75,17.64,17.64,0,0,0-4.77-5,25.91,25.91,0,0,0-3-1.89c-.52-.29-1.05-.56-1.6-.82a1.9,1.9,0,0,1-1.32-1.44v0A1.2,1.2,0,0,1,27.49,79.28Z"/><image class="logo-3" width="81" height="149" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAACVCAYAAAAg9haUAAAACXBIWXMAAAsSAAALEgHS3X78AAAbyUlEQVR4Xu2diZNc11XGv2i1tVmSHS+yZI1sxxKKRYxsy8KyrJFkHFmJvIcYSKyRHceJTYgTCAQntqU4gQQv2AkhMWsgCWELYSvWAGEttmKnoAoKAlVsBf+Dub++58y77/V7c+/M9OsZRVLVVz3dffu9e797zvnOOe91Sy+//LLOYn7IDlgsCP9e0UTuM+NCdkDfaCMnwZIGliZovrdgJGcHjAIF5DQJWmZYHrDCsLIF/t7y5DNtJPdKbHbAbKFuwrrIaRJ0TsC5AasCVgesCVhnOC+Bv7bWxqyyz52jOslOcJPckZGaHTBCwlZqmJy1hpSk9QEbA84PeGXARQGXBGwKuDTBJnv94oALAy6wz21QRXJKsJPrxDqh8yYzO2AehJ2jirC1tjAWCDksmIVD0MUGJ2pzwGUBEwFXBFwVsCNgZ8CrE+y013n/yoDLA7YGbLFjbFKdYCeXuTipzNWtdEBojodZk6hh0koIc/dzi2IBkOUEsdBtigSx+FcpEuFkfVXA1QGvCbg2YE/A1wbsC9ifgOc3BtwQcH3AbvvMLkWSOc52Oz4EszFYMHNhI5kfc8U7nMw5WWaOvJQ4SEtjVhdh7PzFNmG3KMhiQVgPi7xGcdHXGq4zQAakQM7NAYcCbg24LeD1AccCbjfw/GjAkYCvs7GT9jknGfL32DkgGHLZLDaR+TFXLLSVzBx5nSSqItDJ48BuaU23JGZBGFaGG2Fl7Dq7v8Mm/dUBX6NI0F7FxbHQA4qLTnEw4LAiKRAHaXcHvCHgvoBvCPhGA3+/MeBeG3OnIrnHDJD8OjsOGwHJnJc5sIHMDW/AOyATQ8AwMBSPmUVEdpG4VJXlQR7WBnFOmluZuyW7m7ohpGFZblVYBgTdorggrIfFHbXHIwl4zuLvCLhHkShIe3PA/QHH7ZHnb7L37rNxDifcwWtsxF12bDaJOTFHJ5M14UmsFassJrKNQEwZC4RAdoYdgjysbaudMHVNSNutOmk3Ke56alkQBGnulo7XqXJLx1F7D+vC0iAhtUK3xDbyeA9yIftEwIOGBwKm7L2vV9yk1yqSibtjBKyPmIm3YTx4YZbILitcYQfhYBCIyeOmuCjEQZq7J6R50MdFIQ7XweogD8tjsm55ICXuVht7yD6bft4/14yHjmPJ65CCpUE6ZELWVMBbAh4OeFvA2+1vXjtu4+6wcxE/WRvrJFPAeIqIbJKYWiHBdqMdELdlpxAEyEutzWNbSgA4PAOcsJvtOCzAVRbssee+SYzZb+Pb4JsHGWyMx1JIwu2xwrcqkviogb8fUgwNuPpROwdrRAidSHftTrHpcmWEBBEhRmCFCAW7hMuyYBZ1QBWB/rcr434bAzwV4XOQAjmumMROhMdTEix9u2GHhvPDq1uwS5V4XWfn4PxsFFaMpUHSNym6N2Q+EvDNBsjE3QkPkD9px4JI4j/eCB8D1Z4PiRyQCePGHvf2qSLIycGKWMi1NpbJsLPETRbqOZwnycTXCUWR8gT5kgSbVK9UNrdgi+rJORvAXDk3c4JQLJQQglARMyETt4bEd9gj5BICCA0YBHPGAwlneGWnW5e684SqyXmO5ySlCa5XEYz1BPpVBjYiJc0T31eqXq6ldXGzXm5ivX3Oy0TPUTfbeTgv82KebDQuj3VCJoThzhD4zoBvUSQWiyUG77PPbrZz4NZwkyWxTViwRldmiIAYdzkmCTHbVC+5mlbi2GLHSqsGL8OazYNSePKflpjr7fich82aUJwv3oB14upYHFYJkVjjuxTJxCKJpYgansWa2Ry3xqHY2EZiM8U5L5lQswnQbAAwzq2iWe45wXwG6/NKoVnDzgXNUtSLA47v82eebCRGgGXi5lgcRGKBEPhuRUIRIpQet8b7mPd6VbGxm8SGNTqR5yaTcffZYH+76/H+6gRrVSXnkOgxa8ImBLkb7XMr1ahb54Elai9Vvdry8EQag1VCJBaJQiM2kIhFIjaQi9IT4/E21rLajrmkhMTUIps1cwp3vxUJ3IIhGQvdoqqqASxgs01qnTp2d67QMKlOaBqi2ERCEPGdOEmMJHfEGr/VHrFGkn0yDDKHS2y+Qy6dm0hzZ5tocyuf7AZVu84kdhn4e5vqeVhn+jBfqE4mBsGmQQbuTUwn3SJHRGjIHyERiyQ5Jzai7JCNN22wz9dUumQCbS7T5U4uSlgicQiLI6Cj4N6peY29tsXGtLrIqJHMnXOxcRACMbg1QkMpSGyEwPcoxkbcHIIRGIyBOI+B1Dwne/JSJJOERGId7opikyZA3o0GL/onVM/BOiuCUaExR2Ik1khKRjqD6+LSxMRvt8cH7XXmTSgiPA1tevbEpWiZICf0AE6O5uUZlQvWSJy8yMaOhUSbp1sjFnWBzYO0h2rlhCJ53xHwbYqWea/NnTB0cTrf6WPmTloKDZN4kU2QeMJO4zKHVXVN2FkP1ohRLc70BZsn7ohLo9bEZ7wDt50KeCzgvYrWiGLj5pOK3kOm0TuJS42QNHBT2bCTtyomsKghwZydJdf0/GucJC61c0LihCoSjyuS+J2K1ojQvNHmTL4IiUMKnT1pKTRMIlZ2lU2QSXgrjPbYjTYpAjsL6SypRo1knl2WiDtDoltiJ4nTx8ydtBRqJxEVxupIE4g5dFQgE8skLk4oKvSQ4vUFVe68ys59uc2R6oWYiDo7iSTddICI5TttTWN1Z3YN5UNUcGNUjqQWMomPxMUZK4E+oEpYVtu5CTmIHRuMOpMnQqILC3O+ydZCnF/TnGv2pKVQnUSqAkhk93BdrM/b/DRLiY/s/lXJxGq72wc0LH5YFrH5ZpsfpJEjQiJkQirkQjJk+4b3miemJCIaKBq7iKtAIPUo7nGbTWyHGuVU7jzzQWOOCBoJPykYWQNNWdpiCAokEhunFPuQnmzj/kPxO3viUqibRFKaYzZJWvWUUt6vw1I9WPO5XnNFtcdDCEqV+XFFEukvUgoSiuj6zK3smw00TCIlH4qGq3jv7n575DnkQvKlNr7XXFHd1QqeQtvrrYqu/H7FPJH0hg0nfu9qzDPfgJgLNDOJxBU6xlP2eIe9frXGS6Lnh22uTK2MBT6h6NI0IBAVNhuyIX1IVAbHzp28FOomkfQAZcY1puyR507iZo2HxKYqkxmkqQ1C8oQBZX5QMQzdYGNbmw+DY+dOXgq1k4gbpCSeUEUir4+FxJa5ebxmDggd+SAu/JSiO7/T5kkWQTzcqo54ODh+bgKlaEzU3cVJJOYgKifscWwkqoqFboVYFIJClUKWQJxGiSEPEnFpKpU0yW4t96bPkZtEKdQdcyiZ7rbJPqBIol+/gORxkLgsmVdqheSGxD5iIAQ+qejWzBM3x5WvVKYgyE6iFKqTiOnjAnRwDtlkpxSTV8iExEn1TGIyJ+9x0p6DFO9mH1e0QuLgqYD3KQoMQoPgUJpiDO7KraVpdiKlULXjXthPKHZwaDiQaLO7pBFTiqo3qYpELKQPEpc05uSdbLyDFhdui/tC4EnFFMerFCotav9szzM7kVKonsh6s5NElrhDbgiBBHBU715bCAvqhUTVY7S35iCFSul2mwcqfDLgaUVrRFBIwdh4F5Rslyk7mVLYpD144zbUmjQfiC1+SZKyiovlWAHuAom4y0hJVN2NXUy2KXoGigtREAZxHwz4gGJcZKMJNVRTnhu6FXbOLTuhUqhSwDUargbYdcooyqr0KprHnJGRqLoa+wWpNGfFC/AIyjsI/C5FUWFuaVozoXqbrrOuz06qFBrujuxMJk13hD4dykc5hXvjMghPHyQ23ZhuEV5B8kxsJvZhfR8O+JBiXGSObLi3vdLGyIzzyk6qFKpI5MSkEew8yozVPWITp9GJ+uFO7PhISdSwGpOakBM23RjLg8CPKMZEFLpphcTCrBUOzpubWAlUuVBarRDvcFmsDuLea2ARb1ZFIoo5bxJVEehX8s5XpcaTiskzm0ka890Bzyi6MlY4p1g4fe7c5EqgugtBItZFvIModhjiHjcQeyAxbTHNi0QNx0FPqgkp6TVlxAP3fTbgexStkLmx0Ww4m9pU5GyPMzvBEqhOolcrTAiiIAzi3mfAde7XiEhURaBXJWyiXySj4qCpelwxHhMHsUBIhEzCC6JHrNyrqtNebIWDOeQGlEDDJEIMBEGU16ZNEo9odCT6uf2mAXJUruE04yDW97xiLKRW9hp5UjHx9+qk2AoHc8gNKIHKSHy/YWQkJud1ISEfnFBVblIpPWrnhTgIxApP2Tw8rEA4ApS9tbh1HrkBJVA3iRDVC4nJOV1IiGNYkjeCKS1JWxAOhOR5Q+rGVC5UMFQyhABCQWeN3DmX3IASaMwkqj2hRki4coeQeFkHWZAGed+rmNYQUki2yV/JYyEd8j2lWa5ZXuvJDiiBxkii2pXYbxRoCsnTAc8FvKAoKMRFKie6NLfY+SkHCQOzduPpOeUGlEBjIlHDBOJ+fs/P9XZMT6lOKsY/CIRIlPnddm6aInvsc6ixX22cNYGDeeUGlEBjIFHdBNIfdCX2C05PKioxBLbFQdpcJNWb7NzTatx1/hnXnxtQAvVMovIEUodTXqZK/IKBOEiSj8ggNojOvONgbX65ASVQjySqm0DPBYltpDKPqCLwRQPWSLsLcmm/kfZQSU1onnGwNsfcgBKoJxI1M4E0FboI/JhiHDypqtGKu/tNVCTka9vOORdkB5RAIyYxgeeBbS7cJBCrg7zvU0xn6BWi0Cg111NQ7qvU8qVHfQWSuMSQErhe7QR6DHQCvz/go4rJNc2GVEjIIf3O3HM1zzhYW39uQAk0GhLdMpZq+PswqCjpCNeKUxEh3pH/YX2fUCQSl/b2Fpdqu4Rk3m48vf7cgBJoNCS6dSy346yxRWM9JNLkda9VdQtck0AesUgqkrcpViST6kFIhtafG1ACzY/ErYrWhoVgjZC51hbNcegJ0qYiQUYgPA8kkf54wCdVEcjxiZGuxNcoViQjFZKh9ecGlEBzJxGFnVDsQrPINfb5C23xtKduUuz3IRCPKSouykv8cwKfUUUgsfKwHRsl9opkZEIytP7cgBJo9iQet/e8BcVCcV3IvMQWz+cnVV0t5BoxiksCDXkvKVpik0BEZ2wEDtafG1ACzY5E6tcpVd+ZQzA2q/pK73Z7HTJwS+IbQkHlgdX9QMAPKloiLu3JdBuBpDIjVeLW9ecGlEDlJLJgcrcTii7q32eBSHI43Jf+XjP+4b5Y3w8H/Ij9/ZwWAYGD9ecGlEBlJD5hhHDp9CHF9OOgourutsdJxftgphQt9mnFvO+HAn7MgCU+b8dacAIH688NKIFmJvG4EcKiTypeNiV+cYXt9UYAQoB7474P2xjyPVIXiPtswGcUySQmPqWY5vidFAtG4GD9uQElUJ5EXPikomVBJqRijf6VDMjAxf2CEmUbhEHeTwV8LuBHFa2S47xDi4TAwfpzA0qgmUmcUnRhCEQcuGDusRFrwiVJXR639xGMHw/46YDP2yPWSDVCY9U701Qu3lBYMAIH688NKIG6SUQgsDDqWOpZLAx3JC2hUXrKiPmIkYRoYHlfCPiFgJ9TdGNSGTahSSC1tDcUFoTAwfpzA0qgdhJxM0gkx8PKXGFxU1KUl+w5f2NpkAdxvxLwqwG/qOjGjIFwv1NhURE4WH9uQAnUTSJiQewjDn4sIetnFV31C0YWpH0x4HcMv27vk9Lg4sRQ7wnShFg0BA7WnxtQAnWTyJU31BaXxfJ+RtHSfivgSwG/H/BHAX8S8Gf2+Hs2BlHB9VHqKUWr9uR80RA4WH9uQAnUTiIuRwrzdkUxQV1/2UiCsL8O+LuAfzD8fcBfKhKLdWKFlHmkQ5R+1NDeE6RhsSgIHKw/N6AE6iaRqgT1RTgQiN8M+HMj7V8C/i3g3+3xnwP+RpFE3JwckSrnAUUrxI1R4l47MnNBdkAJ1E0iXWXSGNT4JxVdGKL+NeA/A/7HwN9fVrTMP1BUZRSZ3uCU6s0K7pc540gkMUaZyfewMtwW64O8/wv434D/VrRG3vtDRZUmhp5U7FD7PTM7VL9WfEa4c0oiouIkQth/KRIJgf+haJ2898eKwoKS02glKU+v1i0qZR6sPzegBMqTSMuK1OZ3FQXln4y0L9sj8fAfFV0dEomdkE6O+LQWWZk3tP7cgBKoLCaSOJML/qmRRfz724C/CvgLRcEhxcGdfzvglxTTHHqIp+w4C9J0zSE7oAQqU+dPK7opKQ65IQLyJcWcEcv7DXv8ov3NWASGOppE/aQqIg9rERGZHVACzUwieR51M3nizytWJ7+mmAvisljbpw2fs9e8dmY8gvQpVR0c7yFCJPX5Ni2wYmcHlEB5Eql9qZGJi5+3R4ghjUF0Pmx4zl4j0fY2GCT+hL1GBfOkqnutDyp+xWKrqp8RHPkl0RyyA0qgmUmkYkEcEAms7TNGCB0dYh1tMroziAc1MrkhFc6LisTjzp+1R7raEE0STjlJd3y/hn+FeKxCkx1QAs1c9nGhidoZC8OlIRDXhEA6M1OKHe17FN2U58Q+Oj+EAeIhnZ9PKbbKqGRIfaipH1T96xOkPvO6YXMuyA4ogfIknjIysKxPGgn0GOk1ck3lkKqfxScfxMKmVHW6SZEgz9toKDbWSg7p3wBAaIiPXPTHrcdmjdkBJdDMJOJ2JxWt7yUjwPuD5H6HbSxX/XDLaxSvAlLqYZnNS6beh3xBlWITH9kA7pagoiF/HJs1ZgeUQGUkvmiLh0zcG5XF4vbZ4icU4xoisV3Rsg7amLco3i7s7s1xCA/u1jQp6F3SpKC+xhr9xqWiL/TMB9kBJVA5iZ+wR9wbwSEZv0FVKXe+qh8WxzVRXtz8TlXfzcMiIZJrMVgjG4IoEVexRtplxV+zHQWyA0qg2ZPIc9wUUcB6PJaR6602Asj9sErcHCLpKdKMQHCwwI8aIBUrnVL1fUE+h1J7Av4VS+LD9v61qt8ZttIWz81NF9h7WOSkorURA11sOBYlJVcP2RQsFqXGstmEaYHJrWE+yA4ogeZP4mX2uXNs0cvsWGuMDCyVGImlocaoMrnns6q+q4dQIUQHNMOvbvaB7IASaHQkuqKSmjiRuDYxErGhp0hK5G5NmoNrQyh3jd2vmCJxY+cWVRvTa1zMDiiB+iHRiaQCwdUhBbcmJeLSqeeQKPYHVd2jzcUxj7MbVX3R54wj8RUGiMQdcWuurVCVYI3EPqyR/BErhET/ws9dqv98KXH2zCQxOW5qjYgM6ktsxHWptbFGiKTmJvck8UbNuZRAm4wN6FVcsgNKoH5JdGskNlKNUNVMKooISg15CAtNCe+AH9QMv9A+amQHlEB5ErEWEmNPkJ9SReJudZBox4ZELIl0xV2aKuduVbfhcTxI9FtNiJu7FK9Re9J9WpLod0AQu+gB0vr6uD3y/CF7P0di6tLkjVeo+g8XqGLeY8dzErmodYuq3yHzOrq3ZkR2QAnUTiKx66gtFJcjn6PCeMaeo6S32bgt6mgaJMcmVUFtUd3r7NgnFHNGCERYnERueiLNSUnsLc3JDiiBqti1UtXv4tCNQQCmFNMPcrpn7ZEy7bhiTjejxahOoosL1kuXB3F5TNXPOhMT/TduTktLTAWAWERMSnM6SrMP2GOxAKidRFdoqhe64mwSG/Ooqp91vlqnU0wcHKgiETKoMEgxuAmJvA2Xfpdi/MJyaF1RedA3RCg6UxHNTOKbFBWaaoV0B6Hh62gHNMbSLzugFKqrKEkuAkDswmVpHBC/EJMpW+hhI2NCM/xPGBqOiYz3Opr4x0UrNgiLZHNIxFHv7Tqd8sTBgYYTY+IR1kD1AJFYHmkJqkrM2mML9U50a9uqcVzIRlhIn4iJhAq6NxAImbj3UTs2m+jN2cVfsQwOVFdoXIicbkIxNrEoXJum6T4jgebpZapf6hwK/mq3cI6HsmOJpFAQSMjwOySwcNz+9KmdBweqxGW5qm/KX2SLIe5hlRAKeVeq+g8QIXz67oWOY6axFuvFuskxIZEQAZGoPa7MRiFWl2oM6c1gnrkBs4Eqa2TRq2wRuBQBfrOBxUHuRlUEtl6ZS47HmPWq/88aXFpAWMg3iYV8qwDrJBF3sepdVAbzzA2YDVRZjhOJRRLY1xkJxMrzbHHexV6uDktRZdmMxe0nVP3Xmag+JCJYxELiLalNU6x6FZXBPHMDZgvVicRFV6hq+Z9rj07eMnUkwarHWG/MYmHEQ4QKhYdEEm5iIe5NykTYcFfuvSE7mGtuwFxgBKRkOqHLkudLfFzHMdqassTUm4ww0iZIRKGxSlImBAvhQdTwgFaxGjWyA+YDVWS2IvM5Dwmu9FcYSbgsAnKf6v9dE6rfvCenV1Wenm9uwEJAw1boOaffGXGPopDgxn4bit+v6N8uYAN6d+XBfHMDxg3VrdAvC0AOgjGpmKzjyvcZmUdUxcKmFfYqKNNzzg0YN1S3Qk9ryC25noyg3GUkvsEIhdgFs8LBnHMDxgnVk+v0mjNpDUk0gnKPEXinkbrXSF4QKxzMOzdgnDASIcCTa+pqKhTSGtT3diORnPCoEQvBl6uuyGOzwsG8cwPGBdWtkDrZbyGhL4ny0rVBRHDnY0Yq5NJyw+UhfexWOJh7bsC4oHqJ58k1146JdwcU05jbjcBbjVgIntAcf9p5VMgOGBdUL/Goq0muUVxqYVIY3Jerg0eM1N1GMnV52kobqxUO5p4bMA6oXuJ5co2gcJ0Ei6O9dZsRSN28xwiG6BlbaeNAdsA4oEpQPK1BUKiTqVAQD67eEROJg+SEXMlDTOjUpF8EGjuBg/nnBvQNdQsKJRyuPGkkYo37jVgUGzEhpZnu1JzpJDa7NSTOWBtWd8gIhExyQsQEV/fEuvemaw7ZAX1Dw3UyFoalYXH7jURA92a36lY4/cWf3Hn6RHZAn9BwhZK6MuJBPERIUGNce9FZ4WAduQF9QsOujFDgyqjyXiNvUlGh3Qop70iBxtK1LkF2QJ/QcLPBVZmODRej9hvcCpuKvOBWOFhHbkBfUOXKfjmUfI+8jzJut5G4zx532+tpXrigilxbS25AX9Bwgu3fWyGJRlT2GriLgssCWCHK3Xmhf6GQHdAXVO/Y+DVqROPVRiLCcr1iqoOLEwsXvDppQ3ZAX1Dlyh4P/Qd5sTrcFwskNu40cptWuOCC4sgO6AOqx0NUlpxvk5GIJV5jgFCaDG6FC9apmQnZAX0gIdFLvY0JiXSpdxmBiIlb4YL1C3PIDugDql+MgkQs8RIjbLsRucNIxQr9y5OLIrluIjugD2jYnbEyhIW7xFDhK+1xi72+Xoug0dCF7IA+0CARF12n6sanLUYmFogb4+rEwkUnKI7sgD6QkAgpuOhqs7YLzPLAhUbgOlWNhkXnyiA7oC+oiovLVX2/mRRmgwFS/e6xFW6FZ0lMT1y3xhVGJIStNqwyC1zUBILsgD6REOkW6bfhrbS/a7ffnSWxawJ1IpdqlrfgLQZkB4wDTlJCqGNRk+fIDhg3ThfiUmQHnEUe2QFnkcf/A1KKrrsrrRaOAAAAAElFTkSuQmCC"/><path class="logo-4" d="M67.38,15.85a15.21,15.21,0,0,0-7.06-6,32.73,32.73,0,0,0-8.69-2.4,62.67,62.67,0,0,0-8.87-.64,98.9,98.9,0,0,0-17.59,1.6c-5.79,1-11.48,2.33-17.22,3.51a.35.35,0,1,0,.14.68c5.75-1.05,11.5-2.22,17.26-3.12A93.85,93.85,0,0,1,42.73,8.34a61,61,0,0,1,8.61.86,30.86,30.86,0,0,1,8.11,2.47,13.1,13.1,0,0,1,6,5.27,13.46,13.46,0,0,1,1.3,7.78c-.57,5.48-3.06,10.74-6,15.58A90.7,90.7,0,0,1,50.35,53.93,99.83,99.83,0,0,1,37.78,65.71L31,71c-1.12.9-2.27,1.76-3.38,2.69l-.66.51L25.84,18.14a.79.79,0,0,0-1.58,0l-1,84.52s0,0,0,.06a2.1,2.1,0,0,0,4.21-.08L27,80.07c5.3.91,10.81,3.33,14.56,7.31a18.53,18.53,0,0,1,4.18,7.16,23.2,23.2,0,0,1,1,8.48,31.51,31.51,0,0,1-2.36,8.47,36.54,36.54,0,0,1-1.95,4c-.71,1.36-1.38,2.73-2,4.12-2.25,5.64-4.9,11.2-5.72,17.27a.08.08,0,0,0,.16,0,41.88,41.88,0,0,1,2.62-8.65c1.24-2.76,2.48-5.52,3.82-8.22.69-1.34,1.43-2.65,2.22-3.93a38,38,0,0,0,2.3-4,33.34,33.34,0,0,0,3.11-8.8,25.74,25.74,0,0,0-.33-9.52,22.79,22.79,0,0,0-4.15-8.84,27.4,27.4,0,0,0-7.38-6.53A35.9,35.9,0,0,0,32.69,76c.48-.37,1-.73,1.43-1.12,2.31-1.84,4.49-3.85,6.61-5.91C44.92,64.83,49.1,60.66,53,56.19A93.77,93.77,0,0,0,63.32,41.8c2.89-5.15,5.4-10.73,5.88-16.87A15.76,15.76,0,0,0,67.38,15.85Z"/><ellipse class="logo-5" cx="25.97" cy="77.05" rx="2.07" ry="2.05"/></g></g></g></svg>
+        <span id="mybook"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30.22 29.38"><defs><style>.mybooksvg-1{fill:#7b1fa2;}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path class="mybooksvg-1" d="M7.19,28.62H7.13L.19,26.91a.25.25,0,0,1-.18-.3L6.5.19A.25.25,0,0,1,6.8,0l6.94,1.7a.25.25,0,0,1,.18.3L7.43,28.44A.25.25,0,0,1,7.19,28.62ZM.55,26.49,7,28.08,13.38,2.13,6.92.55Z"/><path class="mybooksvg-1" d="M4.56,26A1.93,1.93,0,0,1,4.1,26a1.92,1.92,0,0,1,.46-3.79,1.92,1.92,0,0,1,1.86,2.38A1.91,1.91,0,0,1,4.56,26Zm0-3.34a1.42,1.42,0,1,0,.34,0A1.44,1.44,0,0,0,4.56,22.68Z"/><path class="mybooksvg-1" d="M5.87,20.68a1.92,1.92,0,1,1,1.87-1.46A1.92,1.92,0,0,1,5.87,20.68Zm0-3.34a1.42,1.42,0,1,0,.34,0A1.42,1.42,0,0,0,5.87,17.34Z"/><path class="mybooksvg-1" d="M11.79,4.08h-.06L7.48,3a.25.25,0,0,1,.12-.48l4.25,1a.25.25,0,0,1-.06.49Z"/><path class="mybooksvg-1" d="M11,7.5h-.06l-4.25-1A.25.25,0,0,1,6.76,6L11,7A.25.25,0,0,1,11,7.5Z"/><path class="mybooksvg-1" d="M10.12,10.91h-.06l-4.25-1a.25.25,0,0,1,.12-.48l4.25,1a.25.25,0,0,1-.06.49Z"/><path class="mybooksvg-1" d="M21.9,29.38H14.75a.25.25,0,0,1-.25-.25V1.93a.25.25,0,0,1,.25-.25H21.9a.25.25,0,0,1,.25.25V29.14A.25.25,0,0,1,21.9,29.38Zm-6.9-.5h6.65V2.18H15Z"/><path class="mybooksvg-1" d="M18.32,27.54a1.92,1.92,0,1,1,1.92-1.92A1.92,1.92,0,0,1,18.32,27.54Zm0-3.34a1.42,1.42,0,1,0,1.42,1.42A1.42,1.42,0,0,0,18.32,24.2Z"/><path class="mybooksvg-1" d="M18.32,22a1.92,1.92,0,1,1,1.92-1.92A1.92,1.92,0,0,1,18.32,22Zm0-3.34a1.42,1.42,0,1,0,1.42,1.42A1.42,1.42,0,0,0,18.32,18.69Z"/><path class="mybooksvg-1" d="M20.51,4.45H16.13a.25.25,0,0,1,0-.5h4.38a.25.25,0,0,1,0,.5Z"/><path class="mybooksvg-1" d="M20.51,8H16.13a.25.25,0,0,1,0-.5h4.38a.25.25,0,0,1,0,.5Z"/><path class="mybooksvg-1" d="M20.51,11.49H16.13a.25.25,0,0,1,0-.5h4.38a.25.25,0,0,1,0,.5Z"/><path class="mybooksvg-1" d="M30,29.38H22.82a.25.25,0,0,1-.25-.25V1.93a.25.25,0,0,1,.25-.25H30a.25.25,0,0,1,.25.25V29.14A.25.25,0,0,1,30,29.38Zm-6.9-.5h6.65V2.18H23.07Z"/><path class="mybooksvg-1" d="M26.39,27.54a1.92,1.92,0,1,1,1.92-1.92A1.92,1.92,0,0,1,26.39,27.54Zm0-3.34a1.42,1.42,0,1,0,1.42,1.42A1.42,1.42,0,0,0,26.39,24.2Z"/><path class="mybooksvg-1" d="M26.39,22a1.92,1.92,0,1,1,1.92-1.92A1.92,1.92,0,0,1,26.39,22Zm0-3.34a1.42,1.42,0,1,0,1.42,1.42A1.43,1.43,0,0,0,26.39,18.69Z"/><path class="mybooksvg-1" d="M28.58,4.45H24.2a.25.25,0,0,1,0-.5h4.38a.25.25,0,0,1,0,.5Z"/><path class="mybooksvg-1" d="M28.58,8H24.2a.25.25,0,0,1,0-.5h4.38a.25.25,0,0,1,0,.5Z"/><path class="mybooksvg-1" d="M28.58,11.49H24.2a.25.25,0,1,1,0-.5h4.38a.25.25,0,0,1,0,.5Z"/></g></g></svg>My Books</span>
+        <span id="policy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30.95 38.4"><defs><style>.polsvg-1,.polsvg-2,.polsvg-4{fill:none;}.polsvg-2{stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.3px;}.polsvg-3{fill:#757575;}.polsvg-4{stroke:#757575;stroke-miterlimit:10;}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path class="polsvg-1" d="M24.28,24.37a.26.26,0,0,1,.08.36.28.28,0,0,1-.23.13L23,24.92l-.3,1.13a.26.26,0,0,1-.33.19.26.26,0,0,1-.18-.17L21.76,25,20.59,25a.26.26,0,0,1-.28-.25.27.27,0,0,1,.1-.22l.91-.73-.42-1.09a.27.27,0,0,1,.4-.32l1,.64.91-.74a.27.27,0,0,1,.37,0,.28.28,0,0,1,0,.25l-.31,1.12Zm-1.52,0,.55,0-.46-.3a.27.27,0,0,1-.11-.29l.14-.52-.42.33a.26.26,0,0,1-.32,0l-.46-.29.19.5a.26.26,0,0,1-.08.3l-.42.34.53,0a.25.25,0,0,1,.27.16l.2.51.14-.53A.27.27,0,0,1,22.76,24.4Z"/><path class="polsvg-2" d="M18.87,15.59v5.15a.86.86,0,0,1-.86.86H11.64a.81.81,0,0,1-.81-.81v-5.2h8Z"/><path class="polsvg-3" d="M16.28,27.27a.26.26,0,0,1,.23.29.26.26,0,0,1-.14.21l-1,.58.24,1.15a.26.26,0,0,1-.45.23L14.3,29l-1,.59a.26.26,0,0,1-.36-.1.27.27,0,0,1,0-.25l.47-1.06-.87-.79a.27.27,0,0,1,0-.37.28.28,0,0,1,.23-.09l1.16.13.48-1.07a.27.27,0,0,1,.5.07l.24,1.14ZM14.94,28l.47-.27-.54-.06a.27.27,0,0,1-.24-.21l-.11-.52-.22.49a.26.26,0,0,1-.27.16l-.54-.06.39.35a.26.26,0,0,1,.07.32l-.22.5.47-.27a.28.28,0,0,1,.31,0l.4.37-.12-.53A.28.28,0,0,1,14.94,28Z"/><path class="polsvg-3" d="M25.28,10.27a.26.26,0,0,1,.23.29.26.26,0,0,1-.14.21l-1,.58.24,1.15a.26.26,0,0,1-.45.23L23.3,12l-1,.59a.26.26,0,0,1-.36-.1.27.27,0,0,1,0-.25l.47-1.06-.87-.79a.27.27,0,0,1,0-.37.28.28,0,0,1,.23-.09l1.16.13.48-1.07a.27.27,0,0,1,.5.07l.24,1.14ZM23.94,11l.47-.27-.54-.06a.27.27,0,0,1-.24-.21l-.11-.52-.22.49a.26.26,0,0,1-.27.16l-.54-.06.39.35a.26.26,0,0,1,.07.32l-.22.5.47-.27a.28.28,0,0,1,.31,0l.4.37-.12-.53A.28.28,0,0,1,23.94,11Z"/><path class="polsvg-3" d="M25.28,17.27a.26.26,0,0,1,.23.29.26.26,0,0,1-.14.21l-1,.58.24,1.15a.26.26,0,0,1-.45.23L23.3,19l-1,.59a.26.26,0,0,1-.36-.1.27.27,0,0,1,0-.25l.47-1.06-.87-.79a.27.27,0,0,1,0-.37.28.28,0,0,1,.23-.09l1.16.13.48-1.07a.27.27,0,0,1,.5.07l.24,1.14ZM23.94,18l.47-.27-.54-.06a.27.27,0,0,1-.24-.21l-.11-.52-.22.49a.26.26,0,0,1-.27.16l-.54-.06.39.35a.26.26,0,0,1,.07.32l-.22.5.47-.27a.28.28,0,0,1,.31,0l.4.37-.12-.53A.28.28,0,0,1,23.94,18Z"/><path class="polsvg-3" d="M24.28,24.27a.26.26,0,0,1,.23.29.26.26,0,0,1-.14.21l-1,.58.24,1.15a.26.26,0,0,1-.45.23L22.3,26l-1,.59a.26.26,0,0,1-.36-.1.27.27,0,0,1,0-.25l.47-1.06-.87-.79a.27.27,0,0,1,0-.37.28.28,0,0,1,.23-.09l1.16.13.48-1.07a.27.27,0,0,1,.5.07l.24,1.14ZM22.94,25l.47-.27-.54-.06a.27.27,0,0,1-.24-.21l-.11-.52-.22.49a.26.26,0,0,1-.27.16l-.54-.06.39.35a.26.26,0,0,1,.07.32l-.22.5.47-.27a.28.28,0,0,1,.31,0l.4.37-.12-.53A.28.28,0,0,1,22.94,25Z"/><path class="polsvg-3" d="M10.28,24.27a.26.26,0,0,1,.23.29.26.26,0,0,1-.14.21l-1,.58.24,1.15a.26.26,0,0,1-.45.23L8.3,26l-1,.59a.26.26,0,0,1-.36-.1.27.27,0,0,1,0-.25l.47-1.06-.87-.79a.27.27,0,0,1,0-.37.28.28,0,0,1,.23-.09L7.89,24l.48-1.07a.27.27,0,0,1,.5.07l.24,1.14ZM8.94,25l.47-.27-.54-.06a.27.27,0,0,1-.24-.21l-.11-.52-.22.49a.26.26,0,0,1-.27.16l-.54-.06.39.35a.26.26,0,0,1,.07.32l-.22.5.47-.27a.28.28,0,0,1,.31,0l.4.37-.12-.53A.28.28,0,0,1,8.94,25Z"/><path class="polsvg-3" d="M17.43,8a.27.27,0,0,1,0,.37.26.26,0,0,1-.23.09l-1.17-.13L15.58,9.4a.26.26,0,0,1-.35.14.27.27,0,0,1-.16-.2L14.84,8.2l-1.16-.12a.27.27,0,0,1-.24-.3.28.28,0,0,1,.15-.21l1-.57-.25-1.15a.27.27,0,0,1,.21-.32.26.26,0,0,1,.25.08l.85.77,1-.59a.26.26,0,0,1,.37.35l-.47,1.06Zm-1.51-.21.54.06-.39-.35A.26.26,0,0,1,16,7.16l.22-.5-.48.28a.27.27,0,0,1-.31,0L15,6.54l.12.53a.27.27,0,0,1-.13.29l-.47.27.54.06a.27.27,0,0,1,.24.21l.11.53.22-.5A.27.27,0,0,1,15.92,7.77Z"/><path class="polsvg-2" d="M17.35,14.3v1.29h-5V14.3a2.5,2.5,0,1,1,5,0Z"/><path class="polsvg-3" d="M10.23,10.32a.29.29,0,0,1-.1.24l-1,.8.46,1.19a.28.28,0,0,1-.17.37.29.29,0,0,1-.28,0l-1-.68-1,.8a.29.29,0,0,1-.41,0,.29.29,0,0,1,0-.27L7,11.47l-1.07-.69a.3.3,0,0,1-.09-.4.29.29,0,0,1,.26-.13l1.24-.07L7.65,9A.3.3,0,0,1,8,8.74a.32.32,0,0,1,.2.19l.45,1.17L9.93,10A.29.29,0,0,1,10.23,10.32ZM8.61,11l.46-.37-.58,0a.29.29,0,0,1-.3-.18L8,10l-.15.57a.29.29,0,0,1-.27.22l-.59,0,.5.32a.3.3,0,0,1,.12.32L7.44,12l.45-.37a.29.29,0,0,1,.34,0l.5.32-.21-.55A.29.29,0,0,1,8.61,11Z"/><path class="polsvg-3" d="M7.7,17.06a.27.27,0,0,1,.14.35.26.26,0,0,1-.21.15l-1.13.24L6.38,19a.26.26,0,0,1-.5.09l-.58-1-1.15.24a.26.26,0,0,1-.23-.46L4.68,17,4.1,16a.27.27,0,0,1,.35-.37l1.06.48.79-.88a.27.27,0,0,1,.37,0,.26.26,0,0,1,.09.22l-.12,1.16Zm-1.5.27.53-.11L6.23,17a.26.26,0,0,1-.16-.27l.06-.54-.35.39a.27.27,0,0,1-.32.08L5,16.43l.27.47a.27.27,0,0,1,0,.31l-.37.4.53-.11a.25.25,0,0,1,.29.13l.27.48L6,17.56A.27.27,0,0,1,6.2,17.33Z"/><path class="polsvg-4" d="M30.31,3.58c-6.05.88-11.15.16-14.83-3a19.5,19.5,0,0,1-14.92,3c0,24.23-1.89,18.91,14.92,34.14C32.93,21.81,30.31,27.26,30.31,3.58Z"/><path class="polsvg-4" d="M17.35,15.59h1.52v5.15a.86.86,0,0,1-.86.86H11.64a.81.81,0,0,1-.81-.81v-5.2h1.52"/><path class="polsvg-4" d="M12.35,15.59V14.3a2.5,2.5,0,1,1,5,0v1.29Z"/><polyline class="polsvg-4" points="13.54 19.88 14.85 18.59 16.16 17.3"/><polyline class="polsvg-4" points="16.16 19.88 14.85 18.59 13.54 17.3"/></g></g></svg>Policies</span>
+        <span id="account"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 49.29 31.39"><defs><style>.accsvg-1{fill:#757575;}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path class="accsvg-1" d="M47.4,31.39H8.27a1.89,1.89,0,0,1-1.89-1.89V8.15A1.89,1.89,0,0,1,8.27,6.25H47.4a1.89,1.89,0,0,1,1.89,1.89V29.49A1.89,1.89,0,0,1,47.4,31.39ZM8.27,7.06A1.08,1.08,0,0,0,7.18,8.15V29.49a1.08,1.08,0,0,0,1.08,1.08H47.4a1.08,1.08,0,0,0,1.08-1.08V8.15A1.08,1.08,0,0,0,47.4,7.06Z"/><path class="accsvg-1" d="M48.89,15.11H6.78a.41.41,0,0,1-.41-.41V11.44A.41.41,0,0,1,6.78,11H48.89a.41.41,0,0,1,.41.41v3.26A.41.41,0,0,1,48.89,15.11ZM7.18,14.3h41.3V11.85H7.18Z"/><path class="accsvg-1" d="M37.58,26a3,3,0,1,1,0-6,3,3,0,0,1,2.08.83.4.4,0,0,1,0,.58,2.19,2.19,0,0,0,0,3.16.4.4,0,0,1,0,.58A3,3,0,0,1,37.58,26Zm0-5.19a2.19,2.19,0,1,0,1.21,4,3,3,0,0,1,0-3.65A2.17,2.17,0,0,0,37.58,20.82Z"/><path class="accsvg-1" d="M41.17,26a3,3,0,1,1,3-3A3,3,0,0,1,41.17,26Zm0-5.19A2.19,2.19,0,1,0,43.36,23,2.19,2.19,0,0,0,41.17,20.82Z"/><path class="accsvg-1" d="M26.5,20H9a.41.41,0,0,1,0-.81H26.5a.41.41,0,0,1,0,.81Z"/><path class="accsvg-1" d="M26.5,24.93H9a.41.41,0,0,1,0-.81H26.5a.41.41,0,0,1,0,.81Z"/><path class="accsvg-1" d="M11.84,9.46H9.63a.41.41,0,1,1,0-.81h2.21a.41.41,0,0,1,0,.81Z"/><path class="accsvg-1" d="M16.39,9.46H14.18a.41.41,0,1,1,0-.81h2.21a.41.41,0,0,1,0,.81Z"/><path class="accsvg-1" d="M20.94,9.46H18.73a.41.41,0,1,1,0-.81h2.21a.41.41,0,1,1,0,.81Z"/><path class="accsvg-1" d="M6.78,25.12H1.89A1.89,1.89,0,0,1,0,23.24V1.89A1.89,1.89,0,0,1,1.89,0H41a1.89,1.89,0,0,1,1.89,1.89V6.66a.41.41,0,0,1-.41.41H8.27A1.08,1.08,0,0,0,7.18,8.15V24.72A.41.41,0,0,1,6.78,25.12ZM1.89.81A1.08,1.08,0,0,0,.81,1.89V23.24a1.08,1.08,0,0,0,1.08,1.08H6.37V8.15A1.89,1.89,0,0,1,8.27,6.25H42.1V1.89A1.08,1.08,0,0,0,41,.81Z"/></g></g></svg>Account</span>
+        <span id="helpdesk"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44.01 38.86"><defs><style>.helpsvg-1{fill:none;stroke:#757575;stroke-linecap:round;stroke-linejoin:round;}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><g id="_Group_" data-name="&lt;Group&gt;"><polygon class="helpsvg-1" points="23.57 29.56 24.92 36.55 18.58 36.55 20.26 29.56 23.57 29.56"/><polygon class="helpsvg-1" points="23.57 25.73 23.57 29.56 20.26 29.56 20.26 25.73 21.73 25.73 23.57 25.73"/><polygon class="helpsvg-1" points="21.73 24.68 21.73 25.73 20.26 25.73 16.42 25.73 16.42 19.98 16.72 19.86 21.73 24.68"/><circle class="helpsvg-1" cx="22.07" cy="8.76" r="8.26"/><polygon class="helpsvg-1" points="27.42 19.98 27.42 25.73 23.57 25.73 21.73 25.73 21.73 24.68 27.11 19.86 27.42 19.98"/><path class="helpsvg-1" d="M20.26,25.73v3.83l-1.68,7v0H5.29V29.14h0a4.11,4.11,0,0,0,3-6L16.42,20v5.75Z"/><path class="helpsvg-1" d="M8.73,25.08a4.11,4.11,0,0,1-3.44,4.06,3.91,3.91,0,0,1-.67.06,4.11,4.11,0,1,1,4.11-4.12Z"/><path class="helpsvg-1" d="M39.24,28a2.66,2.66,0,0,1,2.65,2.65V32h-5.3V30.61A2.66,2.66,0,0,1,39.24,28Z"/><path class="helpsvg-1" d="M43.51,32v5.47a.92.92,0,0,1-.91.92H35.82A.86.86,0,0,1,35,37.5V32h8.54Z"/><circle class="helpsvg-1" cx="22.07" cy="8.76" r="8.26"/><polyline class="helpsvg-1" points="8.27 23.18 16.42 19.98 16.72 19.86 21.73 24.68 27.11 19.86 27.42 19.98 38.55 24.36"/><polyline class="helpsvg-1" points="18.57 36.57 5.29 36.57 5.29 29.14"/><line class="helpsvg-1" x1="34.97" y1="36.57" x2="24.92" y2="36.57"/><polyline class="helpsvg-1" points="32.94 28.89 32.94 36.55 24.92 36.55 18.58 36.55 10.9 36.55 10.9 28.89"/><polyline class="helpsvg-1" points="20.26 25.73 16.42 25.73 16.42 19.98 16.42 19.86"/><polyline class="helpsvg-1" points="27.42 19.86 27.42 19.98 27.42 25.73 23.57 25.73"/><polyline class="helpsvg-1" points="20.26 29.56 20.26 25.73 21.73 25.73 23.57 25.73 23.57 29.56"/><polygon class="helpsvg-1" points="18.57 36.57 24.92 36.57 24.92 36.55 23.57 29.56 20.26 29.56 18.58 36.55 18.57 36.57"/><path class="helpsvg-1" d="M41.89,32h1.62v5.47a.92.92,0,0,1-.91.92H35.82A.86.86,0,0,1,35,37.5V32h1.61"/><path class="helpsvg-1" d="M36.58,32V30.61a2.65,2.65,0,1,1,5.3,0V32Z"/><polyline class="helpsvg-1" points="37.84 36.54 39.24 35.17 40.63 33.79"/><polyline class="helpsvg-1" points="40.63 36.54 39.24 35.17 37.84 33.79"/><path class="helpsvg-1" d="M5.29,29.14a3.91,3.91,0,0,1-.67.06,4.14,4.14,0,1,1,.67-.06Z"/><polyline class="helpsvg-1" points="2.86 24.49 3.71 26.1 7.26 24.02"/></g></g></g></svg>Helpdesk</span>
+    </div>
+    <span id="pub-noti"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35.89 40.15"><defs><style>.alert-1{fill:#394146;}.alert-2{fill:#f70b22;}.alert-3{font-size:12.16px;fill:#fff;font-family:Roboto-Medium, Roboto;font-weight: bold}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path class="alert-1" d="M31.39,36.89,28,27.78H3.43L0,36.89H12.61a2.69,2.69,0,0,0,0,.44,2.82,2.82,0,0,0,5.63,0,2.85,2.85,0,0,0,0-.44Z"/><path class="alert-1" d="M18.11,5.94s0-.09,0-.14c0-2.88-.94-5.8-2.74-5.8s-2.74,2.92-2.74,5.8c0,0,0,.09,0,.14-4.43,2.25-7.87,9.84-8.7,19.38H26.81C26,15.78,22.54,8.19,18.11,5.94Zm-2.73-.7a5.58,5.58,0,0,0-1.26.16c.08-2.55.91-3.94,1.26-3.94s1.18,1.39,1.27,3.94A5.61,5.61,0,0,0,15.37,5.24Z"/><circle class="alert-2" cx="27.89" cy="11.57" r="8"/><text class="alert-3" transform="translate(24.22 16.28)">1</text></g></g></svg></span>
+    <span id="pub-logout"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 172 63"><defs><style>.logsvg-1{fill:#fff;}.logsvg-2{font-size:27.07px;fill:#383838;font-family:Roboto-Medium, Roboto;}.logsvg-3{letter-spacing:-0.03em;}.logsvg-4{letter-spacing:-0.03em;}.logsvg-5{fill:#f70b22;}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path class="logsvg-1" d="M31.5,62.5a31,31,0,0,1,0-62h109a31,31,0,0,1,0,62Z"/><path class="logsvg-1" d="M140.5,1a30.5,30.5,0,1,1,0,61H31.5a30.5,30.5,0,1,1,0-61h109m0-1H31.5A31.59,31.59,0,0,0,0,31.5H0A31.59,31.59,0,0,0,31.5,63h109A31.59,31.59,0,0,0,172,31.5h0A31.59,31.59,0,0,0,140.5,0Z"/><text class="logsvg-2" transform="translate(45.73 41.41)"><tspan class="logsvg-3">L</tspan><tspan x="13.8" y="0">OGOU</tspan><tspan class="logsvg-4" x="87.24" y="0">T</tspan></text><path id="_Compound_Path_" data-name="&lt;Compound Path&gt;" class="logsvg-5" d="M32.56,19.71a1.8,1.8,0,0,0-1.81,1.64v2.47A9.66,9.66,0,1,0,42,33.32a9.63,9.63,0,0,0-7.63-9.5V21.35A1.8,1.8,0,0,0,32.56,19.71ZM24.18,33.32a8.55,8.55,0,0,1,6.57-8.38v1.9a6.58,6.58,0,1,0,3.62,0v-1.9a8.56,8.56,0,1,1-10.19,8.38Zm8.38-12.52c.34,0,.75.3.75.55V31c0,.25-.4.55-.75.55s-.75-.3-.75-.55V21.35C31.81,21.1,32.22,20.81,32.56,20.81Zm0,11.82A1.8,1.8,0,0,0,34.37,31V28a5.66,5.66,0,0,1,3.71,5.34,5.52,5.52,0,1,1-11,0A5.65,5.65,0,0,1,30.75,28v3A1.8,1.8,0,0,0,32.56,32.63Z"/></g></g></svg></span>
+    <div class="earning-pub">
+    <div class="earning-div">
+        <h3 id="earning-title">Earning</h3>
+        <div id="earning-scale">
+            <h4>Change scale</h4>
+            <div id="earning-xscale"><span id="earning-xscale-text">X-scale</span>
+                <select>
+                    <option id="graph-month-option" value="Months">Months</option>
+                    <option id="graph-week-option" value="Weeks">Weeks</option>
+                    <option id="graph-day-option" value="Days">Days</option>
+                </select>
+            </div>
+            <div id="earning-yscale"><span id="earning-yscale-text">Y-scale</span></div>
+        </div>
+        <canvas id="earning-month-chart" class="earning-chart" width="90%" height="35px"></canvas>
+        <canvas id="earning-week-chart" class="earning-chart" width="90%" height="35px"></canvas>
+        <canvas id="earning-day-chart" class="earning-chart" width="90%" height="35px"></canvas>
+    </div>
+    <div class="earning-div2">
+        <div id="total-earning-div">
+            <span>Total Earnings</span>
+            <select>
+                <option>This month</option>
+                <option>This Week</option>
+                <option>Today</option>
+                <option>This Year</option>
+            </select>
+            <div id="tearn-div">
+                <span id="tearnx"></span>
+                <span id="tearnxi-arrow"></span>
+                <span id="tearnxi"></span>
+            </div>
+        </div>
+        <div id="earnt-div">
+            <div id="amount-rec">
+                <h4>Amount Received</h4>
+                <p></p>
+                <table>
+                    <tbody>
+                        {% for pay in pubpaym %}
+                        <tr class="pubpaymtr">
+                            <td class="pubpaytime" data-time="{{ pay.0 }}"></td>
+                            <td class="pubpayamount">{{ pay.1 }}</td>
+                        </tr>
+                        {% endfor %}
+                        {% for pay in pubpayw %}
+                        <tr class="pubpaywtr">
+                            <td class="pubpaytime" data-time="{{ pay.0 }}"></td>
+                            <td class="pubpayamount">{{ pay.1 }}</td>
+                        </tr>
+                        {% endfor %}
+                        {% for pay in pubpayd %}
+                        <tr class="pubpaydtr">
+                            <td class="pubpaytime" data-time="{{ pay.0 }}"></td>
+                            <td class="pubpayamount">{{ pay.1 }}</td>
+                        </tr>
+                        {% endfor %}
+                        {% for pay in pubpayy %}
+                        <tr class="pubpayytr">
+                            <td class="pubpaytime" data-time="{{ pay.0 }}"></td>
+                            <td class="pubpayamount">{{ pay.1 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div id="amount-rem">
+                <h4>Amount Remaining</h4>
+                <p>{{ totalremain }}</p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Expected date</td>
+                            <td class="pubedate"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="invoice">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 73.76 70"><defs><style>.invoicesvg-1{fill:#757575;}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path class="invoicesvg-1" d="M49.57,60.45H24.2a.6.6,0,0,1-.5-.26.63.63,0,0,1-.07-.57l1.22-3.49a.61.61,0,0,1,.57-.41h22.9a.61.61,0,0,1,.57.41l1.18,3.35a.64.64,0,0,1,.1.34A.61.61,0,0,1,49.57,60.45ZM25.07,59.21H48.69L47.91,57H25.85Z"/><path class="invoicesvg-1" d="M56.42,70H52.91a.61.61,0,0,1-.57-.41l-7-20a.63.63,0,0,1,.07-.57.6.6,0,0,1,.5-.27h3.57a.61.61,0,0,1,.57.41l7,20a.63.63,0,0,1-.08.57A.6.6,0,0,1,56.42,70Zm-3.08-1.24h2.22L49,50H46.74Z"/><path class="invoicesvg-1" d="M20.85,70H17.34a.6.6,0,0,1-.5-.26.63.63,0,0,1-.08-.57l7-20a.61.61,0,0,1,.57-.41h3.57a.6.6,0,0,1,.5.27.63.63,0,0,1,.07.57l-7,20A.61.61,0,0,1,20.85,70ZM18.2,68.76h2.23L27,50H24.75Z"/><path class="invoicesvg-1" d="M65.74,50H8a5.64,5.64,0,0,1-5.7-5.84V7.58A.61.61,0,0,1,2.93,7h67.9a.61.61,0,0,1,.61.62V44.16A5.64,5.64,0,0,1,65.74,50ZM3.54,8.2v36A4.44,4.44,0,0,0,8,48.76H65.74a4.44,4.44,0,0,0,4.48-4.6V8.2Z"/><path class="invoicesvg-1" d="M73.15,8.2H.61A.61.61,0,0,1,0,7.58V4.1a.61.61,0,0,1,.61-.62H73.15a.61.61,0,0,1,.61.62V7.58A.61.61,0,0,1,73.15,8.2ZM1.21,7H72.55V4.72H1.21Z"/><path class="invoicesvg-1" d="M38.57,4.72h-3.4a.61.61,0,0,1-.61-.62V2.36a2.31,2.31,0,1,1,4.62,0V4.1A.61.61,0,0,1,38.57,4.72ZM35.78,3.47H38V2.36a1.1,1.1,0,1,0-2.2,0Z"/><path class="invoicesvg-1" d="M70.6,44.26H69.38a1.87,1.87,0,0,1-1.82-1.89l0-2a13.81,13.81,0,0,1-3.68-1.5l-1.34,1.36a1.8,1.8,0,0,1-1.29.54h0A1.78,1.78,0,0,1,60,40.17l-2.39-2.48A1.9,1.9,0,0,1,57,36.36,1.87,1.87,0,0,1,57.59,35l1.26-1.27a14.5,14.5,0,0,1-1.58-3.88H55.54A1.88,1.88,0,0,1,53.72,28l0-3.49a1.87,1.87,0,0,1,.54-1.32,1.89,1.89,0,0,1,1.31-.54h1.72a14.26,14.26,0,0,1,1.63-3.86L57.7,17.5a1.93,1.93,0,0,1,0-2.66l2.41-2.44a1.81,1.81,0,0,1,1.29-.54h0a1.78,1.78,0,0,1,1.29.56L64,13.78a13.91,13.91,0,0,1,3.7-1.46v-2A1.87,1.87,0,0,1,68.3,9a1.94,1.94,0,0,1,1.3-.54h1.21a.62.62,0,0,1,0,1.24H69.59a.74.74,0,0,0-.44.18.63.63,0,0,0-.18.44l0,2.53a.62.62,0,0,1-.49.61,12.67,12.67,0,0,0-4.21,1.65.6.6,0,0,1-.74-.1l-1.65-1.72a.6.6,0,0,0-.43-.19h0a.62.62,0,0,0-.44.18l-2.41,2.44a.66.66,0,0,0,0,.91l1.59,1.64a.63.63,0,0,1,.07.79,13,13,0,0,0-1.84,4.36.61.61,0,0,1-.59.48H55.58a.64.64,0,0,0-.44.18.63.63,0,0,0-.18.44l0,3.49a.64.64,0,0,0,.63.64h2.2a.61.61,0,0,1,.59.49,13.24,13.24,0,0,0,1.79,4.39.63.63,0,0,1-.08.78l-1.61,1.62a.62.62,0,0,0-.18.44.65.65,0,0,0,.18.46l2.39,2.48a.6.6,0,0,0,.43.18h0a.61.61,0,0,0,.44-.18l1.67-1.7a.6.6,0,0,1,.74-.09,12.6,12.6,0,0,0,4.19,1.7.62.62,0,0,1,.49.61l0,2.52a.64.64,0,0,0,.62.65h1.22a.62.62,0,0,1,0,1.24Z"/><path class="invoicesvg-1" d="M70.72,33.93h0a7.61,7.61,0,0,1,.09-15.16A.62.62,0,0,1,70.84,20a6.37,6.37,0,0,0-.08,12.68.62.62,0,0,1,0,1.24Z"/><path class="invoicesvg-1" d="M18.36,41.62a12.18,12.18,0,0,1,0-24.35.61.61,0,0,1,.61.62V28.82H29.62a.61.61,0,0,1,.61.62A12,12,0,0,1,18.36,41.62Zm-.61-23.09a10.94,10.94,0,0,0,.61,21.85A10.79,10.79,0,0,0,29,30.07H18.36a.61.61,0,0,1-.61-.62Z"/><path class="invoicesvg-1" d="M31.51,28.15H20.24a.61.61,0,0,1-.61-.62V16a.61.61,0,0,1,.61-.62A12,12,0,0,1,32.11,27.53.61.61,0,0,1,31.51,28.15ZM20.85,26.9h10a10.82,10.82,0,0,0-10-10.29Z"/><path class="invoicesvg-1" d="M49.68,41.6H18a.62.62,0,0,1,0-1.24H49.68a.62.62,0,0,1,0,1.24Z"/><path class="invoicesvg-1" d="M49.68,36.73H27.53a.62.62,0,0,1,0-1.24H49.68a.62.62,0,0,1,0,1.24Z"/><path class="invoicesvg-1" d="M49.68,32.53H29.62a.62.62,0,0,1,0-1.24H49.68a.62.62,0,0,1,0,1.24Z"/><path class="invoicesvg-1" d="M49.68,28.15H29.62a.62.62,0,0,1,0-1.24H49.68a.62.62,0,0,1,0,1.24Z"/><path class="invoicesvg-1" d="M49.68,23.88h-19a.62.62,0,0,1,0-1.24h19a.62.62,0,0,1,0,1.24Z"/><path class="invoicesvg-1" d="M49.68,19.43H27.52a.62.62,0,0,1,0-1.24H49.68a.62.62,0,0,1,0,1.24Z"/></g></g></svg>
+            <span id="invoice-span-1">Download detailed</span>
+            <span id="invoice-span-2">invoice</span>
+            <select>
+                <option>This month</option>
+                <option>This week</option>
+                <option>Today</option>
+                <option>This year</option>
+            </select>
+        </div>
+    </div>
+    </div>
+    <div id="pub-lpane">
+    <div id="pub-upload">
+        <h3>Upload books</h3>
+        <!--<form class="dropzone" method="post" action="/publisher" enctype="multipart/form-data" id="ebookUploadDropzone">
+            {% csrf_token %}
+            <input type="file" name="efile[]" id="efile" multiple >
+            <input type="hidden" name="publisher" value="{{ publisherName}}">
+            <div class="dz-message">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 126.97 74.11"><defs><style>.uploadsvg-1{fill:#bdbdbd;}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path class="uploadsvg-1" d="M105.16,23a19.6,19.6,0,0,0-12.51,4.63C91.24,12.1,80,0,66.39,0,54.35,0,44.19,9.44,41,22.35a14.24,14.24,0,0,0-7.09-1.91c-9,0-16.24,8.52-16.24,19,0,.11,0,.23,0,.34a12.72,12.72,0,0,0-2.92-.34C6.62,39.47,0,47.22,0,56.79S6.62,74.11,14.78,74.11H57.29V46.81H50l19-29.21,19,29.21H80.83v27.3h24.34c12,0,21.81-11.44,21.81-25.56S117.2,23,105.16,23Z"/></g></g></svg><br>
+            <span>Drag and drop</span>
+            <br>
+            <span>to upload</span>
+            <br>
+            <span id="upload-or-span">or</span><br>
+            <span id="upload-browse">Browse</span>
+          </div>
+        </form>-->
+        <div class="dropzone fileinput-button">
+        	<div class="dz-message">
+	            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 126.97 74.11"><defs><style>.uploadsvg-1{fill:#bdbdbd;}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path class="uploadsvg-1" d="M105.16,23a19.6,19.6,0,0,0-12.51,4.63C91.24,12.1,80,0,66.39,0,54.35,0,44.19,9.44,41,22.35a14.24,14.24,0,0,0-7.09-1.91c-9,0-16.24,8.52-16.24,19,0,.11,0,.23,0,.34a12.72,12.72,0,0,0-2.92-.34C6.62,39.47,0,47.22,0,56.79S6.62,74.11,14.78,74.11H57.29V46.81H50l19-29.21,19,29.21H80.83v27.3h24.34c12,0,21.81-11.44,21.81-25.56S117.2,23,105.16,23Z"/></g></g></svg><br>
+	            <span>Drag and drop</span>
+	            <br>
+	            <span>to upload</span>
+	            <br>
+	            <span id="upload-or-span">or</span><br>
+	            <span id="upload-browse">Browse</span>
+	        </div>
+	        {% csrf_token %}
+	        <input id="fileupload" type="file" name="file" multiple>
+	        <input type="hidden" name="publisher" id="pubname" value="{{ publisherName}}">
+	    </div>
+	    <div id="progress" class="progress">
+	        <div class="progress-bar progress-bar-success"></div>
+	    </div>
+        <span id="upload-message"></span>
+        <button type="submit" form="ebookUploadDropzone" id="upload-btn">Upload</button>
+        <div id="files"></div>
+    </div>
+    <div id="pub-books">
+    	<div id="pub-booknav">
+    		<input type="text" name="search" id="pub-booksearch" placeholder="Search your book">
+    		<i class="fa fa-search" aria-hidden="true" style="color: rgb(128,128,128);position: relative;right: 41%"></i>
+    		<span id="pub-bookstotal">Total Books: {{ pbookarr|length }}</span>
+    		<span id="pub-booksort">Sort By <i class="fa fa-angle-down" aria-hidden="true" style="position: relative;top: 3px;"></i><i class="fa fa-angle-up" aria-hidden="true" style="position: relative;top: 3px;display: none"></i>
+    		</span>
+    		<ul id="book-sorter">
+				<li>Alphabetical</li>
+				<li>Earnings</li>
+				<li>Most Bought</li>
+				<li>Most Rented</li>
+			</ul>
+    	</div>
+    	<div id="pub-bookcore">
+    		<table cellspacing="0">
+    			<tbody>
+    				<tr>
+    					<td></td>
+    					<td></td>
+    					<td class="pub-book-t">No of time Bought</td>
+    					<td class="pub-book-t">No of time Rented</td>
+    					<td class="pub-book-t">Total earning(Rs)</td>
+    				</tr>
+    				{% for item in pbookarr %}
+    				<tr class="pub-booktr">
+    					<td class="pub-bookimg"><img src="/{{ item.0 }}"></td>
+    					<td class="pub-bookname">{{ item.1 }}</td>
+    					<td class="pub-bookbuy">{{ item.2 }}</td>
+    					<td class="pub-bookrent">{{ item.3 }}</td>
+    					<td class="pub-bookearn">{{ item.4 }}</td>
+    				</tr>
+    				{% endfor %}
+    			</tbody>
+    		</table>
+    	</div>
+    </div>
+    </div>
+
+
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery.ui.widget.js' %}"></script>
+    <script src="{% static 'js/jquery.iframe-transport.js' %}"></script>
+	<script src="{% static 'js/jquery.fileupload.js' %}"></script>
+	<!-- The File Upload processing plugin -->
+	<script src="{% static 'js/jquery.fileupload-process.js' %}"></script>
+	<script src="{% static 'js/jquery.fileupload-validate.js' %}"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+    <script>
+
+        $("#earning-week-chart").hide();
+        $("#earning-day-chart").hide();
+        var datapointsm1 = {{ earningmonthbuy|safe }};
+        var datapointsm2 = {{ earningmonthrent|safe }};
+        var monthlabel = {{ monthlabel|safe }};
+        var datapointsm3 = [];
+        for(var i in datapointsm1){
+            datapointsm3.push(datapointsm1[i] + datapointsm2[i]);
+        }
+        var datapointsw1 = {{ earningweekbuy|safe }};
+        var datapointsw2 = {{ earningweekrent|safe }};
+        var weeklabel = {{ weeklabel|safe }};
+        var datapointsw3 = [];
+        for(var i in datapointsw1){
+            datapointsw3.push(datapointsw1[i] + datapointsw2[i]);
+        }
+        var datapointsd1 = {{ earningdaybuy|safe }};
+        var datapointsd2 = {{ earningdayrent|safe }};
+        var daylabel = {{ daylabel|safe }};
+        var datapointsd3 = [];
+        for(var i in datapointsd1){
+            datapointsd3.push(datapointsd1[i] + datapointsd2[i]);
+        }
+        var tearnm = '{{ tearnm|safe }}';
+        var tearnmi = '{{ tearnmi|safe }}';
+        var tearnw = '{{ tearnw|safe }}';
+        var tearnwi = '{{ tearnwi|safe }}';
+        var tearnd = '{{ tearnd|safe }}';
+        var tearndi = '{{ tearndi|safe }}';
+        var tearny = '{{ tearny|safe }}';
+        var tearnyi = '{{ tearnyi|safe }}';
+        var configm = {
+            type: 'line',
+            data: {
+                labels: monthlabel,
+                datasets: [{
+                    label: 'Money by bought',
+                    data: datapointsm1,
+                    borderColor: 'rgba(128,128,128,0.5)',
+                    backgroundColor: 'rgba(128,128,128,0.5)',
+                    fill: false,
+                    lineTension: 0
+                }, {
+                    label: 'Money by rent',
+                    data: datapointsm2,
+                    borderColor: 'rgba(128,128,128,0.7)',
+                    backgroundColor: 'rgba(128,128,128,0.7)',
+                    fill: false,
+                    lineTension: 0
+                }, {
+                    label: 'Total money',
+                    data: datapointsm3,
+                    borderColor: 'rgba(128,128,128,1.0)',
+                    backgroundColor: 'rgba(128,128,128,1.0)',
+                    fill: false,
+                    lineTension: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                },
+                tooltips: {
+                    mode: 'index'
+                },
+                legend: {
+                    position: 'top',
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                        },
+                        gridLines: {
+                            display: false,
+                            color: 'rgb(70,70,70)',
+                        },
+                        ticks: {
+                            fontColor: 'rgb(70,70,70)',
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                        },
+                        gridLines: {
+                            display: false,
+                            color: 'rgb(70,70,70)',
+                        },
+                        ticks: {
+                            suggestedMin: 0,
+                            fontColor: 'rgb(70,70,70)',
+                        }
+                    }]
+                }
+            }
+        };
+
+        var configw = {
+            type: 'line',
+            data: {
+                labels: weeklabel,
+                datasets: [{
+                    label: 'Money by bought',
+                    data: datapointsw1,
+                    borderColor: 'rgba(128,128,128,0.5)',
+                    backgroundColor: 'rgba(128,128,128,0.5)',
+                    fill: false,
+                    lineTension: 0
+                }, {
+                    label: 'Money by rent',
+                    data: datapointsw2,
+                    borderColor: 'rgba(128,128,128,0.7)',
+                    backgroundColor: 'rgba(128,128,128,0.7)',
+                    fill: false,
+                    lineTension: 0
+                }, {
+                    label: 'Total money',
+                    data: datapointsw3,
+                    borderColor: 'rgba(128,128,128,1.0)',
+                    backgroundColor: 'rgba(128,128,128,1.0)',
+                    fill: false,
+                    lineTension: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                },
+                tooltips: {
+                    mode: 'index'
+                },
+                legend: {
+                    position: 'top',
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Last 12 weeks',
+                        },
+                        gridLines: {
+                            display: false,
+                            color: 'rgb(70,70,70)',
+                        },
+                        ticks: {
+                            fontColor: 'rgb(70,70,70)',
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                        },
+                        gridLines: {
+                            display: false,
+                            color: 'rgb(70,70,70)',
+                        },
+                        ticks: {
+                            suggestedMin: 0,
+                            fontColor: 'rgb(70,70,70)',
+                        }
+                    }]
+                }
+            }
+        };
+
+        var configd = {
+            type: 'line',
+            data: {
+                labels: daylabel,
+                datasets: [{
+                    label: 'Money by bought',
+                    data: datapointsd1,
+                    borderColor: 'rgba(128,128,128,0.5)',
+                    backgroundColor: 'rgba(128,128,128,0.5)',
+                    fill: false,
+                    lineTension: 0
+                }, {
+                    label: 'Money by rent',
+                    data: datapointsd2,
+                    borderColor: 'rgba(128,128,128,0.7)',
+                    backgroundColor: 'rgba(128,128,128,0.7)',
+                    fill: false,
+                    lineTension: 0
+                }, {
+                    label: 'Total money',
+                    data: datapointsd3,
+                    borderColor: 'rgba(128,128,128,1.0)',
+                    backgroundColor: 'rgba(128,128,128,1.0)',
+                    fill: false,
+                    lineTension: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                },
+                tooltips: {
+                    mode: 'index'
+                },
+                legend: {
+                    position: 'top',
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Last 12 days',
+                        },
+                        gridLines: {
+                            display: false,
+                            color: 'rgb(70,70,70)',
+                        },
+                        ticks: {
+                            fontColor: 'rgb(70,70,70)',
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                        },
+                        gridLines: {
+                            display: false,
+                            color: 'rgb(70,70,70)',
+                        },
+                        ticks: {
+                            suggestedMin: 0,
+                            fontColor: 'rgb(70,70,70)',
+                        }
+                    }]
+                }
+            }
+        };
+
+        window.onload = function() {
+            var ctxm = document.getElementById('earning-month-chart').getContext('2d');
+            window.myLine = new Chart(ctxm, configm);
+            var ctxw = document.getElementById('earning-week-chart').getContext('2d');
+            window.myLine = new Chart(ctxw, configw);
+            var ctxd = document.getElementById('earning-day-chart').getContext('2d');
+            window.myLine = new Chart(ctxd, configd);
+        };
+        $("#earning-xscale select").change(function(){
+            var option = $(this).val();
+            if(option == 'Months'){
+                $("#earning-month-chart").show();
+                $("#earning-week-chart").hide();
+                $("#earning-day-chart").hide();
+            }else if(option == 'Weeks'){
+                $("#earning-month-chart").hide();
+                $("#earning-week-chart").show();
+                $("#earning-day-chart").hide();
+            }else if(option == 'Days'){
+                $("#earning-month-chart").hide();
+                $("#earning-week-chart").hide();
+                $("#earning-day-chart").show();
+            }
+        });
+        $(".pubpaytime").each(function(){
+            var time = $(this).attr('data-time');
+            var month = time.substring(0,3);
+            var day = time.substring(time.indexOf('.')+2,time.indexOf(','));
+            var year = time.substring(time.indexOf(',')+2,time.indexOf(',')+6);
+            var mon;
+            switch (month) {
+              case 'Jan':
+                mon = '01';
+                break;
+              case 'Feb':
+                mon = '02';
+                break;
+              case 'Mar':
+                mon = '03';
+                break;
+              case 'Apr':
+                mon = '04';
+                break;
+              case 'May':
+                mon = '05';
+                break;
+              case 'Jun':
+                mon = '06';
+                break;
+              case 'Jul':
+                mon = '07';
+                break;
+              case 'Aug':
+                mon = '08';
+                break;
+              case 'Sep':
+                mon = '09';
+                break;
+              case 'Oct':
+                mon = '10';
+                break;
+              case 'Nov':
+                mon = '11';
+                break;
+              case 'Dec':
+                mon = '12';
+            }
+            $(this).html(day + '/' + mon + '/' + year);
+            $(".pubpayamount").css('padding-left','30%');
+        });
+        var trecamount = 0;
+        $(".pubpaymtr .pubpayamount").each(function(){
+            trecamount = trecamount + parseFloat($(this).html());
+        })
+        $("#amount-rec p").html(trecamount);
+        var datee = new Date();
+        datee.setTime(datee.getTime() + (3*24 * 60 * 60 * 1000));
+        var daye = datee.getDate();
+        var monthe = datee.getMonth() + 1;
+        var yeare = datee.getFullYear();
+        $(".pubedate").html(daye + '/' + monthe + '/' + yeare);
+        $(".pubpaywtr").hide();
+        $(".pubpaydtr").hide();
+        $(".pubpayytr").hide();
+        $("#tearnx").html(tearnm);
+        $("#tearnxi").html(tearnmi);
+        if(tearnmi.indexOf('%') != -1){
+            if(parseFloat(tearnmi.substring(0,tearnmi.indexOf('%'))) < 0){
+                $("#tearnxi-arrow").css({'border-bottom':'none','border-top':'10px solid #00F148','bottom':'-10px'});
+            }else{
+                $("#tearnxi-arrow").css({'border-bottom':'10px solid #00F148','border-top':'none','bottom':'25px'});
+            }
+        }else{
+            if(parseFloat(tearnmi.substring(0,) < 0)){
+                $("#tearnxi-arrow").css({'border-bottom':'none','border-top':'10px solid #00F148','bottom':'-10px'});
+            }else{
+                $("#tearnxi-arrow").css({'border-bottom':'10px solid #00F148','border-top':'none','bottom':'25px'});
+            }
+        }
+        $("#total-earning-div select").change(function(){
+            var option = $(this).val();
+            if(option == 'This month'){
+                $("#tearnx").html(tearnm);
+                $("#tearnxi").html(tearnmi);
+                $(".pubpaymtr").show();
+                $(".pubpaywtr").hide();
+                $(".pubpaydtr").hide();
+                $(".pubpayytr").hide();
+                var trecamount = 0;
+                $(".pubpaymtr .pubpayamount").each(function(){
+                    trecamount = trecamount + parseFloat($(this).html());
+                })
+                $("#amount-rec p").html(trecamount);
+                if(tearnmi.indexOf('%') != -1){
+                    if(parseFloat(tearnmi.substring(0,tearnmi.indexOf('%'))) < 0){
+                        $("#tearnxi-arrow").css({'border-bottom':'none','border-top':'10px solid #00F148','bottom':'-10px'});
+                    }else{
+                        $("#tearnxi-arrow").css({'border-bottom':'10px solid #00F148','border-top':'none','bottom':'25px'});
+                    }
+                }else{
+                    if(parseFloat(tearnmi.substring(0,) < 0)){
+                        $("#tearnxi-arrow").css({'border-bottom':'none','border-top':'10px solid #00F148','bottom':'-10px'});
+                    }else{
+                        $("#tearnxi-arrow").css({'border-bottom':'10px solid #00F148','border-top':'none','bottom':'25px'});
+                    }
+                }
+            }else if(option == 'This week'){
+                $("#tearnx").html(tearnw);
+                $("#tearnxi").html(tearnwi);
+                $(".pubpaymtr").hide();
+                $(".pubpaywtr").show();
+                $(".pubpaydtr").hide();
+                $(".pubpayytr").hide();
+                var trecamount = 0;
+                $(".pubpaywtr .pubpayamount").each(function(){
+                    trecamount = trecamount + parseFloat($(this).html());
+                })
+                $("#amount-rec p").html(trecamount);
+                if(tearnwi.indexOf('%') != -1){
+                    if(parseFloat(tearnwi.substring(0,tearnwi.indexOf('%'))) < 0){
+                        $("#tearnxi-arrow").css({'border-bottom':'none','border-top':'10px solid #00F148','bottom':'-10px'});
+                    }else{
+                        $("#tearnxi-arrow").css({'border-bottom':'10px solid #00F148','border-top':'none','bottom':'25px'});
+                    }
+                }else{
+                    if(parseFloat(tearnwi.substring(0,) < 0)){
+                        $("#tearnxi-arrow").css({'border-bottom':'none','border-top':'10px solid #00F148','bottom':'-10px'});
+                    }else{
+                        $("#tearnxi-arrow").css({'border-bottom':'10px solid #00F148','border-top':'none','bottom':'25px'});
+                    }
+                }
+            }else if(option == 'Today'){
+                $("#tearnx").html(tearnd);
+                $("#tearnxi").html(tearndi);
+                $(".pubpaymtr").hide();
+                $(".pubpaywtr").hide();
+                $(".pubpaydtr").show();
+                $(".pubpayytr").hide();
+                var trecamount = 0;
+                $(".pubpaydtr .pubpayamount").each(function(){
+                    trecamount = trecamount + parseFloat($(this).html());
+                })
+                $("#amount-rec p").html(trecamount);
+                if(tearndi.indexOf('%') != -1){
+                    if(parseFloat(tearndi.substring(0,tearndi.indexOf('%'))) < 0){
+                        $("#tearnxi-arrow").css({'border-bottom':'none','border-top':'10px solid #00F148','bottom':'-10px'});
+                    }else{
+                        $("#tearnxi-arrow").css({'border-bottom':'10px solid #00F148','border-top':'none','bottom':'25px'});
+                    }
+                }else{
+                    if(parseFloat(tearndi.substring(0,) < 0)){
+                        $("#tearnxi-arrow").css({'border-bottom':'none','border-top':'10px solid #00F148','bottom':'-10px'});
+                    }else{
+                        $("#tearnxi-arrow").css({'border-bottom':'10px solid #00F148','border-top':'none','bottom':'25px'});
+                    }
+                }
+            }else if(option == 'This year'){
+                $("#tearnx").html(tearny);
+                $("#tearnxi").html(tearnyi);
+                $(".pubpaymtr").hide();
+                $(".pubpaywtr").hide();
+                $(".pubpaydtr").hide();
+                $(".pubpayytr").show();
+                var trecamount = 0;
+                $(".pubpayytr .pubpayamount").each(function(){
+                    trecamount = trecamount + parseFloat($(this).html());
+                })
+                $("#amount-rec p").html(trecamount);
+                if(tearnyi.indexOf('%') != -1){
+                    if(parseFloat(tearnyi.substring(0,tearnyi.indexOf('%'))) < 0){
+                        $("#tearnxi-arrow").css({'border-bottom':'none','border-top':'10px solid #00F148','bottom':'-10px'});
+                    }else{
+                        $("#tearnxi-arrow").css({'border-bottom':'10px solid #00F148','border-top':'none','bottom':'25px'});
+                    }
+                }else{
+                    if(parseFloat(tearnyi.substring(0,) < 0)){
+                        $("#tearnxi-arrow").css({'border-bottom':'none','border-top':'10px solid #00F148','bottom':'-10px'});
+                    }else{
+                        $("#tearnxi-arrow").css({'border-bottom':'10px solid #00F148','border-top':'none','bottom':'25px'});
+                    }
+                }
+            }
+        })
+
+        function csrfSafeMethod(method) {
+		    // these HTTP methods do not require CSRF protection
+		    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+		}
+
+        $(function () {
+        	var pubname = $("#pubname").val();
+        	var filecount = 0;
+    'use strict';
+    // Change this to the location of your server-side upload handler:
+    var url = '/publisher',
+    csrftoken = $('input[name=csrfmiddlewaretoken]').val(),
+        uploadButton = $('<button/>')
+            .addClass('btn btn-primary clickermain')
+            .prop('disabled', true)
+            .on('click', function () {
+                var $this = $(this),
+                    data = $this.data();
+                $this
+                    .off('click')
+                    .text('Abort')
+                    .on('click', function () {
+                        $this.remove();
+                        data.abort();
+                    });
+                data.submit().always(function () {
+                    $this.remove();
+                });
+            });
+            uploadButton.css('display','none');
+    $("#upload-btn").click(function(){
+    	$(".clickermain").each(function(){
+            $(this).trigger('click');
+    	})
+    })
+    $('#fileupload').fileupload({
+        url: url,
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type)) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        },
+        formData : {'publisher':pubname},
+        dataType: 'json',
+        autoUpload: false,
+    }).on('fileuploadadd', function (e, data) {
+        $.each(data.files, function (index, file) {
+            filecount = filecount + 1;
+        });
+        if(filecount == 1){
+        	$("#upload-message").html(filecount + ' file selected!');
+        }else{
+        	$("#upload-message").html(filecount + ' files selected!');
+        } 
+        $(".dz-message").hide();
+        data.context = $('<div/>').appendTo('#files');
+        $.each(data.files, function (index, file) {
+            var node = $('<span/>')
+            if (!index) {
+                node
+                    .append(uploadButton.clone(true).data(data));
+            }
+            node.appendTo(data.context);
+        });
+    }).on('fileuploadprocessalways', function (e, data) {
+        var index = data.index,
+            file = data.files[index],
+            node = $(data.context.children()[index]);
+        if (file.preview) {
+            node
+                .prepend('<br>')
+                .prepend(file.preview);
+        }
+        if (file.error) {
+            node
+                .append('<br>')
+                .append($('<span class="text-danger"/>').text(file.error));
+        }
+        if (index + 1 === data.files.length) {
+            data.context.find('button')
+                .text('Upload')
+                .prop('disabled', !!data.files.error);
+        }
+    }).on('fileuploadprogressall', function (e, data) {
+        var progress = parseInt(data.loaded / data.total * 100, 10);
+        $("#progress").show();
+        $('#progress .progress-bar').css(
+            'width',
+            progress + '%'
+        );
+    }).on('fileuploaddone', function (e, data) {
+        $("#upload-message").html('Files uploaded!');
+        $("#progress").hide();
+    }).on('fileuploadfail', function (e, data) {
+        $("#upload-message").html('Files uploaded!');
+        $("#progress").hide();
+    })
+});
+        $(".pub-booktr").mouseover(function(){
+        	$(this).css({'background-color':'#E7BCE7'})
+        	$(this).find('.pub-bookname').css({'color':'#851EA1'});
+            $(this).find('.pub-bookbuy').css({'color':'#851EA1'});
+            $(this).find('.pub-bookrent').css({'color':'#851EA1'});
+            $(this).find('.pub-bookearn').css({'color':'#851EA1'});
+        })
+        $(".pub-booktr").mouseleave(function(){
+        	$(this).css({'background-color':'white'})
+        	$(this).find('.pub-bookname').css({'color':'#3B3B3B'});
+            $(this).find('.pub-bookbuy').css({'color':'#3B3B3B'});
+            $(this).find('.pub-bookrent').css({'color':'#3B3B3B'});
+            $(this).find('.pub-bookearn').css({'color':'#3B3B3B'});
+        })
+        var pbooknamearr = {{ pbooknamearr|safe }};
+        $("#pub-booksearch").keyup(function(){
+        	var text = $(this).val();
+        	var parray = []
+        	if(text != ''){
+        		for(var i=0;i<pbooknamearr.length;i++){
+        			if(pbooknamearr[i].toLowerCase().indexOf(text.toLowerCase()) != -1){
+                        parray.push(pbooknamearr[i]);
+        			}
+        		}
+        		$(".pub-bookname").each(function(){
+        			if(parray.indexOf($(this).html()) == -1){
+                        $(this).parent().hide();
+        			}else{
+        				$(this).parent().show();
+        			}
+        		})
+        	}else{
+        		$(".pub-booktr").show();
+        	}
+        })
+
+        $("#book-sorter li:nth-child(1)").click(function(){
+        	var $container = $("#pub-bookcore tbody"),
+		    $tickets = $('.pub-booktr').detach()
+		    $tickets = $tickets.sort(function(a, b) {
+			    var aVal = $(a).find('.pub-bookname').text(),
+			        bVal = $(b).find('.pub-bookname').text();
+			    return aVal > bVal;
+			});
+
+			$container.append($tickets);
+	    })
+
+        $("#book-sorter li:nth-child(2)").click(function(){
+        	var $container = $("#pub-bookcore tbody"),
+		    $tickets = $('.pub-booktr').detach()
+		    $tickets = $tickets.sort(function(a, b) {
+			    var aVal = 1 * $(a).find('.pub-bookearn').text(),
+			        bVal = 1 * $(b).find('.pub-bookearn').text();
+			    return aVal < bVal;
+			});
+
+			$container.append($tickets);
+	    })
+
+        $("#book-sorter li:nth-child(3)").click(function(){
+        	var $container = $("#pub-bookcore tbody"),
+		    $tickets = $('.pub-booktr').detach()
+		    $tickets = $tickets.sort(function(a, b) {
+			    var aVal = 1 * $(a).find('.pub-bookbuy').text(),
+			        bVal = 1 * $(b).find('.pub-bookbuy').text();
+			    return aVal < bVal;
+			});
+
+			$container.append($tickets);
+	    })
+
+        $("#book-sorter li:nth-child(4)").click(function(){
+        	var $container = $("#pub-bookcore tbody"),
+		    $tickets = $('.pub-booktr').detach()
+		    $tickets = $tickets.sort(function(a, b) {
+			    var aVal = 1 * $(a).find('.pub-bookrent').text(),
+			        bVal = 1 * $(b).find('.pub-bookrent').text();
+			    return aVal < bVal;
+			});
+
+			$container.append($tickets);
+	    })
+        $("#pub-booksort").click(function(){
+        	if($("#book-sorter").css('display') == 'none'){
+        		$("#book-sorter").show();
+        		$("#pub-booknav .fa-angle-up").show();
+        		$("#pub-booknav .fa-angle-down").hide();
+        	}else{
+        		$("#book-sorter").hide();
+        		$("#pub-booknav .fa-angle-up").hide();
+        		$("#pub-booknav .fa-angle-down").show();
+        	}
+        	
+        })
+    </script>
+</body>
+</html>

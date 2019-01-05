@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Wishlist{% endblock %}
+{% block style %}
+	
+{% endblock %}
+{% block activew %}class="active"{% endblock %}    
+{% block content %}
+	
+	<div class="wl-container">
+		<div class="wl-title">
+			<h2>WISHLIST<i class="fa fa-heart" style="font-size:24px;color:red;margin-left: 10px"></i></h2>
+		</div>
+		<div class="wl-cards">
+		{% for item in list %}
+			<div class="card" data-eid="{{ item.ebook.id }}">
+			  <img src="/{{ item.ebook.img }}" alt="Ebook">
+			  <i class="fa fa-heart" style="font-size:16px;color:red;position: absolute;top: 8px;right: 10px;"></i>
+			  <div class="container">
+			    <p class="title" data-id={{ forloop.counter }}>{{ item.ebook.name }}</p> 
+			    <p class="author" data-id={{ forloop.counter }}>{{ item.ebook.author }}</p>
+			    <p class="stars" data-rating="{{ item.ebook.rating }}"></p> 
+			    <span class="nprice"><b>&#x20b9; {{ item.ebook.price }}</b></span>
+			    <span class="oprice"></span>
+			    {% csrf_token %}
+			    <button class="wl-atc">ADD TO CART</button>
+			    {% csrf_token %}
+			    <button class="wl-remove">Remove</button>
+			  </div>
+			</div>
+    	{% endfor %}	
+    	</div>
+	</div>
+	
+{% endblock %}

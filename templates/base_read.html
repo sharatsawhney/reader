@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Reader Earth is India's largest E-book marketplace with e-books in all categories ;that allows the renting and purchasing of e-books.">
+    <meta name="author" content="Reader Earth-Renting E-books">
+    <title>{% block title %}Home{% endblock %} | Reader Earth:Rent Ebooks at an affordable rate</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/prettyPhoto.css' %}" rel="stylesheet">
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+    <link href="{% static 'css/responsive.css' %}" rel="stylesheet">
+	<link href="{% static 'css/animations.css' %}" rel="stylesheet">
+	<link href="{% static 'css/animations-ie-fix.css' %}" rel="stylesheet">
+	<link href="{% static 'css/animate.css' %}s" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+         
+    <link rel="shortcut icon" href="{% static 'images/ico/icon.png' %}">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{% static 'images/ico/apple-touch-icon-144-precomposed.png' %}">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{% static 'images/ico/apple-touch-icon-114-precomposed.png' %}">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{% static 'images/ico/apple-touch-icon-72-precomposed.png' %}">
+    <link rel="apple-touch-icon-precomposed" href="{% static 'images/ico/apple-touch-icon-57-precomposed.png' %}">
+    <style type="text/css">
+    	.compress-nav li{
+          margin-right:-40px;
+
+      }
+      @media only screen and (max-width:1200px){
+          .compress-nav li{
+          margin-right:0px;
+
+      }
+      }
+	  @media only screen and (max-width:991px){
+		  .navbar .nav li{
+		     margin-bottom:-5px !important;
+	    }
+	  }
+	  
+	  @media only screen and (max-width:991px){
+	.navbar-nav{
+		margin-top:5px;
+		margin-right:-26px !important;
+	}
+	.navbar-nav li{
+		margin-right:-5px;
+	}
+	.compress-nav{
+		margin-left:40px;
+	}
+	.compress-nav li{
+		margin-right:-10px !important;
+	}
+}
+@media only screen and (max-width:767px){
+.navbar-collapse{
+	background-color:lightblue;
+	width:99%;
+	overflow-x:hidden;
+}
+}
+ #login-modal .modal-content{
+	background-color:#e5e5ff !important;
+}
+#register-modal .modal-content{
+	background-color:#e5e5ff !important;
+}
+{% block style %}
+{% endblock %}
+    </style>
+    
+</head>
+
+<body class="homepage">   
+    <header id="header">
+       
+        <nav class="navbar navbar-inverse navbar-fixed-top special-navbar" style="height:60px" >
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/"><img src="images/ico/icon.png" alt="logo" height="60px" style="margin-top:-10px"></a>
+                </div>
+				
+                <div class="collapse navbar-collapse navbar-right">
+                    <ul class="nav navbar-nav">
+                        <li><i class="fa fa-arrow-circle-left" id="leftread"></i></li>
+                        <li><i class="fa fa-arrow-circle-right" id="rightread"></i></li>
+                        <li><h2 id="readzoomin">+</h2></li>
+                        <li><h2 id="readzoomout">-</h2></li>
+                    </ul>
+					<ul class="nav navbar-nav compress-nav">
+                        <li><h4 id="fts">Fit to Screen</h4></li>
+                       
+						<li><a href="/dashboard/">Dashboard</a></li>
+						<li><a href="/logout/" class="logout-btn">Logout</a></li>
+						
+                        <li><a data-toggle="modal" data-target="#login-modal" href="">Login/Register</a></li>
+						
+						
+					</ul>						
+                </div>
+            </div>
+        </nav>
+		
+    </header>
+	
+    {% block content %}
+    {% endblock %}
+
+	
+
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.prettyPhoto.js' %}"></script>
+    <script src="{% static 'js/jquery.isotope.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/wow.min.js' %}"></script>
+    <script src="{% static 'js/css3-animate-it.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/turn.min.js' %}"></script>
+    <script>
+      $(".loginchangebtn").click(function(){
+	    $('#login-modal').modal('hide');
+	  });
+     $(".registerchangebtn").click(function(){
+        $('#register-modal').modal('hide');
+     });
+	 
+	/* setInterval(function(){
+		$.get("repeat.php", function(data){
+			var repeatdata = data.toString();
+			
+			var wq = repeatdata.slice(0,repeatdata.indexOf(","));
+			var cq = repeatdata.slice(repeatdata.indexOf(",")+1);
+			
+			
+			$(".wq").html(wq);
+			$(".cq").html(cq);
+			
+		});
+	},100);*/
+	
+	$('.ssubmit').click(function(e){
+		e.preventDefault();
+		var subemail = $(".subemail").val();
+		if(subemail==""){
+			$(".sub-reply").html("Please enter an Email Id!")
+		}else{
+			$.ajax({
+				url: '/subscribe/',
+				type:'POST',
+				data:
+				{
+					'subemail': subemail,
+                    'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{
+					if(data.indexOf('True') != -1){
+                        $(".sub-reply").html("You have been successfully subscribed!")
+					}
+					else{
+						$(".sub-reply").html("You are already subscribed!")
+					}
+					
+				},
+				error: function(xhr,status,error){
+					alert('There is some issue! Please try again later!');
+				}            
+			});
+		}
+    });
+    $(".login-submit").click(function(e){
+        e.preventDefault();
+        var username = $(".login-username").val();
+        var password = $(".login-password").val();
+        if(username=="" || password==""){
+        	$(".login-reply").html("Please Fill the Details!");
+        }else{
+        	$.ajax({
+				url: '/check_login/',
+				type:'POST',
+				data:
+				{
+					'username': username,
+					'password': password,
+                    'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{
+					if(data == 'Login Successful'){
+                        $("#login-modal").hide();
+                        location.reload();
+					}else{
+                        $(".login-reply").html(data)
+					}
+				}          
+			});
+        }
+    });
+
+    $(".register-submit").click(function(e){
+        e.preventDefault();
+        var email = $(".register-email").val();
+        var username = $(".register-username").val();
+        var password = $(".register-password").val();
+        if(username=="" || password=="" || email==""){
+        	$(".register-reply").html("Please Fill the Details!");
+        }else{
+        	$.ajax({
+				url: '/register/',
+				type:'POST',
+				data:
+				{
+					'email': email,
+					'username': username,
+					'password': password,
+                    'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{
+                    $(".register-reply").html(data)
+					
+				}          
+			});
+        }
+    });
+
+    $(".cart-btn").click(function(){
+        if($(".logout-btn").html() == "Logout"){
+        	if($(".durationselect").val() != null){
+	            var pathname = window.location.pathname;
+	            var number1 = pathname.substr(pathname.indexOf("/detail/") + 8);
+	            var ebooknumber = number1.substr(0,number1.indexOf("/"));
+	            var duration = $(".durationselect").val();
+	            $.ajax({
+					url: '/add_cart/',
+					type:'POST',
+					data:
+					{
+						'ebooknumber': ebooknumber,
+						'duration': duration,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".cart-reply").html(data);
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+            }else{
+            	$(".cart-reply").html("Please select a duration!");
+            }
+        }else{
+        	$(".cart-reply").html("You must login to continue!");
+        }
+    });
+
+    $(".durationcartselect").on('change',function(){
+        var duration = this.value;
+        var productid = $(this).attr('data-id');
+        var ebookid = $(".hiddenid[data-id=" + productid + "]").html();
+        $.ajax({
+					url: '/change_duration/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebookid,
+						'duration': duration,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".price-span[data-id=" + productid + "]").html(data['nprice']);
+	                    $(".totalprice strong").html("Rs. " + data['tprice']);
+	                    $(".ordertotal strong").html("Rs. " + data['tprice']);
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    });
+
+    $(".deletecart").click(function(){
+        var productid = $(this).attr('data-id');
+        var ebookid = $(".hiddenid[data-id=" + productid + "]").html();
+        $.ajax({
+					url: '/delete_cart/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebookid,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    if(data == 'Success'){
+	                    	location.reload();
+	                    }
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    });
+
+    $(".wremove").click(function(){
+        var productid = $(this).attr('data-id');
+        var ebookid = $(".hiddenidw[data-id=" + productid + "]").html();
+        $.ajax({
+					url: '/delete_wishlist/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebookid,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    if(data == 'Success'){
+	                    	location.reload();
+	                    }
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    });
+
+    $(".mtc").click(function(){
+        var productid = $(this).attr('data-id');
+        var ebookid = $(".hiddenidw[data-id=" + productid + "]").html();
+        $.ajax({
+					url: '/mtc/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebookid,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    if(data == 'Success'){
+	                    	location.reload();
+	                    }
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    });
+
+    $(".towishlist").click(function(){
+        var productid = $(this).attr('data-id');
+        var ebookid = $(".hiddenid[data-id=" + productid + "]").html();
+        $.ajax({
+					url: '/mtw/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebookid,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    if(data == 'Success'){
+	                    	location.reload();
+	                    }
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    });
+
+    $("#rightread").click(function(){
+    	var pages = parseInt($("#hiddenpages").html());
+    	var source1 = $("#img1").attr("src");
+    	var slidenum1 = parseInt(source1.slice(-6,-4));
+    	var source2 = $("#img2").attr("src");
+    	var slidenum2 = parseInt(source2.slice(-6,-4));
+    	slidenum1 = slidenum1 + 2;
+    	slidenum2 = slidenum2 + 2;
+    	if(slidenum1 < 10 ){
+            var slide1 = slidenum1.toString();
+            slide1 = '0' + slide1;
+    	}else{
+            var slide1 = slidenum1.toString();
+    	}
+
+    	if(slidenum2 < 10 ){
+            var slide2 = slidenum2.toString();
+            slide2 = '0' + slide2;
+    	}else{
+            var slide2 = slidenum2.toString();
+    	}
+    	if(pages-parseInt(slide1) >= 0){
+    		var src1 = '/static/theeffort/theeffort-' + slide1 + '.png';
+    		$("#img1").attr("src",src1);
+    	}
+    	if(pages-parseInt(slide2) >= 0){
+    		var src2 = '/static/theeffort/theeffort-' + slide2 + '.png';
+    		$("#img2").attr("src",src2);
+    	}else if(pages-parseInt(slide2) < 0 ){
+    		$("#img2").attr("src","/static/white.png");
+    	}
+       
+    })
+
+    $("#leftread").click(function(){
+    	var pages = parseInt($("#hiddenpages").html());
+    	var source1 = $("#img1").attr("src");
+    	var slidenum1 = parseInt(source1.slice(-6,-4));
+    	var source2 = $("#img2").attr("src");
+    	var slidenum2 = parseInt(source2.slice(-6,-4));
+    	slidenum1 = slidenum1 - 2;
+    	slidenum2 = slidenum2 - 2;
+    	if(slidenum1 < 10 ){
+            var slide1 = slidenum1.toString();
+            slide1 = '0' + slide1;
+    	}else{
+            var slide1 = slidenum1.toString();
+    	}
+
+    	if(slidenum2 < 10 ){
+            var slide2 = slidenum2.toString();
+            slide2 = '0' + slide2;
+    	}else{
+            var slide2 = slidenum2.toString();
+    	}
+    	if(parseInt(slide1) > 0){
+    		var src1 = '/static/theeffort/theeffort-' + slide1 + '.png';
+    		$("#img1").attr("src",src1);
+    	}
+    	if(parseInt(slide2) > 0){
+    		var src2 = '/static/theeffort/theeffort-' + slide2 + '.png';
+    		$("#img2").attr("src",src2);
+    	}else if(source2 == '/static/white.png'){
+    		var term = (pages-1).toString()
+    		var src2 = '/static/theeffort/theeffort-' + term + '.png';
+    		$("#img2").attr("src",src2);
+    	}
+       
+    })
+    
+    $(document).keydown(function(e){
+        e = e || window.event;
+        if(e.keyCode == '37'){
+        	var pages = parseInt($("#hiddenpages").html());
+	    	var source1 = $("#img1").attr("src");
+	    	var slidenum1 = parseInt(source1.slice(-6,-4));
+	    	var source2 = $("#img2").attr("src");
+	    	var slidenum2 = parseInt(source2.slice(-6,-4));
+	    	slidenum1 = slidenum1 - 2;
+	    	slidenum2 = slidenum2 - 2;
+	    	if(slidenum1 < 10 ){
+	            var slide1 = slidenum1.toString();
+	            slide1 = '0' + slide1;
+	    	}else{
+	            var slide1 = slidenum1.toString();
+	    	}
+
+	    	if(slidenum2 < 10 ){
+	            var slide2 = slidenum2.toString();
+	            slide2 = '0' + slide2;
+	    	}else{
+	            var slide2 = slidenum2.toString();
+	    	}
+	    	if(parseInt(slide1) > 0){
+	    		var src1 = '/static/theeffort/theeffort-' + slide1 + '.png';
+	    		$("#img1").attr("src",src1);
+	    	}
+	    	if(parseInt(slide2) > 0){
+	    		var src2 = '/static/theeffort/theeffort-' + slide2 + '.png';
+	    		$("#img2").attr("src",src2);
+	    	}else if(source2 == '/static/white.png'){
+	    		var term = (pages-1).toString()
+	    		var src2 = '/static/theeffort/theeffort-' + term + '.png';
+	    		$("#img2").attr("src",src2);
+    	    }
+        }else if(e.keyCode == '39'){
+             var pages = parseInt($("#hiddenpages").html());
+	    	var source1 = $("#img1").attr("src");
+	    	var slidenum1 = parseInt(source1.slice(-6,-4));
+	    	var source2 = $("#img2").attr("src");
+	    	var slidenum2 = parseInt(source2.slice(-6,-4));
+	    	slidenum1 = slidenum1 + 2;
+	    	slidenum2 = slidenum2 + 2;
+	    	if(slidenum1 < 10 ){
+	            var slide1 = slidenum1.toString();
+	            slide1 = '0' + slide1;
+	    	}else{
+	            var slide1 = slidenum1.toString();
+	    	}
+
+	    	if(slidenum2 < 10 ){
+	            var slide2 = slidenum2.toString();
+	            slide2 = '0' + slide2;
+	    	}else{
+	            var slide2 = slidenum2.toString();
+	    	}
+	    	if(pages-parseInt(slide1) >= 0){
+	    		var src1 = '/static/theeffort/theeffort-' + slide1 + '.png';
+	    		$("#img1").attr("src",src1);
+	    	}
+	    	if(pages-parseInt(slide2) >= 0){
+	    		var src2 = '/static/theeffort/theeffort-' + slide2 + '.png';
+	    		$("#img2").attr("src",src2);
+	    	}else if(pages-parseInt(slide2) < 0 ){
+	    		$("#img2").attr("src","/static/white.png");
+	    	}
+          
+        }
+    })
+    var zoomLevel = 1.0;
+    var marLevel = 0;
+
+    $("#readzoomin").click(function(){
+    	if(zoomLevel < 1.5){
+	    	var newLevel = zoomLevel+0.1;
+	    	var marginLevel = marLevel + 1;
+	    	$("#readframe").css('transform','scale('+newLevel + ',' + newLevel + ')');
+	        zoomLevel = zoomLevel + 0.1;
+	        $("#readframe").css("margin-top",marginLevel + '%');
+	        marLevel = marLevel + 1;
+	    }
+    });
+
+    $("#readzoomout").click(function(){
+    	if(zoomLevel >0.6){
+	    	var newLevel = zoomLevel-0.1;
+	    	var marginLevel = marLevel - 1;
+	    	$("#readframe").css('transform','scale('+newLevel + ',' + newLevel + ')');
+	        zoomLevel = zoomLevel -0.1;
+	        $("#readframe").css("margin-top",marginLevel + '%');
+	        marLevel = marLevel - 1;
+	    }
+    });
+
+    var height = document.body.scrollHeight-110;
+    $("#fts").click(function(){
+    	$("#img1").css('width','50%');
+    	$("#img1").css('margin-top','60px');
+    	$("#img1").css('margin-left','0px');
+    	$("#img1").css('margin-bottom','0px');
+    	$("#img1").css('height',height + 'px');
+    	$("#img2").css('width','50%');
+    	$("#img2").css('margin-top','60px');
+    	$("#img2").css('margin-left','50%');
+    	$("#img2").css('margin-bottom','0px');
+    	$("#img2").css('height',height + 'px');
+    })
+
+
+    $(window).ready(function() {
+		$('#magazine').turn({
+							display: 'double',
+							acceleration: true,
+							gradients: !$.isTouch,
+							elevation:50,
+							when: {
+								turned: function(e, page) {
+									/*console.log('Current view: ', $(this).turn('view'));*/
+								}
+							}
+						});
+	});
+
+	$(window).bind('keydown', function(e){
+		
+		if (e.keyCode==37)
+			$('#magazine').turn('previous');
+		else if (e.keyCode==39)
+			$('#magazine').turn('next');
+			
+	});
+
+    </script>
+    
+</body>
+</html>
+
+

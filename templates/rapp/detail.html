@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Shop{% endblock %}
+{% block style %}
+.mp-1{
+	margin-top: -15px;
+}
+{% endblock %}
+{% block content %}
+	<div class="detail-container">
+	    <div class="detail-1">
+	    	<div class="mp-1-wrapper">
+			<div class="mp-1">
+				<span>Genre<i class="fa fa-angle-down" aria-hidden="true"></i><i class="fa fa-angle-up" aria-hidden="true" style="display: none"></i></span>
+				<span><a href="/search/?nr=true">New Releases</a></span>
+				<span><a href="/search/?bs=true">Best Seller</a></span>
+				<span><a href="/search/">Top Charts</a></span>
+				<span><a href="/search/">Offer</a></span>
+				<div class="shop-genre-list row">
+					<div class="col-sm-6">
+						<ul class="shop-genre-list-ul">
+							<li><a href="/search/?cat=Self-Development">Self-Development</a></li>
+							<li><a href="/search/?cat=Fiction,+Literature+%26+Novels">Fiction, Literature & Novels</a></li>
+							<li><a href="/search/?cat=Health+%26+Fitness">Health & Fitness</a></li>
+							<li><a href="/search/?cat=Academic+Books">Academic Books</a></li>
+							<li><a href="/search/?cat=Business+%26+Finance">Business & Finance</a></li>
+							<li><a href="/search/?cat=Religion+%26+Spirituality">Religion & Spirituality</a></li>
+						</ul>
+					</div>
+					<div class="col-sm-6">
+						<ul>
+							<li><a href="/search/?cat=Children's+Books">Children's Books</a></li>
+							<li><a href="/search/?cat=Competitive+Books">Competitive Books</a></li>
+							<li><a href="/search/?cat=Biographies+%26+Memoirs">Biographies & Memoirs</a></li>
+							<li><a href="/search/?cat=Short+Stories+%26+Poetry">Short Stories & Poetry</a></li>
+							<li><a href="/search/?cat=Science+%26+Technology">Science & Technology</a></li>
+							<li><a href="/search/?cat=Young+Adult">Young Adult</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		    </div>
+		    <div class="detail-core">
+		    	<div class="detail-img" data-img="/{{ebook.img}}">
+		    		<i class="fa fa-heart" style="font-size:18px;color:rgb(178,178,178);"></i>
+		    	</div>
+		    	<div class="detail-text">
+		    		<h3 class="detail-name">{{ ebook.name }}</h3>
+		    		<div class="detail-text-wrapper">
+		    		<span class="detail-author">By {{ ebook.author }}</span>
+		    		<p>
+		    		<span class="detail-stars" data-rating="{{ ebook.rating }}"></span>
+		    		<span class="detail-starusers">({{ ebook.ratedusers }} reviews)</span>
+		    	    </p>
+		    		<a class="detail-sample" href="/sample/{{ebook.id}}">Read free sample</a>
+		    		<span class="detail-atc"><i class="fa fa-shopping-cart" aria-hidden="true"></i><span>Add to Cart</span></span>
+		    		<p class="detail-price-wrapper">
+		    		<span class="detail-nprice" data-price="{{ ebook.price }}">&#8377; {{ ebook.price }}</span>
+		    		<span class="detail-oprice"></span>
+		    		<span class="detail-discount"></span>
+		    	    </p>
+		    	    <p class="detail-buy-wrapper">
+		    		<button class="detail-buy">Buy <span>Ebook</span></button>
+		    		<span class="detail-or">or</span>
+		    		<span class="detail-duration-title">Select duration</span>
+		    		<select class="detail-rentselect">
+		    			{% for opt in ebook.dayopt %}
+		    			<option value="{{ opt }}">{{ opt }}</option>
+		    			{% endfor %}
+		    		</select>
+		    		<button class="detail-rent">Rent</button>
+		    		<span class="detail-lmore">Learn more</span>
+		    	    </p>
+		    	    </div>
+		    	</div>
+		    	<span class="detail-special"></span>
+		    	<div class="detail-description">
+		    		<div class="detail-description-text">
+		    			{% autoescape off %}
+		    			{{ ebook.description }}
+		    			{% endautoescape %}
+		    		</div>
+		    		<span class="detail-rmore">Read More</span>
+		    	</div>
+		    	<div class="detail-rating">
+		    		<p class="detail-rating-text">{{ ebook.rating }}</p>
+		    		<p class="detail-nrating">({{ebook.ratedusers}} reviews)</p>
+		    		<p class="detail-rate-title">Rate the book</p>
+		    		{% csrf_token %}
+		    		<p class="detail-rstars">
+		    			<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+		    		</p>
+		    	</div>
+		    	<div class="detail-add">
+		    		<h3 class="detail-add-title"><span>Additional Details</span></h3>
+		    		<table class="detail-add-table">
+		    			<tbody>
+		    				<tr>
+		    					<td>Pages</td>
+		    					<td>{{ ebook.pages }}</td>
+		    				</tr>
+		    				<tr>
+		    					<td>Publisher</td>
+		    					<td>{{ ebook.publisher.name }}</td>
+		    				</tr>
+		    				<tr>
+		    					<td>Published On</td>
+		    					<td>{{ ebook.publishdate }}</td>
+		    				</tr>
+		    				<tr>
+		    					<td>Language</td>
+		    					<td>{{ ebook.language }}</td>
+		    				</tr>
+		    				<tr>
+		    					<td>Genre</td>
+		    					<td>{{ ebook.category.cat }}</td>
+		    				</tr>
+		    				<tr>
+		    					<td>ISBN</td>
+		    					<td>{{ ebook.isbn }}</td>
+		    				</tr>
+		    			</tbody>
+		    		</table>
+		    	</div>
+		    </div>
+		    <h3 class="detail-sug-title">Other books by this {{sftitle}}</h3>
+		    {% if sfless == False %}
+		    <div class="detail-sug-wrapper">
+		    	{% for book in sfbooks %}
+				<div class="card" data-eid="{{ book.id }}">
+				  <i class="fa fa-heart" style="font-size:16px;color:#E4E4E4;position: absolute;top: 10px;margin-left: 135px;"></i>
+    			  <a href="/detail/{{book.id}}/">
+				  <img src="/{{ book.img }}" alt="Ebook">
+				  <div class="container">
+				    <p class="title" data-id={{ forloop.counter }}>{{ book.name }}</p> 
+				    <p class="author" data-id={{ forloop.counter }}>{{ book.author }}</p>
+				    <p class="stars" data-rating="{{ book.rating }}"></p> 
+				    <span class="nprice"><b>&#x20b9; {{ book.price }}</b></span>
+				    <span class="oprice"></span>
+				  </div>
+				  </a>
+				</div>
+				{% endfor %}
+		    </div>
+		    {% else %}
+		    <div class="detail-sug-wrapper2">
+		    	{% for book in sfbooks %}
+				<div class="card" data-eid="{{ book.id }}">
+				  <i class="fa fa-heart" style="font-size:16px;color:#E4E4E4;position: absolute;top: 10px;margin-left: 135px;"></i>
+    			  <a href="/detail/{{book.id}}/">
+				  <img src="/{{ book.img }}" alt="Ebook">
+				  <div class="container">
+				    <p class="title" data-id={{ forloop.counter }}>{{ book.name }}</p> 
+				    <p class="author" data-id={{ forloop.counter }}>{{ book.author }}</p>
+				    <p class="stars" data-rating="{{ book.rating }}"></p> 
+				    <span class="nprice"><b>&#x20b9; {{ book.price }}</b></span>
+				    <span class="oprice"></span>
+				  </div>
+				  </a>
+				</div>
+				{% endfor %}
+		    </div>
+		    {% endif %}
+	    </div>
+	    <div class="detail-2">
+	    	<span class="detail-similar-title">Similar Ebooks</span>
+	    	<a href="/search/" class="detail-s-viewall">View All</a>
+	    	<div class="detail-similar">
+	    		{% for book in ebooks %}
+	    		<div class="detail-similar-book" data-id="{{ book.id }}">
+	    			<i class="fa fa-heart" style="font-size:12px;color:rgb(178,178,178);"></i>
+	    			<a href="/detail/{{book.id}}/">
+	    			<div class="detail-similar-img" data-img="/{{book.img}}">
+		    		  
+		    	    </div>
+		    	    <div class="detail-similar-rating">
+		    	    	<p class="detail-similar-stars" data-rating="{{ book.rating}}"></p>
+		    	    	<span class="detail-similar-starusers">({{ book.ratedusers }} reviews)</span>
+		    	    </div>
+		    	    <div class="detail-similar-text">
+		    	    	<h4 class="detail-similar-name">{{ book.name }}</h4>
+		    	    	<p class="detail-similar-author">{{ book.author }}</p>
+		    	    	<div class="detail-similar-description">
+			    			{% autoescape off %}
+			    			{{ book.description }}
+			    			{% endautoescape %}
+			    		</div>
+		    	    	<p class="detail-similar-price">
+		    	    		<span class="detail-similar-nprice" data-price="{{ book.price }}">&#8377; {{ book.price }}</span>
+		    	    		<span></span>
+		    	    		<span class="detail-similar-oprice"></span>
+		    	    		<span class="detail-similar-discount"></span>
+		    	    	</p>
+		    	    </div>
+		    	    </a>
+	    		</div>
+	    		{% endfor %}
+	    	</div>
+	    </div>
+	</div>
+	<p style="display: none" class="hidden-detail-ebook-id">{{ ebook.id }}</p>
+	
+{% endblock %}

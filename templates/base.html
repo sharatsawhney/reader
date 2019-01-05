@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Reader Earth is India's largest E-book marketplace with e-books in all categories ;that allows the renting and purchasing of e-books.">
+    <meta name="author" content="Reader Earth-Renting E-books">
+    <meta name="google-site-verification" content="RP0t3LbjQ-DA79c58YxKZ5cny7D8xzLVUJtTEl0PiII" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-124179480-1"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-124179480-1');
+	</script>
+
+    <title>{% block title %}Home{% endblock %} | Reader Earth:Rent Ebooks at an affordable rate</title>
+    <link href="{% static 'cs/bootstrap.min.css' %}" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://kenwheeler.github.io/slick/slick/slick-theme.css"/>
+    <link href="{% static 'cs/main.css' %}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'cs/intlTelInput.css' %}">
+    <meta name="google-signin-client_id" content="18205974359-scm2ogghtt91dkgfb9id3lpprfnvd3f4.apps.googleusercontent.com">
+    <style type="text/css">
+    	.g-signin2{
+            margin-left:30%;
+            margin-top: 10px;
+            margin-bottom: -10px;
+            display: none;
+    	}
+{% block style %}
+{% endblock %}
+    </style>
+    
+</head>
+
+<body>   
+    <nav class="navbar">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand" href="/"></a>
+	    </div>
+
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	      <ul class="nav navbar-nav navbar-right">
+	        <li {% block activeh %}{% endblock %}><a href="/">Home</a></li>
+	        <li {% block activee %}{% endblock %}><a href="/search/">Shop</a></li>
+	        {% if user.is_authenticated %}
+	        <li {% block actived %}{% endblock %}><a href="/dashboard/">My Books</a></li>
+	        {% endif %}
+	        <li class="reader-shop-search-li"><input type="text" name="reader-shop-search-input" placeholder="Search" class="reader-shop-search-input">
+	        <svg class="reader-shop-search-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/><path d="M0 0h24v24H0z" fill="none"/></svg></li>
+	        {% if user.is_authenticated %}
+	        <li class="nav-logout"><a href="/logout/" onclick="signOut();" class="logout-btn">LOGOUT</a></li>
+	        {% else %}
+            <li><button id="navloginbtn">Login</button></li>
+			{% endif %}
+			<li {% block activeca %}{% endblock %}><a href="/cart/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/><path d="M0 0h24v24H0z" fill="none"/></svg></a></li>
+
+	      </ul>
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
+	<div id="bodyopaquer"></div>
+	<div id="loginModal" role="dialog">
+      	<div class="row">
+      		<div class="col-sm-5">
+      			<div class="heading">Login</div>
+      			<div class="sub-heading">Get access to thousands<br>of ebooks.</div>
+      			<img src="{% static 'images/login.png' %}">
+      		</div>
+      		<div class="col-sm-7">
+      			<button type="button" class="close loginclose" style="outline: none;">&times;</button>
+      			<div class="heading">LOGIN</div>
+      			<form method="post">
+      			  {% csrf_token %}
+      			    <div class="login-input-wrapper">
+	      				<input type="text" name="login-username" class="login-username" id="login-username" placeholder="Email">
+	      				<div class="login-reply-1"></div>
+	      			</div>
+	      			<div class="login-input-wrapper">
+	      				<input type="password" name="login-password" class="login-password" id="login-password" placeholder="Password">
+	      				<div class="login-reply-2"></div>
+	      			</div>
+      				<a href="/password_reset/" class="forgot">Forgot Password?</a>
+      				<button type="submit" class="btn btn-default login-submit submit">SUBMIT</button><br>
+      				<span id="loginsocialtext">Login With:</span>
+      				<i class="fa fa-google logingoogle" aria-hidden="true"></i>
+      				<i class="fa fa-facebook loginfacebook" aria-hidden="true"></i>
+      				<br>
+      				<div class="g-signin2" data-onsuccess="onSignIn"></div>
+      				<button type="button" class="btn btn-default loginchangebtn other">Create an Account</button><br>
+      			</form>
+      		</div>
+      	</div>
+    </div>
+	
+	<div id="registerModal" role="dialog">
+      	<div class="row">
+      		<div class="col-sm-5">
+      			<div class="heading">Register</div>
+      			<div class="sub-heading">Get access to thousands<br>of ebooks.</div>
+      			<img src="{% static 'images/login.png' %}">
+      		</div>
+      		<div class="col-sm-7">
+      			<button type="button" class="close loginclose" style="outline: none;">&times;</button>
+      			<div class="heading">REGISTER</div>
+      			<form method="post">
+      			  {% csrf_token %}
+      			    <div class="login-input-wrapper">
+      			        <input type="email" name="register-email" class="register-email" id="register-email" placeholder="Email">
+      			        <div class="register-reply-1"></div>
+      			        <div class="register-reply-4"></div>
+      			    </div>
+      			    <div class="login-input-wrapper">
+      				    <input type="password" name="register-password" class="register-password" id="register-password" placeholder="Password">
+      				    <div class="register-reply-2"></div>
+      				</div>
+      				<div class="login-input-wrapper">
+      				    <input type="password" name="register-confirm-password" class="register-confirm-password" id="register-confirm-password" placeholder="Confirm Password">
+      				    <div class="register-reply-3"></div>
+      				</div>
+      				<button type="submit" class="btn btn-default register-submit submit">SUBMIT</button><br>
+      				<span id="loginsocialtext">Register With:</span>
+      				<i class="fa fa-google logingoogle" aria-hidden="true"></i>
+      				<i class="fa fa-facebook loginfacebook" aria-hidden="true"></i>
+      				<br>
+      				<button type="button" class="btn btn-default registerchangebtn other">Already have an Account</button>
+      			</form>
+      		</div>
+        </div>
+	    <div class="loader"></div>
+    </div>
+    {% if user.is_authenticated %}
+        <p style="display: none" class="authcheck">True</p>
+    {% else %}
+        <p style="display: none" class="authcheck">False</p>
+    {% endif %}
+    {% block content %}
+    {% endblock %}
+
+	<div class="footer">
+		<div class="row">
+			<div class="col-sm-4 footer-1">
+				<img src="{% static 'images/logo.png' %}"><span class="title">ReaderEarth</span><br>
+				<span class="title-2">@ReaderEarth</span><br>
+				<span class="inform"><a>FAQ</a> / <a>Terms Of Use</a> / <a>Privacy Policy</a></span>
+			</div>
+			<div class="col-sm-4 footer-2">
+				<div class="topic">Links</div>
+				<div class="row">
+					<div class="col-sm-6">
+						<h4>Customer Service</h4>
+						<ul>
+							<li><a href="/contact/">Contact Us</a></li>
+							<li><a>FAQs</a></li>
+						</ul>
+					</div>
+					<div class="col-sm-6">
+						<h4>Company</h4>
+						<ul>
+							<li><a>About Us</a></li>
+							<li><a href="/contact/">Careers</a></li>
+					    </ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-4 footer-3">
+				<div class="topic">Follow Us</div>
+                <a href="https://www.facebook.com/ReaderEarth.2018/" target="_blank"><i class="fa fa-facebook first-child" aria-hidden="true" style="color: white"></i></a>
+                <a href="https://www.linkedin.com/company/readerearth/" target="_blank"><i class="fa fa-linkedin" aria-hidden="true" style="color: white"></i></a>
+                <a href="https://www.instagram.com/readerearth.2018/" target="_blank"><i class="fa fa-instagram" aria-hidden="true" style="color: white"></i></a><br>
+                <i class="fa fa-envelope mail-i" aria-hidden="true" style="color: white"></i>
+                <span class="mail">contact@readerearth.com</span>
+			</div>
+		</div>
+	</div>
+
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.11/summernote.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/intlTelInput.js' %}"></script>
+    <script type="text/javascript" src="https://checkout.razorpay.com/v1/razorpay.js"></script>
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+    <script>
+
+      $(".loginchangebtn").click(function(){
+      	$("#loginModal").animate({'opacity':0.0});
+	    $("#loginModal").hide();
+     	$("#registerModal").show();
+       	$("#registerModal").animate({'opacity':1.0});
+	  });
+     $(".registerchangebtn").click(function(){
+        $("#registerModal").animate({'opacity':0.0});
+	    $("#registerModal").hide();
+     	$("#loginModal").show();
+       	$("#loginModal").animate({'opacity':1.0});
+       	$("#bodyopaquer").css('z-index','1');
+       	$("#loginModal").css('z-index','6');
+     });
+	 
+	/* setInterval(function(){
+		$.get("repeat.php", function(data){
+			var repeatdata = data.toString();
+			
+			var wq = repeatdata.slice(0,repeatdata.indexOf(","));
+			var cq = repeatdata.slice(repeatdata.indexOf(",")+1);
+			
+			
+			$(".wq").html(wq);
+			$(".cq").html(cq);
+			
+		});
+	},100);*/
+	
+	$('.ssubmit').click(function(e){
+		e.preventDefault();
+		var subemail = $(".subemail").val();
+		if(subemail==""){
+			$(".sub-reply").html("Please enter an Email Id!")
+		}else{
+			$.ajax({
+				url: '/subscribe/',
+				type:'POST',
+				data:
+				{
+					'subemail': subemail,
+                    'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{
+					if(data.indexOf('True') != -1){
+                        $(".sub-reply").html("You have been successfully subscribed!")
+					}
+					else{
+						$(".sub-reply").html("You are already subscribed!")
+					}
+					
+				},
+				error: function(xhr,status,error){
+					alert('There is some issue! Please try again later!');
+				}            
+			});
+		}
+    });
+    $(".login-submit").click(function(e){
+        e.preventDefault();
+        var username = $(".login-username").val();
+        var password = $(".login-password").val();
+        if(username=="" && password==""){
+        	$(".login-username").css({'border-bottom':'2px solid red'});
+        	$(".login-password").css({'border-bottom':'2px solid red'});
+        	$(".login-reply-1").html("Email is required!");
+        	$(".login-reply-2").html("Password is required!");
+        }else if(username != '' && password == ''){
+        	$(".login-password").focus();
+        }else if(username == '' && password != ''){
+        	$(".login-username").focus();
+        }else{
+        	$.ajax({
+				url: '/check_login/',
+				type:'POST',
+				data:
+				{
+					'username': username,
+					'password': password,
+                    'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{
+					if(data == 'Login Successful'){
+                        $("#loginModal").animate({'opacity':0.0});
+					   	$("#bodyopaquer").hide();
+					   	$("#loginModal").hide();
+					}else if(data=='Email Entered is Incorrect!'){
+                        $(".login-username").css({'border-bottom':'2px solid red'});
+			        	$(".login-reply-1").html(data);
+					}else if(data=='Password Entered is Incorrect!'){
+                        $(".login-password").css({'border-bottom':'2px solid red'});
+			        	$(".login-reply-2").html(data);
+					}
+				}          
+			});
+        }
+    });
+    $(".loader").hide();
+    $(".register-submit").click(function(e){
+        e.preventDefault();
+        var email = $(".register-email").val();
+        var password = $(".register-password").val();
+        var cpassword = $(".register-confirm-password").val();
+        if(email=="" && password=="" && cpassword==""){
+        	$(".register-email").css({'border-bottom':'2px solid red'});
+        	$(".register-reply-1").html('Email is required!');
+        	$(".register-password").css({'border-bottom':'2px solid red'});
+        	$(".register-reply-2").html('Password is required!');
+        	$(".register-confirm-password").css({'border-bottom':'2px solid red'});
+        	$(".register-reply-3").html('Password is required!');
+        }else if(email != '' && password =='' && cpassword==''){
+        	$(".register-password").focus();
+        }else if(email != '' && password !='' && cpassword==''){
+        	$(".register-confirm-password").focus();
+        }else if(email == '' && password !='' && cpassword==''){
+        	$(".register-email").focus();
+        }else if(email == '' && password =='' && cpassword!=''){
+        	$(".register-email").focus();
+        }else if(email == '' && password !='' && cpassword!=''){
+        	$(".register-email").focus();
+        }else if(email != '' && password =='' && cpassword!=''){
+        	$(".register-password").focus();
+        }else{
+        	$(".loader").show();
+        	$.ajax({
+				url: '/register/',
+				type:'POST',
+				data:
+				{
+					'email': email,
+					'cpassword': cpassword,
+					'password': password,
+                    'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{         
+					$(".loader").hide();
+					if(data=='This Email id has already been taken!'){
+						$(".register-email").css({'border-bottom':'2px solid red'});
+	        	        $(".register-reply-1").html(data);
+	        	    }else if(data=='Please confirm your email address to complete the registration'){
+                        $(".register-email").css({'border-bottom':'2px solid #7F70C9'});
+                        $(".register-reply-1").html('');
+                        $(".register-reply-4").html(data);
+	        	    }
+				}          
+			});
+        }
+    });
+
+    $(".detail-atc i,.detail-atc span").click(function(){
+        if($(".logout-btn").html() == "LOGOUT"){
+            var ebooknumber = parseInt($(".hidden-detail-ebook-id").html());
+            $.ajax({
+				url: '/add_cart/',
+				type:'POST',
+				data:
+				{
+					'ebooknumber': ebooknumber,
+					'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{
+                    $(".cart-reply").html(data);
+					
+				},
+				error: function(xhr,status,error){
+				alert(xhr.responseText);
+			    }             
+			});
+        }else{
+        	$(".cart-reply").html("You must login to continue!");
+        }
+    });
+
+    $(".durationcartselect").on('change',function(){
+        var duration = this.value;
+        var productid = $(this).attr('data-id');
+        var ebookid = $(".hiddenid[data-id=" + productid + "]").html();
+        $.ajax({
+					url: '/change_duration/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebookid,
+						'duration': duration,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".price-span[data-id=" + productid + "]").html(data['nprice']);
+	                    $(".totalprice").html("Rs. " + data['tprice']);
+	                    $(".ordertotal").html("Rs. " + data['tprice']);
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    });
+    
+    var dataId = 1;
+    while($(".cart-left .product span:nth-child(3) select[data-id=" + dataId + "]").length > 0){
+    	var buy = $(".cart-left .product span:nth-child(3) select[data-id=" + dataId + "] option").html();
+        var productid = dataId;
+        if(buy == 'Buy'){
+        	$(".cart-left .product span:nth-child(4) select[data-id=" + productid + "]").attr('disabled','disabled');
+        	$(".cart-left .product span:nth-child(4) select[data-id=" + productid + "]").css('opacity','0.5');
+        }
+        dataId = dataId + 1;
+    }
+    $(".itemsCart").html(dataId-1);
+    
+
+    $(".buycartselect").on('change',function(){
+        var buy = this.value;
+        var productid = $(this).attr('data-id');
+        var ebookid = $(".hiddenid[data-id=" + productid + "]").html();
+        if(buy == 'Buy'){
+        	$(".cart-left .product span:nth-child(4) select[data-id=" + productid + "]").attr('disabled','disabled');
+        	$(".cart-left .product span:nth-child(4) select[data-id=" + productid + "]").css('opacity','0.5');
+        }else{
+        	$(".cart-left .product span:nth-child(4) select[data-id=" + productid + "]").removeAttr('disabled');
+        	$(".cart-left .product span:nth-child(4) select[data-id=" + productid + "]").css('opacity','1.0');
+        }
+        $.ajax({
+					url: '/change_buy/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebookid,
+						'buy': buy,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".price-span[data-id=" + productid + "]").html(data['nprice']);
+	                    $(".totalprice").html("&#8377; " + data['tprice']);
+	                    $(".ordertotal").html("&#8377; " + data['tprice']);
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    });
+
+    $(".deletecart").click(function(){
+        var productid = $(this).attr('data-id');
+        var ebookid = $(".hiddenid[data-id=" + productid + "]").html();
+        $.ajax({
+					url: '/delete_cart/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebookid,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    if(data == 'Success'){
+	                    	location.reload();
+	                    }
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    });
+
+    $(".wl-remove").click(function(){
+    	var curelem = $(this);
+        var ebookid = parseInt($(this).parent().parent().attr('data-eid'));
+        $.ajax({
+					url: '/delete_wishlist/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebookid,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    if(data == 'Success'){
+	                    	curelem.parent().parent().remove();
+	                    }
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    });
+
+    $(".wl-atc").click(function(){
+    	curelem = $(this);
+        var ebookid = parseInt($(this).parent().parent().attr('data-eid'));
+        $.ajax({
+					url: '/mtc/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebookid,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    if(data == 'Success'){
+	                    	curelem.parent().parent().remove();
+	                    }
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    });
+
+    $(".towishlist").click(function(){
+        var productid = $(this).attr('data-id');
+        var ebookid = $(".hiddenid[data-id=" + productid + "]").html();
+        $.ajax({
+					url: '/mtw/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebookid,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    if(data == 'Success'){
+	                    	location.reload();
+	                    }
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    });
+
+    $(".detailHeart").click(function(){
+        if($(".logout-btn").html() == "LOGOUT"){
+            var pathname = window.location.pathname;
+            var number1 = pathname.substr(pathname.indexOf("/detail/") + 8);
+            var ebooknumber = number1.substr(0,number1.indexOf("/"));
+            $.ajax({
+				url: '/atw/',
+				type:'POST',
+				data:
+				{
+					'ebooknumber': ebooknumber,
+					'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{
+                    $(".cart-reply").html(data);
+                    $('.detailHeart i').css('color','#FF0000')
+					
+				},
+				error: function(xhr,status,error){
+				alert(xhr.responseText);
+			    }             
+			});
+        }else{
+        	$(".cart-reply").html("You must login to continue!");
+        }
+    });
+
+    $(".loader3").hide();
+    $(".feedbacksubmit").click(function(){
+        var message = $(".feedmessage").val();
+        var email = $(".feedemail").val();
+        if(message!= '' && email != ''){
+        	$(".loader3").show();
+	        $.ajax({
+						url: '/feedback/',
+						type:'POST',
+						data:
+						{
+							'email': email,
+							'message':message,
+							'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+						},
+						success: function(data)
+						{
+		                    $(".loader3").hide();
+		                    $(".feedback-reply").html(data);
+							
+						},
+						error: function(xhr,status,error){
+						alert(xhr.responseText);
+					    }             
+					});
+        }
+        else{
+        	$(".feedback-reply").html('Please Fill Both the Details!');
+        }
+    });
+
+    $(".loader4").hide()
+    $(".allowerbtn").click(function(){
+        var publisher = $(".allowerpublisher").val();
+        var email = $(".alloweremail").val();
+        if(publisher!='' && email!=''){
+        	$(".loader4").show();
+	        $.ajax({
+						url: '/allower/',
+						type:'POST',
+						data:
+						{
+							'email': email,
+							'publisher':publisher,
+							'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+						},
+						success: function(data)
+						{
+		                    $(".loader4").hide();
+		                    $(".allowerreply").html(data)
+		                    $("input").val('');
+							
+						},
+						error: function(xhr,status,error){
+						alert(xhr.responseText);
+					    }             
+					});
+	    }
+    });
+
+    $(".pubactivatebtn").click(function(){
+        var benname = $(".pubactivatebenname").val();
+        var account = $(".pubactivateaccount").val();
+        var ifsc = $(".pubactivateifsc").val();
+        var number = $(".pubactivatenumber").val();
+        var pass = $(".pubactivatepass").val();
+        var cnfpass = $(".pubactivatecnfpass").val();
+        var emailpath = window.location.pathname;
+        var endpoint = emailpath.split('/',3).join('/').length;
+        var email =emailpath.substring(13,parseInt(endpoint));
+        if(benname!='' && account!='' && ifsc!='' && number!='' && pass!='' && cnfpass!='' && pass == cnfpass && email!=''){
+	        $.ajax({
+						url: '/pubactivate/',
+						type:'POST',
+						data:
+						{
+							'benname': benname,
+							'account':account,
+							'ifsc':ifsc,
+							'number':number,
+							'pass':pass,
+							'email':email,
+							'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+						},
+						success: function(data)
+						{
+		                    $(".pubactivatereply").html('You have successfully been Registered With Us! Please <a href="/">Login</a> to continue');
+		                    $("input").val('');
+							
+						},
+						error: function(xhr,status,error){
+						alert(xhr.responseText);
+					    }             
+					});
+	    }else if(pass != cnfpass){
+	    	$(".pubactivatereply").html('Your Passwords do not match! Please try again!');
+	    }else{
+	    	$(".pubactivatereply").html('Please fill all the Details!');
+	    }
+    });
+
+
+    if($(document.body)[0].scrollHeight < $(window).height()){
+    	$(".footer").css('position','absolute');
+    	$(".footer").css('bottom','0px');
+    };
+    $(".dash-bottom .card").mouseover(function(){
+    	$(this).css({'height':'330px','width':'110%','margin-top':'-5%','margin-left':'-5%','box-shadow':'0px 0px 4px rgb(128,128,128)','z-index':'3'});
+    });
+    $(".dash-bottom .card").mouseleave(function(){
+    	$(this).css({'height':'310px','width':'99%','margin-top':'0%','margin-left':'0%','box-shadow':'none','z-index':'1'});
+    });
+    $(".wl-cards .card .container").css('height','120px');
+    $(".wl-cards .card").mouseover(function(){
+        $(this).find('.container').css('height','auto');
+    })
+    $(".wl-cards .card").mouseleave(function(){
+        $(this).find('.container').css('height','120px');
+    })
+
+    var dataId = 1;
+    var dataArray = [];
+    while($(".dash-right .card .container .title[data-id=" + dataId + "]").length > 0){
+        var lineHeight = $(".dash-right .card .container .title[data-id=" + dataId + "]").css('line-height');
+        var height = $(".dash-right .card .container .title[data-id=" + dataId + "]").css('height');
+        var lines = parseFloat(height)/parseFloat(lineHeight);
+        dataArray.push(lines);
+        dataId = dataId + 1;
+    }
+    var maxArray = Math.max.apply(Math,dataArray);
+    $(".dash-right .card .container .title").css('height',maxArray + 'em');
+
+
+    var dataId = 1;
+    var dataArray = [];
+    while($(".dash-right .card .container .author[data-id=" + dataId + "]").length > 0){
+        var lineHeight = $(".dash-right .card .container .author[data-id=" + dataId + "]").css('line-height');
+        var height = $(".dash-right .card .container .author[data-id=" + dataId + "]").css('height');
+        var lines = parseFloat(height)/parseFloat(lineHeight);
+        dataArray.push(lines);
+        dataId = dataId + 1;
+    }
+    var maxArray = Math.max.apply(Math,dataArray);
+    $(".dash-right .card .container .author").css('height',maxArray + 'em');
+
+
+    var dataId = 1;
+    var dataArray = [];
+    while($(".dash-right .card .container .publisher[data-id=" + dataId + "]").length > 0){
+        var lineHeight = $(".dash-right .card .container .publisher[data-id=" + dataId + "]").css('line-height');
+        var height = $(".dash-right .card .container .publisher[data-id=" + dataId + "]").css('height');
+        var lines = parseFloat(height)/parseFloat(lineHeight);
+        dataArray.push(lines);
+        dataId = dataId + 1;
+    }
+    var maxArray = Math.max.apply(Math,dataArray);
+    $(".dash-right .card .container .publisher").css('height',maxArray + 'em');
+
+
+    var dataId = 1;
+    while($(".wl-cards .card .wishlistNewPrice[data-id=" + dataId + "]").length > 0){
+    	var newPrice = $(".wl-cards .card .wishlistNewPrice[data-id=" + dataId + "]").html();
+        var oldPrice = (parseFloat(newPrice)/0.8).toFixed(1);
+        $(".wl-cards .card .wishlistOldPrice[data-id=" + dataId + "]").html(oldPrice);
+
+        dataId = dataId + 1;
+    }
+
+	var newPrice = $(".detail-2 .detailNewPrice").html();
+    var oldPrice = (parseFloat(newPrice)/0.8).toFixed(1);
+    $(".detail-2 .detailOldPrice").html(oldPrice);
+    
+    $(".hiddenPub").val($(".pubName").html());
+
+    var urlString = window.location.href;
+    var urlText = urlString.substr(urlString.indexOf("?upload"));
+    if(urlText=='?upload=success'){
+    	$(".publisherUploadReply").html('The Ebooks were uploaded successfully! Your Ebooks will be live soon!');
+    }
+        
+    if($(".remaindArray").length > 0 ){
+	    var remainArray = $(".remaindArray").html();
+	    var leftArray = remainArray.slice(1,remainArray.length-1)
+	    var array = JSON.parse("[" + leftArray + "]");
+	    for(var i=1;i<=array.length;i++){
+	    	$(".dash-bottom .ebooks .card .dash-dl[data-id=" + i + "] span:nth-child(1)").html(array[i-1]);
+	    };
+    }
+    if($(".remainhArray").length > 0 ){
+	    var remainArray = $(".remainhArray").html();
+	    var leftArray = remainArray.slice(1,remainArray.length-1)
+	    var array = JSON.parse("[" + leftArray + "]");
+	    for(var i=1;i<=array.length;i++){
+	    	$(".dash-bottom .ebooks .card .dash-hl[data-id=" + i + "] span:nth-child(1)").html(array[i-1]);
+	    };
+    }
+    if($(".remainmArray").length > 0 ){
+	    var remainArray = $(".remainmArray").html();
+	    var leftArray = remainArray.slice(1,remainArray.length-1)
+	    var array = JSON.parse("[" + leftArray + "]");
+	    for(var i=1;i<=array.length;i++){
+	    	$(".dash-bottom .ebooks .card .dash-ml[data-id=" + i + "] span:nth-child(1)").html(array[i-1]);
+	    };
+    }
+
+    var dasheslength = {{ dashes|length }};
+    var bdasheslength = {{ bdashes|length }};
+ 
+    $(".dash-middle #dash-rented-btn").click(function(){
+    	$(".dash-bottom .dashes").show();
+    	$(".dash-bottom .bdashes").hide();
+    	$(this).addClass("dashactivebtn");
+    	$(".dash-middle #dash-bought-btn").removeClass('dashactivebtn');
+    	if($(document.body)[0].scrollHeight < $(window).height() && dasheslength == 0){
+	    	$(".footer").css('position','absolute');
+	    	$(".footer").css('bottom','0px');
+	    	$("body").css('overflow-y','hidden');
+	    }else{
+	    	$(".footer").css('position','static');
+	    	$("body").css('overflow-y','auto');
+	    }
+    });
+    $(".dash-middle #dash-bought-btn").click(function(){
+    	$(".dash-bottom .dashes").hide();
+    	$(".dash-bottom .bdashes").show();
+    	$(this).addClass("dashactivebtn");
+    	$(".dash-middle #dash-rented-btn").removeClass('dashactivebtn');
+    	if($(document.body)[0].scrollHeight < $(window).height() && bdasheslength == 0){
+	    	$(".footer").css('position','absolute');
+	    	$(".footer").css('bottom','0px');
+	    	$("body").css('overflow-y','hidden');
+	    }else{
+	    	$(".footer").css('position','static');
+	    	$("body").css('overflow-y','auto');
+	    }
+    });
+    $(".dash-left .dl-all").click(function(){
+    	$(".dash-right .dashes").show();
+    	$(".dash-right .bdashes").show();
+    	$(this).addClass("active");
+    	$(".dash-left .dl-buy").removeClass('active');
+    	$(".dash-left .dl-rent").removeClass('active');
+    });
+    var googleUser = {};
+	  var startApp = function() {
+	    gapi.load('auth2', function(){
+	      // Retrieve the singleton for the GoogleAuth library and set up the client.
+	      auth2 = gapi.auth2.init({
+	        client_id: '18205974359-scm2ogghtt91dkgfb9id3lpprfnvd3f4.apps.googleusercontent.com',
+	        cookiepolicy: 'single_host_origin',
+	        // Request scopes in addition to 'profile' and 'email'
+	        //scope: 'additional_scope'
+	      });
+	      attachSignin($(".logingoogle"));
+	    });
+	  };
+	  //startApp();
+
+	  function attachSignin(element) {
+	    console.log(element.id);
+	    auth2.attachClickHandler(element, {},
+	        function(googleUser) {
+	          document.getElementById('name').innerText = "Signed in: " +
+	              googleUser.getBasicProfile().getName();
+	        }, function(error) {
+	          alert(JSON.stringify(error, undefined, 2));
+	        });
+	  }
+
+    function onSignIn(googleUser) {
+	    var id_token = googleUser.getAuthResponse().id_token;
+	    if($(".authcheck").html() == 'False'){
+		    $.ajax({
+							url: '/googlesignin/',
+							type:'POST',
+							data:
+							{
+								'id_token': id_token,
+								'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+							},
+							success: function(data)
+							{
+			                    if(data=='Success'){
+			                    	location.reload();
+			                    }
+								
+							},
+							error: function(xhr,status,error){
+							alert(xhr.responseText);
+						    }             
+						});
+		}
+	}
+
+	function signOut() {
+	    var auth2 = gapi.auth2.getAuthInstance();
+	    auth2.signOut().then(function () {
+	      console.log('User signed out.');
+	    });
+	  }
+
+	$(document).ready(function() {
+	     $('#upload-publisher-select').select2();
+	     $("#upload-category-select").select2();
+	     $("#upload-language-select").select2();
+	     $("#upload-tag-select").select2();
+	     $("#upload-author-select").select2();
+	     $("#upload-description").summernote({
+	     	height: 200
+	     });
+	});
+	$("#upload-add-author").click(function(e){
+		e.preventDefault();
+		$("#upload-add-panel-author").show();
+		$("#upload-book-container").css('opacity','0.1');
+	});
+	$("#upload-add-author-button").click(function(e){
+        e.preventDefault();
+        var authorname = $("#upload-add-author-input").val();
+        if(authorname != ''){
+        	$.ajax({
+				url: '/addauthor/',
+				type:'POST',
+				data:
+				{
+					'authorname': authorname,
+					'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{
+					$("#upload-author-select").append(`<option value="` + authorname+ `">` + authorname + `</option>`);
+					$("#upload-add-panel-author").hide();
+		            $("#upload-book-container").css('opacity','1.0');
+				},
+				error: function(xhr,status,error){
+				alert(xhr.responseText);
+			    }             
+			});
+        }
+	});
+	$("#upload-cancel-author-button").click(function(e){
+        e.preventDefault();
+        $("#upload-add-panel-author").hide();
+		$("#upload-book-container").css('opacity','1.0');
+	});
+	$("#upload-add-publisher").click(function(e){
+		e.preventDefault();
+		$("#upload-add-panel-publisher").show();
+		$("#upload-book-container").css('opacity','0.1');
+	});
+	$("#upload-add-publisher-button").click(function(e){
+        e.preventDefault();
+        var publishername = $("#upload-add-publisher-input").val();
+        if(publishername != ''){
+        	$.ajax({
+				url: '/addpublisher/',
+				type:'POST',
+				data:
+				{
+					'publishername': publishername,
+					'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{
+					$("#upload-publisher-select").append(`<option value="` + publishername+ `">` + publishername + `</option>`);
+					$("#upload-add-panel-publisher").hide();
+		            $("#upload-book-container").css('opacity','1.0');
+				},
+				error: function(xhr,status,error){
+				alert(xhr.responseText);
+			    }             
+			});
+        }
+	});
+	$("#upload-cancel-publisher-button").click(function(e){
+        e.preventDefault();
+        $("#upload-add-panel-publisher").hide();
+		$("#upload-book-container").css('opacity','1.0');
+	});
+
+	$("#upload-add-tag").click(function(e){
+		e.preventDefault();
+		$("#upload-add-panel-tag").show();
+		$("#upload-book-container").css('opacity','0.1');
+	});
+	$("#upload-add-tag-button").click(function(e){
+        e.preventDefault();
+        var tagname = $("#upload-add-tag-input").val();
+        if(tagname != ''){
+        	$.ajax({
+				url: '/addtag/',
+				type:'POST',
+				data:
+				{
+					'tagname': tagname,
+					'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{
+					$("#upload-tag-select").append(`<option value="` + tagname+ `">` + tagname + `</option>`);
+					$("#upload-add-panel-tag").hide();
+		            $("#upload-book-container").css('opacity','1.0');
+				},
+				error: function(xhr,status,error){
+				alert(xhr.responseText);
+			    }             
+			});
+        }
+	});
+	$("#upload-cancel-tag-button").click(function(e){
+        e.preventDefault();
+        $("#upload-add-panel-tag").hide();
+		$("#upload-book-container").css('opacity','1.0');
+	});
+	$("#upload-add-category").click(function(e){
+		e.preventDefault();
+		$("#upload-add-panel-category").show();
+		$("#upload-book-container").css('opacity','0.1');
+	});
+	$("#upload-add-category-button").click(function(e){
+        e.preventDefault();
+        var categoryname = $("#upload-add-category-input").val();
+        var categorymodel = $("#upload-add-category-select").val();
+        if(categoryname != ''){
+        	$.ajax({
+				url: '/addcategory/',
+				type:'POST',
+				data:
+				{
+					'categoryname': categoryname,
+					'categorymodel': categorymodel,
+					'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{
+					$("#upload-category-select").append(`<option value="` + categoryname+ `">` + categoryname + `</option>`);
+					$("#upload-add-panel-category").hide();
+		            $("#upload-book-container").css('opacity','1.0');
+				},
+				error: function(xhr,status,error){
+				alert(xhr.responseText);
+			    }             
+			});
+        }
+	});
+	$("#upload-cancel-category-button").click(function(e){
+        e.preventDefault();
+        $("#upload-add-panel-category").hide();
+		$("#upload-book-container").css('opacity','1.0');
+	});
+	$("#upload-book-form").submit(function(){
+        $("#upload-description-input").val($("#upload-description").summernote('code'));
+		return true;
+	});
+
+	$(".reader-shop-search-input").keypress(function(e){
+    	if(e.keyCode== '13'){
+    		var text = $(this).val();
+    		if(text!=''){
+    			window.location.href = '/search/?q=' + text;
+    		}
+    	}
+    });
+
+    function lisearchfunc(query){
+    	window.location.href= '/search/?q=' + query;
+    }
+    $(".reader-shop-search-input").keyup(function(e){
+        if(e.keyCode != '13'){
+        	q = $(this).val();
+        	if(q!= ''){
+                $.ajax({
+					url: '/autocomplete/?q=' + q,
+					type:'GET',
+					success: function(data)
+					{   
+						$(".ul-autocomplete").remove();
+						appender = ``;
+	                    for(var i in data['results1']){
+                            var obj = `<li onClick="lisearchfunc('` + data['results1'][i] +`')">` + data['results1'][i] + `</li>`;
+                            appender = appender + obj;
+	                    }
+	                    for(var i in data['results2']){
+                            var obj = `<li onClick="lisearchfunc('` + data['results2'][i] +`')">` + data['results2'][i] + `</li>`;
+                            appender = appender + obj;
+	                    }
+	                    for(var i in data['results3']){
+                            var obj = `<li onClick="lisearchfunc('` + data['results3'][i] +`')">` + data['results3'][i] + `</li>`;
+                            appender = appender + obj;
+	                    }
+	                    for(var i in data['results4']){
+                            var obj = `<li onClick="lisearchfunc('` + data['results4'][i] +`')">` + data['results4'][i] + `</li>`;
+                            appender = appender + obj;
+	                    }
+	                    for(var i in data['results5']){
+                            var obj = `<li onClick="lisearchfunc('` + data['results5'][i] +`')">` + data['results5'][i] + `</li>`;
+                            appender = appender + obj;
+	                    }
+	                    for(var i in data['results6']){
+                            var obj = `<li onClick="lisearchfunc('` + data['results6'][i] +`')">` + data['results6'][i] + `</li>`;
+                            appender = appender + obj;
+	                    }
+	                    appender = `<ul class="ul-autocomplete">` + appender + `</ul>`;
+	                    $(".reader-shop-search-li").append(appender);
+	                    $(".ul-autocomplete").css({'position':'absolute','top':'40px','left':'0px','background-color':'white','list-style-type':'none','width':'300px','border':'none','border-radius':'0px 0px 20px 20px','z-index':'2'});
+	                    $(".ul-autocomplete li").css({'cursor':'pointer','width':'100%','padding-left':'20px'});
+	                    if($(".ul-autocomplete li").length > 0){
+                            $(".mp-1 span:nth-child(5)").css('z-index','0');
+                            $(".reader-shop-search-input").css('border-radius','20px 20px 0px 0px');
+                            $(".ul-autocomplete").css({'box-shadow':'1px 1px 4px rgb(128,128,128)','border-top':'1px solid rgb(204,204,204)','padding':'0px 0px 20px 0px'});
+	                    }else{
+	                    	$(".reader-shop-search-input").css('border-radius','20px 20px 20px 20px');
+	                    }
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+        	}else{
+        		$(".reader-shop-search-input").css('border-radius','20px 20px 20px 20px');
+        	}
+        }
+    });
+    $('body').click(function(e){
+	      if ( !$(e.target).is('.reader-shop-search-input') ) {
+	            $(".ul-autocomplete").hide();
+	            $(".mp-1 span:nth-child(5)").css('z-index','1');
+	            $(".reader-shop-search-input").css('border-radius','20px 20px 20px 20px');
+	      }else{
+	      	    $(".ul-autocomplete").show();
+	      	    if($(".ul-autocomplete li").length > 0){
+                    $(".mp-1 span:nth-child(5)").css('z-index','0');
+	      	    }else{
+	      	    	$(".reader-shop-search-input").css('border-radius','20px 20px 20px 20px');
+	      	    }
+	      }
+	});
+    var pagetimer = 0;
+    var pageinterval = setInterval(timer,1000);
+    function timer(){
+    	pagetimer = pagetimer + 1;
+    }
+
+    $(window).on("beforeunload", function() { 
+    	var pathname = String(window.location.pathname);
+    	if(pathname.indexOf('detail') != -1){
+            $.ajax({
+				url: '/adddurationview/',
+				type:'POST',
+				async: false,
+				data:
+				{
+					'view': 'detail',
+					'duration': pagetimer,
+					'ebookid': parseInt($(".hidden-detail-ebook-id").html()),
+					'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+				},
+				success: function(data)
+				{
+				},
+				error: function(xhr,status,error){
+				alert(xhr.responseText);
+			    }             
+			});
+    	}
+	});
+
+	$(".mp-1 span:first-child").click(function(){
+        	if($(".mp-1 .shop-genre-list").css('display') == 'none'){
+                $(".mp-1 .fa-angle-up").show();
+        	    $(".mp-1 .fa-angle-down").hide();
+        	    $(".mp-1 .shop-genre-list").show();
+        	}else{
+        		$(".mp-1 .fa-angle-up").hide();
+        	    $(".mp-1 .fa-angle-down").show();
+        	    $(".mp-1 .shop-genre-list").hide();
+        	}
+        })
+	var detailimg = $(".detail-img").attr('data-img');
+	$(".detail-img").css({'background-image':'url('+detailimg+')','background-size':'100% 100%'});
+	var detailrating = $(".detail-stars").attr('data-rating');
+	var detailfrac = parseFloat(detailrating%1);
+	var detailint = detailrating - detailfrac;
+	var appender= ``;
+	if(detailfrac < 0.25){
+		detailint = detailint;
+		for(var i=1;i<=detailint;i++){
+			var obj = `<i class="fa fa-star" aria-hidden="true"></i>`;
+			appender = appender + obj;
+		}
+		for(var i=1;i<=5-detailint;i++){
+			var obj = `<i class="fa fa-star-o" aria-hidden="true"></i>`;
+			appender = appender + obj;
+		}
+	}else if(detailfrac < 0.75 && detailfrac >= 0.25){
+		detailint  = detailint;
+		for(var i=1;i<=detailint;i++){
+			var obj = `<i class="fa fa-star" aria-hidden="true"></i>`;
+			appender = appender + obj;
+		}
+		appender = appender + `<i class="fa fa-star-half-o" aria-hidden="true"></i>`;
+		for(var i=1;i<=4-detailint;i++){
+			var obj = `<i class="fa fa-star-o" aria-hidden="true"></i>`;
+			appender = appender + obj;
+		}
+	}else if(detailfrac < 1.0 && detailfrac >= 0.75){
+		detailint  = detailint + 1;
+		for(var i=1;i<=detailint;i++){
+			var obj = `<i class="fa fa-star" aria-hidden="true"></i>`;
+			appender = appender + obj;
+		}
+		for(var i=1;i<=5-detailint;i++){
+			var obj = `<i class="fa fa-star-o" aria-hidden="true"></i>`;
+			appender = appender + obj;
+		}
+	}
+	$(".detail-stars").append(appender);
+
+
+	var detailprice = parseFloat($('.detail-nprice').attr('data-price'));
+	var detailid = parseInt($(".hidden-detail-ebook-id").html());
+	if(detailid == 0){
+		detailid = 80;
+	}
+	if(detailid<=40){
+        var detaily = 30 - Math.sqrt((225/(Math.log(1/80)))*Math.log(detailid/80));
+	}else{
+		var detaily = 30 + Math.sqrt((225/(Math.log(1/80)))*Math.log(detailid/80));
+	}
+    var fnprice = (detailprice + detailprice*(detaily/100)).toFixed(1);
+    $(".detail-oprice").html('&#x20b9; ' + fnprice);
+    if(fnprice > 0.0){
+        $(".detail-discount").html(Math.round(detaily) + '% Off');
+    }else{
+        $(".detail-discount").html(0 + '% Off');
+    }
+
+    $(".detail-similar-img").each(function(){
+        var detailimg = $(this).attr('data-img');
+	    $(this).css({'background-image':'url('+detailimg+')','background-size':'100% 100%'});
+    });
+    $(".detail-similar-name").each(function(){
+    	var name = $(this).html();
+    	if(name.length > 22){
+    		name = name.substring(0,22) + '...';
+    	}
+    	$(this).html(name);
+    });
+    $(".detail-similar-author").each(function(){
+    	var name = $(this).html();
+    	if(name.length > 30){
+    		name = name.substring(0,30) + '...';
+    	}
+    	$(this).html(name);
+    });
+    $(".detail-similar-description").each(function(){
+    	var name = $(this).text();
+    	if(name.length > 100){
+    		name = name.substring(0,100) + '...';
+    	}
+    	$(this).html(name);
+    });
+    
+    $(".detail-similar-oprice").each(function(){
+        var detailprice = parseFloat($(this).parent().find('.detail-similar-nprice').attr('data-price'));
+		var detailid = parseInt($(this).parent().parent().parent().parent().attr('data-id'));
+		if(detailid == 0){
+			detailid = 80;
+		}
+		if(detailid<=40){
+	        var detaily = 30 - Math.sqrt((225/(Math.log(1/80)))*Math.log(detailid/80));
+		}else{
+			var detaily = 30 + Math.sqrt((225/(Math.log(1/80)))*Math.log(detailid/80));
+		}
+	    var fnprice = (detailprice + detailprice*(detaily/100)).toFixed(1);
+	    $(this).html('&#x20b9; ' + fnprice);
+	    if(fnprice > 0.0){
+            $(this).parent().find('.detail-similar-discount').html(Math.round(detaily) + '% Off');
+	    }else{
+	    	$(this).parent().find('.detail-similar-discount').html(0 + '% Off');
+	    }
+	});
+
+    $(".detail-similar-stars").each(function(){
+    	var detailrating = $(this).attr('data-rating');
+		var detailfrac = parseFloat(detailrating%1);
+		var detailint = detailrating - detailfrac;
+		var appender= ``;
+		if(detailfrac < 0.25){
+			detailint = detailint;
+			for(var i=1;i<=detailint;i++){
+				var obj = `<i class="fa fa-star" aria-hidden="true"></i>`;
+				appender = appender + obj;
+			}
+			for(var i=1;i<=5-detailint;i++){
+				var obj = `<i class="fa fa-star-o" aria-hidden="true"></i>`;
+				appender = appender + obj;
+			}
+		}else if(detailfrac < 0.75 && detailfrac >= 0.25){
+			detailint  = detailint;
+			for(var i=1;i<=detailint;i++){
+				var obj = `<i class="fa fa-star" aria-hidden="true"></i>`;
+				appender = appender + obj;
+			}
+			appender = appender + `<i class="fa fa-star-half-o" aria-hidden="true"></i>`;
+			for(var i=1;i<=4-detailint;i++){
+				var obj = `<i class="fa fa-star-o" aria-hidden="true"></i>`;
+				appender = appender + obj;
+			}
+		}else if(detailfrac < 1.0 && detailfrac >= 0.75){
+			detailint  = detailint + 1;
+			for(var i=1;i<=detailint;i++){
+				var obj = `<i class="fa fa-star" aria-hidden="true"></i>`;
+				appender = appender + obj;
+			}
+			for(var i=1;i<=5-detailint;i++){
+				var obj = `<i class="fa fa-star-o" aria-hidden="true"></i>`;
+				appender = appender + obj;
+			}
+		}
+		$(this).append(appender);
+    });
+    $(".detail-atc span,.detail-atc i").mouseover(function(){
+    	$(".detail-atc i").css('color','rgb(130,130,130)');
+    });
+    $(".detail-atc span,.detail-atc i").mouseleave(function(){
+    	$(".detail-atc i").css('color','rgb(160,160,160)');
+    });
+
+    var detaildesc = $(".detail-description-text").text();
+    var detaildesctrue = detaildesc;
+    if(detaildesc.length > 650){
+    	detaildesc = detaildesc.substring(0,550) + '...';
+    }
+    $(".detail-description-text").html(detaildesc);
+    
+    $(".detail-rmore").click(function(){
+    	var rmore = $(".detail-rmore").html();
+    	if(rmore == 'Read More'){
+    	    $(".detail-description-text").html(detaildesctrue);
+            $(".detail-rmore").html('Read Less');
+    	}else if(rmore == 'Read Less'){
+    		$(".detail-description-text").html(detaildesc);
+            $(".detail-rmore").html('Read More');
+    	}
+    });
+
+    function rateduser(rating){
+        var rating = parseInt(rating);
+        var ebookid = parseInt($(".hidden-detail-ebook-id").html());
+        $.ajax({
+			url: '/addrating/',
+			type:'POST',
+			data:
+			{
+				'ebookid': ebookid,
+				'rating': rating,
+				'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+			},
+			success: function(data)
+			{
+				if(data['age'] == 'new'){
+					$(".detail-nrating").html('(' + data['users'] + ' reviews)');
+					$(".detail-rating-text").html(parseFloat(data['rating']).toFixed(2));
+				}else if(data['age'] == 'old'){
+					$(".detail-rating-text").html(parseFloat(data['rating']).toFixed(2));
+				}else if(data == 'Please login to Rate the Book'){
+
+				}
+			},
+			error: function(xhr,status,error){
+			alert(xhr.responseText);
+		    }             
+		});
+    }
+
+    $(".detail-rstars i:nth-child(1)").click(function(){
+    	{% if user.is_authenticated %}
+    	$(".detail-rstars i:nth-child(2)").css('color','#B2B2B2');
+    	$(".detail-rstars i:nth-child(3)").css('color','#B2B2B2');
+    	$(".detail-rstars i:nth-child(4)").css('color','#B2B2B2');
+    	$(".detail-rstars i:nth-child(5)").css('color','#B2B2B2');
+    	$(this).css('color','#FF8E19');
+    	rateduser(1);
+    	{% endif %}
+    });
+    $(".detail-rstars i:nth-child(2)").click(function(){
+    	{% if user.is_authenticated %}
+    	$(".detail-rstars i:nth-child(1)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(3)").css('color','#B2B2B2');
+    	$(".detail-rstars i:nth-child(4)").css('color','#B2B2B2');
+    	$(".detail-rstars i:nth-child(5)").css('color','#B2B2B2');
+    	$(this).css('color','#FF8E19');
+    	rateduser(2);
+    	{% endif %}
+    });
+    $(".detail-rstars i:nth-child(3)").click(function(){
+    	{% if user.is_authenticated %}
+    	$(".detail-rstars i:nth-child(1)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(2)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(4)").css('color','#B2B2B2');
+    	$(".detail-rstars i:nth-child(5)").css('color','#B2B2B2');
+    	$(this).css('color','#FF8E19');
+    	rateduser(3);
+    	{% endif %}
+    });
+    $(".detail-rstars i:nth-child(4)").click(function(){
+    	{% if user.is_authenticated %}
+    	$(".detail-rstars i:nth-child(1)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(2)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(3)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(5)").css('color','#B2B2B2');
+    	$(this).css('color','#FF8E19');
+    	rateduser(4);
+    	{% endif %}
+    });
+    $(".detail-rstars i:nth-child(5)").click(function(){
+    	{% if user.is_authenticated %}
+    	$(".detail-rstars i:nth-child(1)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(2)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(3)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(4)").css('color','#FF8E19');
+    	$(this).css('color','#FF8E19');
+    	rateduser(5);
+    	{% endif %}
+    });
+    var detailbookrating = parseInt({{ rating|safe }});
+    if(detailbookrating == 1){
+    	$(".detail-rstars i:nth-child(1)").css('color','#FF8E19');
+    }else if(detailbookrating == 2){
+    	$(".detail-rstars i:nth-child(1)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(2)").css('color','#FF8E19');
+    }else if(detailbookrating == 3){
+    	$(".detail-rstars i:nth-child(1)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(2)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(3)").css('color','#FF8E19');
+    }
+    else if(detailbookrating == 4){
+    	$(".detail-rstars i:nth-child(1)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(2)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(3)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(4)").css('color','#FF8E19');
+    }
+    else if(detailbookrating == 5){
+    	$(".detail-rstars i:nth-child(1)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(2)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(3)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(4)").css('color','#FF8E19');
+    	$(".detail-rstars i:nth-child(5)").css('color','#FF8E19');
+    }
+
+    $(".detail-rating-text").html(parseFloat($(".detail-rating-text").html()).toFixed(2));
+
+    $(".wl-cards .card .container .title").each(function(){
+        var text  = $(this).html();
+        if(text.length > 28){
+        	text = text.substring(0,28) + '...';
+        	$(this).html(text);
+        }
+    });
+    $(".wl-cards .card .container .author").each(function(){
+        var text  = $(this).html();
+        if(text.length > 22){
+        	text = text.substring(0,22) + '...';
+        	$(this).html(text);
+        }
+    });
+
+    $(".wl-cards .card .oprice").each(function(){
+    	var nprice = parseFloat($(this).parent().find('.nprice').html().substring(5,$(this).parent().find('.nprice').html().indexOf('</b>')));
+    	var x = parseInt($(this).parent().parent().attr('data-eid'))%80;
+    	if(x == 0){
+    		x = 80;
+    	}
+    	if(x<=40){
+            var y = 30 - Math.sqrt((225/(Math.log(1/80)))*Math.log(x/80));
+    	}else{
+    		var y = 30 + Math.sqrt((225/(Math.log(1/80)))*Math.log(x/80));
+    	}
+        var fnprice = (nprice + nprice*(y/100)).toFixed(1);
+        $(this).html('&#x20b9; ' + fnprice);
+    });
+    $(".wl-cards .card").mouseover(function(){
+    	$(this).css({'height':'330px','width':'16.5%','z-index':'3','margin-top':'-10px','border-radius':'5px','box-shadow':'10px 0 15px -4px rgba(160, 100, 245, 0.4),-10px 0 15px -4px rgba(160, 100, 245, 0.4),0px 6px 15px -4px rgba(160, 100, 245, 0.4),0px -6px 15px -4px rgba(160, 100, 245, 0.4)','margin-left':'-0.05%','margin-right':'-0.05%','margin-bottom':'-55px'});
+    	$(this).find('img').css('height','170px');
+    	$(this).find('.fa-heart').css({'font-size':'17px','top':'11px','margin-left':'145px'});
+    	$(this).find('.wl-atc').css('display','block');
+    	$(this).find('.wl-remove').css('display','block');
+    });
+    $(".wl-cards .card").mouseleave(function(){
+    	$(this).css({'height':'265px','width':'16.4%','z-index':'0','margin-top':'0px','border-radius':'0px','box-shadow':'none','margin-left':'0%','margin-right':'0%','margin-bottom':'0px'});
+
+    	$(this).find('img').css('height','150px');
+    	$(this).find('.fa-heart').css({'font-size':'16px','top':'10px','margin-left':'145px'});
+    	$(this).find('.wl-atc').css('display','none');
+    	$(this).find('.wl-remove').css('display','none');
+    });
+
+    var wishlistlength = $(".wl-cards .card").length;
+    if(wishlistlength == 0 && String(window.location.href).indexOf('/wishlist') != -1){
+    	$(".footer").css({'position':'absolute','bottom':'0px'});
+    }
+    
+    if(String(window.location.href).indexOf('/detail') != -1){
+        var wisharray = {{ wisharray|safe }}
+ 
+	    $(".detail-similar-book").each(function(){
+	    	if(wisharray.indexOf(parseInt($(this).attr('data-id'))) != -1){
+	    		$(this).find('.fa-heart').css('color','red');
+	    	}
+	    });
+	    var curdetailid = parseInt($(".hidden-detail-ebook-id").html());
+	    if(wisharray.indexOf(curdetailid) != -1){
+	    		$('.detail-img .fa-heart').css('color','red');
+	    	}
+    }
+    $(".detail-similar-book .fa-heart").click(function(){
+    	if($(".logout-btn").html() == "LOGOUT"){
+    		var ebooknumber = parseInt($(this).parent().attr('data-id'));
+            var curelem = $(this);
+    		if($(this).css('color') != 'rgb(255, 0, 0)'){
+                $.ajax({
+					url: '/atw/',
+					type:'POST',
+					data:
+					{
+						'ebooknumber': ebooknumber,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".cart-reply").html(data);
+	                    curelem.css('color','red')
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    		}else{
+    			$.ajax({
+					url: '/delete_wishlist/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebooknumber,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".cart-reply").html(data);
+	                    curelem.css('color','rgb(178, 178, 178)');
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    		}
+        }else{
+        	$(".cart-reply").html("You must login to continue!");
+        }
+    })
+
+
+
+    $(".detail-img .fa-heart").click(function(){
+    	if($(".logout-btn").html() == "LOGOUT"){
+    		var ebooknumber = parseInt($(".hidden-detail-ebook-id").html());
+            var curelem = $(this);
+    		if($(this).css('color') != 'rgb(255, 0, 0)'){
+                $.ajax({
+					url: '/atw/',
+					type:'POST',
+					data:
+					{
+						'ebooknumber': ebooknumber,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".cart-reply").html(data);
+	                    curelem.css('color','red')
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    		}else{
+    			$.ajax({
+					url: '/delete_wishlist/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebooknumber,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".cart-reply").html(data);
+	                    curelem.css('color','rgb(178, 178, 178)');
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    		}
+        }else{
+        	$(".cart-reply").html("You must login to continue!");
+        }
+    });
+
+    $(".detail-sug-wrapper .card .container .title").each(function(){
+        var text  = $(this).html();
+        if(text.length > 28){
+        	text = text.substring(0,28) + '...';
+        	$(this).html(text);
+        }
+    });
+    $(".detail-sug-wrapper .card .container .author").each(function(){
+        var text  = $(this).html();
+        if(text.length > 22){
+        	text = text.substring(0,22) + '...';
+        	$(this).html(text);
+        }
+    });
+
+    $(".detail-sug-wrapper2 .card .container .title").each(function(){
+        var text  = $(this).html();
+        if(text.length > 28){
+        	text = text.substring(0,28) + '...';
+        	$(this).html(text);
+        }
+    });
+    $(".detail-sug-wrapper2 .card .container .author").each(function(){
+        var text  = $(this).html();
+        if(text.length > 22){
+        	text = text.substring(0,22) + '...';
+        	$(this).html(text);
+        }
+    });
+    
+
+    $('.detail-sug-wrapper').slick({
+          infinite: true,
+          slidesToShow: 5,
+          slidesToScroll: 5,
+          variableWidth: true,
+        });
+
+    $(".detail-sug-wrapper .slick-prev").hide();
+
+    $('.detail-sug-wrapper').on('beforeChange', function(event, slick, currentSlide,nextSlide){
+          var slidemodulo = {{ sfbooks|length|safe }}%5;
+          if(slidemodulo == 0){
+            slidemodulo = 5;
+          }
+          if(nextSlide =={{ sfbooks|length|safe }} -slidemodulo){
+              $(".detail-sug-wrapper .slick-next").hide();
+              $(".detail-sug-wrapper .slick-prev").show();
+          }else if(nextSlide == 0){
+              $(".detail-sug-wrapper .slick-next").show();
+              $(".detail-sug-wrapper .slick-prev").hide();
+          }else{
+          	$(".detail-sug-wrapper .slick-next").show();
+          	$(".detail-sug-wrapper .slick-prev").show();
+          }
+        });
+
+    $(".detail-sug-wrapper .card .oprice").each(function(){
+    	var nprice = parseFloat($(this).parent().find('.nprice').html().substring(5,$(this).parent().find('.nprice').html().indexOf('</b>')));
+    	var x = parseInt($(this).parent().parent().parent().attr('data-eid'))%80;
+    	if(x == 0){
+    		x = 80;
+    	}
+    	if(x<=40){
+            var y = 30 - Math.sqrt((225/(Math.log(1/80)))*Math.log(x/80));
+    	}else{
+    		var y = 30 + Math.sqrt((225/(Math.log(1/80)))*Math.log(x/80));
+    	}
+        var fnprice = (nprice + nprice*(y/100)).toFixed(1);
+        $(this).html('&#x20b9; ' + fnprice);
+    });
+
+    $(".detail-sug-wrapper2 .card .oprice").each(function(){
+    	var nprice = parseFloat($(this).parent().find('.nprice').html().substring(5,$(this).parent().find('.nprice').html().indexOf('</b>')));
+    	var x = parseInt($(this).parent().parent().parent().attr('data-eid'))%80;
+    	if(x == 0){
+    		x = 80;
+    	}
+    	if(x<=40){
+            var y = 30 - Math.sqrt((225/(Math.log(1/80)))*Math.log(x/80));
+    	}else{
+    		var y = 30 + Math.sqrt((225/(Math.log(1/80)))*Math.log(x/80));
+    	}
+        var fnprice = (nprice + nprice*(y/100)).toFixed(1);
+        $(this).html('&#x20b9; ' + fnprice);
+    });
+    $(".detail-sug-wrapper .card").mouseover(function(){
+    	$(".mp-4").css('margin-top','-10px');
+    	$(this).css({'height':'285px','width':'0.54%','z-index':'3','margin-top':'-10px','border-radius':'5px','box-shadow':'10px 0 15px -4px rgba(160, 100, 245, 0.4),-10px 0 15px -4px rgba(160, 100, 245, 0.4),0px 6px 15px -4px rgba(160, 100, 245, 0.4),0px -6px 15px -4px rgba(160, 100, 245, 0.4)','margin-left':'-0.01%','margin-right':'-0.01%'});
+    	if(parseInt($(this).attr('data-slick-index'))%5 == 0){
+    		$(this).css({'margin-left':'0.032%','margin-right':'-0.052%'});
+    	}
+    	$(this).find('img').css('height','170px');
+    	$(this).find('.fa-heart').css({'font-size':'17px','top':'11px','margin-left':'135px'});
+    });
+    $(".detail-sug-wrapper .card").mouseleave(function(){
+    	$(".mp-4").css('margin-top','20px');
+    	$(this).css({'height':'265px','width':'0.52%','z-index':'0','margin-top':'0px','border-radius':'0px','box-shadow':'none','margin-left':'0%','margin-right':'0%'});
+
+    	$(this).find('img').css('height','150px');
+    	$(this).find('.fa-heart').css({'font-size':'16px','top':'10px','margin-left':'135px'});
+    });
+
+    $(".detail-sug-wrapper2 .card").mouseover(function(){
+    	$(".mp-4").css('margin-top','-10px');
+    	$(this).css({'height':'285px','width':'22%','z-index':'3','margin-top':'-10px','border-radius':'5px','box-shadow':'10px 0 15px -4px rgba(160, 100, 245, 0.4),-10px 0 15px -4px rgba(160, 100, 245, 0.4),0px 6px 15px -4px rgba(160, 100, 245, 0.4),0px -6px 15px -4px rgba(160, 100, 245, 0.4)','margin-left':'-1%','margin-right':'-1%'});
+    	$(this).find('img').css('height','170px');
+    	$(this).find('.fa-heart').css({'font-size':'17px','top':'11px','margin-left':'150px'});
+    });
+    $(".detail-sug-wrapper2 .card").mouseleave(function(){
+    	$(".mp-4").css('margin-top','20px');
+    	$(this).css({'height':'265px','width':'20%','z-index':'0','margin-top':'0px','border-radius':'0px','box-shadow':'none','margin-left':'0%','margin-right':'0%'});
+
+    	$(this).find('img').css('height','150px');
+    	$(this).find('.fa-heart').css({'font-size':'16px','top':'10px','margin-left':'135px'});
+    });
+
+    if(String(window.location.href).indexOf('/detail') != -1){
+        var wisharray = {{ wisharray|safe }}
+ 
+	    $(".detail-sug-wrapper2 .card").each(function(){
+	    	if(wisharray.indexOf(parseInt($(this).attr('data-eid'))) != -1){
+	    		$(this).find('.fa-heart').css('color','red');
+	    	}
+	    });
+    }
+    $(".detail-sug-wrapper2 .card .fa-heart").click(function(){
+    	if($(".logout-btn").html() == "LOGOUT"){
+    		var ebooknumber = parseInt($(this).parent().attr('data-eid'));
+            var curelem = $(this);
+    		if($(this).css('color') != 'rgb(255, 0, 0)'){
+                $.ajax({
+					url: '/atw/',
+					type:'POST',
+					data:
+					{
+						'ebooknumber': ebooknumber,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".cart-reply").html(data);
+	                    curelem.css('color','red')
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    		}else{
+    			$.ajax({
+					url: '/delete_wishlist/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebooknumber,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".cart-reply").html(data);
+	                    curelem.css('color','rgb(178, 178, 178)');
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    		}
+        }else{
+        	$(".cart-reply").html("You must login to continue!");
+        }
+    })
+
+    if(String(window.location.href).indexOf('/detail') != -1){
+        var wisharray = {{ wisharray|safe }}
+ 
+	    $(".detail-sug-wrapper .card").each(function(){
+	    	if(wisharray.indexOf(parseInt($(this).attr('data-eid'))) != -1){
+	    		$(this).find('.fa-heart').css('color','red');
+	    	}
+	    });
+    }
+    $(".detail-sug-wrapper .card .fa-heart").click(function(){
+    	if($(".logout-btn").html() == "LOGOUT"){
+    		var ebooknumber = parseInt($(this).parent().attr('data-eid'));
+            var curelem = $(this);
+    		if($(this).css('color') != 'rgb(255, 0, 0)'){
+                $.ajax({
+					url: '/atw/',
+					type:'POST',
+					data:
+					{
+						'ebooknumber': ebooknumber,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".cart-reply").html(data);
+	                    curelem.css('color','red')
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    		}else{
+    			$.ajax({
+					url: '/delete_wishlist/',
+					type:'POST',
+					data:
+					{
+						'ebookid': ebooknumber,
+						'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+					},
+					success: function(data)
+					{
+	                    $(".cart-reply").html(data);
+	                    curelem.css('color','rgb(178, 178, 178)');
+						
+					},
+					error: function(xhr,status,error){
+					alert(xhr.responseText);
+				    }             
+				});
+    		}
+        }else{
+        	$(".cart-reply").html("You must login to continue!");
+        }
+    })
+
+    $(".dash-ebook-progress-text").each(function(){
+    	var percent = parseFloat($(this).attr('data-percent'));
+    	var lpercent = 100 - percent.toFixed(2);
+    	$(this).html(percent.toFixed(2) + '%');
+    	$(this).parent().css('background','linear-gradient(to right,#7F70C9 '+percent.toFixed(2)+'%,#F2F2F2 0%)');
+    });
+
+    var paymentphone = document.querySelector("#phonepayment");
+    try{
+	    var iti = window.intlTelInput(paymentphone,{
+	        initialCountry:'in',
+	        preferredCountries: ['in','us','gb'],
+	        separateDialCode: true,
+	        nationalMode: false,
+	    });
+	}catch(e){
+
+	}
+
+    $("#pm-nb").show();
+    $("#pm-qp").hide();
+    $("#pm-up").hide();
+    $("#pm-wa").hide();
+    $("#pm-ca").hide();
+    $("#pm-options div").click(function(){
+        $("#pm-options div").css({'border-bottom':'2px solid #d9d9d9','background-color':'#F2F2F2'});
+        $("#pm-options div:nth-child(6)").css('border-bottom','none');
+        $(this).css({'background-color':'white','border-bottom':'none'});
+        $(this).prev().css({'border-bottom':'none'});
+        $("#pm-nb").hide();
+	    $("#pm-qp").hide();
+	    $("#pm-up").hide();
+	    $("#pm-wa").hide();
+	    $("#pm-ca").hide();
+        var thisid = $(this).attr('id');
+        var newid = thisid.substring(0,2) +thisid.substring(3,);
+        $("#" + newid).show();
+    })
+    $("#phonepayment").change(function(){
+    	var val = $(this).val();
+    	var code = $(".selected-dial-code").html();
+    	if(val.indexOf(code) != -1){
+    		var vali = val.substring(code.length,);
+    		$(this).val(vali);
+    	}
+    })
+    var paymentemail = undefined;
+    var paymentnumber = undefined;
+    var paymentemailon = false;
+    var paymentphoneon = false;
+    $("#pd-continue").css('cursor','not-allowed');
+    $("#pd-email").change(function(){
+    	if($(this).val() != ''){
+    		paymentemailon = true;
+    		if(paymentphoneon == true){
+                $("#pd-continue").css('cursor','pointer');
+    		}else{
+    			$("#pd-continue").css('cursor','not-allowed');
+    		}
+    	}else{
+    		$("#pd-continue").css('cursor','not-allowed');
+    	}
+    })
+    $("#phonepayment").change(function(){
+    	if($(this).val() != ''){
+            paymentphoneon = true;
+            if(paymentemailon == true){
+                $("#pd-continue").css('cursor','pointer');
+    		}else{
+    			$("#pd-continue").css('cursor','not-allowed');
+    		}
+    	}else{
+    		$("#pd-continue").css('cursor','not-allowed');
+    	}
+    })
+    $("#pd-continue").click(function(){
+    	if(paymentemailon == true && paymentphoneon == true){
+            paymentemail = $("#pd-email").val();
+	    	var number = $("#phonepayment").val();
+	        var code = $(".selected-dial-code").html();
+	    	if(number.indexOf(code) != -1){
+	    		var vali = number.substring(code.length,);
+	    	}else{
+	    		var vali = number;
+	    	}
+	    	paymentnumber = code + vali;
+	    	$('#payment-methods').fadeTo('slow',1.0);
+		    $("#paymentmethodcover").remove();
+            $("#pd-core").hide();
+            $("#payment-details").css('height','30px');
+            $("#pd-header .fa-angle-up").show();
+            $("#pd-header .fa-angle-down").hide();   
+	    }
+    });
+    $("#pd-header .fa-angle-down").click(function(){
+    	$("#pd-core").hide();
+        $("#payment-details").css('height','30px');
+        $("#pd-header .fa-angle-up").show();
+        $("#pd-header .fa-angle-down").hide(); 
+    })
+    $("#pd-header .fa-angle-up").click(function(){
+    	$("#pd-core").show();
+        $("#payment-details").css('height','110px');
+        $("#pd-header .fa-angle-up").hide();
+        $("#pd-header .fa-angle-down").show(); 
+    })
+
+    $("#pm-nb span").click(function(){
+    	if($(this).find('.pselectsvg').css('display') == 'none'){
+    		$("#pm-nb span .pselectsvg").hide();
+    		$("#pm-nb span .pbordersvg").css({'background-color':'white'});
+    		$(this).find('.pselectsvg').show();
+	    	$(this).find('.pbordersvg').css({'background-color':'#D0FFFF'});
+	    	if($(this).attr('id') == 'pm-nb-sbi'){
+                $("#netbank-select").val('SBIN');
+	    	}else if($(this).attr('id') == 'pm-nb-axis'){
+                $("#netbank-select").val('UTIB');
+	    	}else if($(this).attr('id') == 'pm-nb-icici'){
+                $("#netbank-select").val('ICIC');
+	    	}else if($(this).attr('id') == 'pm-nb-central'){
+                $("#netbank-select").val('CBIN');
+	    	}else if($(this).attr('id') == 'pm-nb-baroda'){
+                $("#netbank-select").val('BARB_R');
+	    	}else if($(this).attr('id') == 'pm-nb-hdfc'){
+                $("#netbank-select").val('HDFC');
+	    	}
+	    }
+        else{
+        	$(this).find('.pselectsvg').hide();
+    	    $(this).find('.pbordersvg').css({'background-color':'white'});
+    	    $("#netbank-select").val('');
+        }
+    })
+    var walletpayment = undefined;
+    $("#pm-wa .row .col-sm-6").click(function(){
+    	if($(this).find('.pselectsvg').css('display') == 'none'){
+    		$("#pm-wa .row .col-sm-6 .pselectsvg").hide();
+    		$("#pm-wa .row .col-sm-6").css({'background-color':'white'});
+    		$(this).find('.pselectsvg').show();
+    		$(this).css({'background-color':'#D0FFFF'});
+    		walletpayment = $(this).attr('data-wallet');
+    		if(walletpayment == 'paytm'){
+    			walletpayment = undefined;
+    		}
+    	}else{
+    		$(this).find('.pselectsvg').hide();
+    		$(this).css({'background-color':'white'});
+    	}
+    });
+    var paypalpayment= false;
+    $("#pm-qp div").click(function(){
+    	if($(this).find('.pselectsvg').css('display') == 'none'){
+    		$(this).find('.pselectsvg').show();
+    		$(this).css({'background-color':'#D0FFFF'});
+    		paypalpayment = true;
+    	}else{
+    		$(this).find('.pselectsvg').hide();
+    		$(this).css({'background-color':'white'});
+    		paypalpayment = false;
+    	}
+    });
+
+    var razorpay = new Razorpay({
+	    key: 'rzp_test_R9MS4y8dG93IWT',
+	      // logo, we'll display it in payment processing popup
+	    image: 'https://i.imgur.com/n5tjHFD.png',
+	});
+	razorpay.once('ready', function(response) {
+        console.log(response.methods);
+    })
+    razorpay.on('payment.success', function(response) {
+	    alert(response.razorpay_payment_id)
+	  }).on('payment.error', function(response) {
+	    alert(response.error.description)
+	})
+    $("#payment-pay").click(function(e){
+    	if($("#pm-nb").css('display')== 'block'){
+            var data = {
+		      amount: parseFloat($("#payment-r .ordertotal").html().substring(2,))*100,
+		      email: paymentemail,
+		      contact: paymentnumber,
+		      method: 'netbanking',
+		      'bank':$("#netbank-select").val(),
+		    }
+		    
+		    razorpay.createPayment(data);
+		    e.preventDefault();
+    	}else if($("#pm-wa").css('display')== 'block'){
+            var data = {
+		      amount: parseFloat($("#payment-r .ordertotal").html().substring(2,))*100,
+		      email: paymentemail,
+		      contact: paymentnumber,
+		      method: 'wallet',
+		      'wallet':walletpayment,
+		    }
+		    
+		    razorpay.createPayment(data);
+		    e.preventDefault();
+    	}else if($("#pm-up").css('display')== 'block'){
+            var data = {
+		      amount: parseFloat($("#payment-r .ordertotal").html().substring(2,))*100,
+		      email: paymentemail,
+		      contact: paymentnumber,
+		      method: 'upi',
+		      'vpa':$("#pm-upi-input").val(),
+		    }
+		    
+		    razorpay.createPayment(data);
+		    e.preventDefault();
+    	}else if($("#pm-qp").css('display')== 'block'){
+            $("#paypal-button").trigger('click');
+    	}
+    })
+
+
+    
+
+   $('#payment-methods').fadeTo('slow',.4);
+   $('#payment-methods').append('<div id="paymentmethodcover" style="position: absolute;top:0;left:0;width: 100%;height:100%;z-index:2;opacity:0.4;filter: alpha(opacity = 50)"></div>');
+   $("#navloginbtn").click(function(){
+   	$("#loginModal").show();
+   	$("#bodyopaquer").show();
+   	$("#loginModal").animate({'opacity':1.0});
+   })
+   $(".loginclose").click(function(){
+   	$("#loginModal").animate({'opacity':0.0});
+   	$("#registerModal").animate({'opacity':0.0});
+   	$("#bodyopaquer").hide();
+   	$("#loginModal").hide();
+   	$("#registerModal").hide();
+   })
+   
+
+    </script>
+    
+    
+</body>
+</html>
+
+

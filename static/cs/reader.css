@@ -1,0 +1,77 @@
+.reader{
+	background-color: white;
+	width: 70%;
+	height: 650px;
+	margin: auto;
+	margin-top:0.5%;
+	box-shadow:0px 3px 16px #888888;
+  margin-left: 29% !important;
+  overflow: hidden;
+}
+
+
+.reader .main-pane{
+    height: 90%;
+    padding-top: 2px;
+}
+.reader .main-pane #magazine{
+  position: relative;
+	height: 98%;
+	width: 100%;
+	margin-left: 0%;
+  margin-top: 0%;
+}
+
+.reader .bottom-pane .slider{
+	-webkit-appearance: none;
+    width: 90%;
+    margin-left: 5%;
+    height: 3px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    margin-top: 30px;
+}
+.reader .bottom-pane .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background:#55A7E1;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.reader .bottom-pane .slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    background: #4CAF50;
+    cursor: pointer;
+    border-radius: 50%;
+}
+.reader .bottom-pane output{
+  position: absolute;
+  background-image: linear-gradient(top, #444444, #999999);
+  width: 40px; 
+  height: 30px; 
+  text-align: center; 
+  color: black; 
+  border-radius: 10px; 
+  display: inline-block; 
+  font: bold 15px/30px Georgia;
+  bottom: 9%;
+  margin-left: -1%;
+  font-size: 10px;
+}
+
+@media screen and (max-width:1240px) and (min-width:768px){
+  .rsdiv{
+    height: 900px !important;
+  }
+}
+
+
+
+
+
+

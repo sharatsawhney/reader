@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Publisher Activation{% endblock %}
+{% block style %}
+	
+{% endblock %}  
+{% block content %}
+{% if allow == True %}
+<div class="container">
+	<h4>Please Fill the Details Below and Set Your Password to activate your Publisher Account!</h4>
+	<div class="form-group">
+	    <label>Name on Bank Account:</label>
+	    <input type="text" name="benname" placeholder="Name on Bank Account" class="pubactivatebenname form-control">
+	</div>
+    <div class="form-group">
+	    <label>Bank Account Number:</label>
+	    <input type="text" name="account" placeholder="Account Number" class="pubactivateaccount form-control">
+	</div>
+	<div class="form-group">
+	    <label>IFSC Code:</label>
+	    <input type="text" name="ifsc" placeholder="IFSC Code" class="pubactivateifsc form-control">
+	</div>
+	<div class="form-group">
+	    <label>Contact Number:</label>
+	    <input type="text" name="number" placeholder="Contact Number" class="pubactivatenumber form-control">
+	</div>
+	<div class="form-group">
+	    <label>Set Password:</label>
+	    <input type="password" name="password" placeholder="Password" class="pubactivatepass form-control">
+	</div>
+	<div class="form-group">
+	    <label>Confirm Password:</label>
+	    <input type="password" name="cnfpassword" placeholder="Confirm Your Password" class="pubactivatecnfpass form-control">
+	</div>
+	{% csrf_token %}
+	<button class="pubactivatebtn">Activate Account</button>
+	<h3 class="pubactivatereply"></h3>
+</div>
+<br><br>
+{% else %}
+<h2>You are not entitled to access this Page!</h2>
+{% endif %}
+{% endblock %}
