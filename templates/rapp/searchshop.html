@@ -191,8 +191,8 @@
         		{% for book in offermp2.ebooks.all %}
 				<div class="card" data-eid="{{ book.id }}">
 				  <i class="fa fa-heart" style="font-size:16px;color:#E4E4E4;position: absolute;top: 10px;margin-left: 170px;"></i>
-    			  <a href="/detail/{{book.id}}/">
-				  <img src="/{{ book.img }}" alt="Ebook">
+    			  <a href="/detail/{{book.id}}/" target="_blank">
+				  <img src="	https://s3.ap-south-1.amazonaws.com/readerearth/{{ book.img }}" alt="Ebook">
 				  <div class="container">
 				    <p class="title" data-id={{ forloop.counter }}>{{ book.name }}</p> 
 				    <p class="author" data-id={{ forloop.counter }}>{{ book.author }}</p>
@@ -213,20 +213,20 @@
         		    <div class="loader2"></div>-->
         		{% endfor %}
         	  </div>
-        	  <a href="/search/" class="mp-2-viewall">View All</a>
+        	  <a href="/search/" class="mp-2-viewall" target="_blank" style="opacity: 0">View All</a>
             </div>
 
             <div class="mp-3">
               <h3>Recommended for you</h3>
-              <a href="/search/" class="mp-viewall">View All</a>
+              <a href="/search/?rec=true" class="mp-viewall" target="_blank">View All</a>
               <div class="mp-3-backlay">
               <div class="mp-3-backlay-fillerl"></div>
               <div class="mp-3-wrapper">
-              	{% for book in ebooks %}
+              	{% for book in recommendedbooks %}
 				<div class="card" data-eid="{{ book.id }}">
-				  <i class="fa fa-heart" style="font-size:16px;color:#E4E4E4;position: absolute;top: 10px;margin-left: 150px;"></i>
-    			  <a href="/detail/{{book.id}}/">
-				  <img src="/{{ book.img }}" alt="Ebook">
+				  <i class="fa fa-heart" style="font-size:16px;color:#E4E4E4;position: absolute;top: 10px;margin-left: 155px;"></i>
+    			  <a href="/detail/{{book.id}}/" target="_blank">
+				  <img src="	https://s3.ap-south-1.amazonaws.com/readerearth/{{ book.img }}" alt="Ebook">
 				  <div class="container">
 				    <p class="title" data-id={{ forloop.counter }}>{{ book.name }}</p> 
 				    <p class="author" data-id={{ forloop.counter }}>{{ book.author }}</p>
@@ -244,15 +244,15 @@
 
             <div class="mp-4">
               <h3>Most Popular</h3>
-              <a href="/search/" class="mp-viewall">View All</a>
+              <a href="/search/?mp=true" class="mp-viewall" target="_blank">View All</a>
               <div class="mp-4-backlay">
               <div class="mp-4-backlay-fillerl"></div>
               <div class="mp-4-wrapper">
-              	{% for book in ebooks %}
+              	{% for book in mostpopularbooks %}
 				<div class="card" data-eid="{{ book.id }}">
-				  <i class="fa fa-heart" style="font-size:16px;color:#E4E4E4;position: absolute;top: 10px;margin-left: 150px;"></i>
-    			  <a href="/detail/{{book.id}}/">
-				  <img src="/{{ book.img }}" alt="Ebook">
+				  <i class="fa fa-heart" style="font-size:16px;color:#E4E4E4;position: absolute;top: 10px;margin-left: 155px;"></i>
+    			  <a href="/detail/{{book.id}}/" target="_blank">
+				  <img src="	https://s3.ap-south-1.amazonaws.com/readerearth/{{ book.img }}" alt="Ebook">
 				  <div class="container">
 				    <p class="title" data-id={{ forloop.counter }}>{{ book.name }}</p> 
 				    <p class="author" data-id={{ forloop.counter }}>{{ book.author }}</p>
@@ -270,15 +270,15 @@
 
             <div class="mp-5">
               <h3>Bestsellers</h3>
-              <a href="/search/?bs=true" class="mp-viewall">View All</a>
+              <a href="/search/?bs=true" class="mp-viewall" target="_blank">View All</a>
               <div class="mp-5-backlay">
               <div class="mp-5-backlay-fillerl"></div>
               <div class="mp-5-wrapper">
-              	{% for book in ebooks %}
+              	{% for book in bestsellers %}
 				<div class="card" data-eid="{{ book.id }}">
-				  <i class="fa fa-heart" style="font-size:16px;color:#E4E4E4;position: absolute;top: 10px;margin-left: 150px;"></i>
-    			  <a href="/detail/{{book.id}}/">
-				  <img src="/{{ book.img }}" alt="Ebook">
+				  <i class="fa fa-heart" style="font-size:16px;color:#E4E4E4;position: absolute;top: 10px;margin-left: 155px;"></i>
+    			  <a href="/detail/{{book.id}}/" target="_blank">
+				  <img src="	https://s3.ap-south-1.amazonaws.com/readerearth/{{ book.img }}" alt="Ebook">
 				  <div class="container">
 				    <p class="title" data-id={{ forloop.counter }}>{{ book.name }}</p> 
 				    <p class="author" data-id={{ forloop.counter }}>{{ book.author }}</p>
@@ -296,15 +296,15 @@
 
             <div class="mp-6">
               <h3>Latest Collection</h3>
-              <a href="/search/?nr=true" class="mp-viewall">View All</a>
+              <a href="/search/?nr=true" class="mp-viewall" target="_blank">View All</a>
               <div class="mp-6-backlay">
               <div class="mp-6-backlay-fillerl"></div>
               <div class="mp-6-wrapper">
-              	{% for book in ebooks %}
+              	{% for book in latestbooks %}
 				<div class="card" data-eid="{{ book.id }}">
-				  <i class="fa fa-heart" style="font-size:16px;color:#E4E4E4;position: absolute;top: 10px;margin-left: 150px;"></i>
-    			  <a href="/detail/{{book.id}}/">
-				  <img src="/{{ book.img }}" alt="Ebook">
+				  <i class="fa fa-heart" style="font-size:16px;color:#E4E4E4;position: absolute;top: 10px;margin-left: 155px;"></i>
+    			  <a href="/detail/{{book.id}}/" target="_blank">
+				  <img src="	https://s3.ap-south-1.amazonaws.com/readerearth/{{ book.img }}" alt="Ebook">
 				  <div class="container">
 				    <p class="title" data-id={{ forloop.counter }}>{{ book.name }}</p> 
 				    <p class="author" data-id={{ forloop.counter }}>{{ book.author }}</p>
@@ -319,7 +319,6 @@
               <div class="mp-6-backlay-fillerr"></div>
               </div>
             </div>
-
             {% else %}
             <div class="row">
                 <span class="search-title" data-number="{{ sqs|length }}"></span>
@@ -328,13 +327,14 @@
                 {% endif %}
             </div>
             {% if sqs|length > 0 %}
-            <div class="mp-search" style="margin-top: 30px;">
+            <div class="mp-search" style="margin-top: 30px;margin-bottom: 20px">
                 <div class="mp-search-wrapper">
                 	{% for book in sqs %}
-                	<div class="card" data-eid="{{ book.ebookid }}">
+                	{% if book.ebookid == None %}
+                	<div class="card" data-eid="{{ book.id }}">
                 	  <i class="fa fa-heart" style="font-size:16px;color:#E4E4E4;position: absolute;top: 10px;margin-left: 145px;"></i>
-	    			  <a href="/detail/{{book.ebookid}}/">
-					  <img src="/{{ book.img }}" alt="Ebook">
+	    			  <a href="/detail/{{book.id}}/" target="_blank">
+					  <img src="	https://s3.ap-south-1.amazonaws.com/readerearth/{{ book.img }}" alt="Ebook">
 					  <div class="container">
 					    <p class="title" data-id={{ forloop.counter }}>{{ book.name }}</p> 
 					    <p class="author" data-id={{ forloop.counter }}>{{ book.author }}</p>
@@ -344,6 +344,21 @@
 					  </div>
 					  </a>
 					</div>
+					{% else %}
+					<div class="card" data-eid="{{ book.ebookid }}">
+                	  <i class="fa fa-heart" style="font-size:16px;color:#E4E4E4;position: absolute;top: 10px;margin-left: 145px;"></i>
+	    			  <a href="/detail/{{book.ebookid}}/" target="_blank">
+					  <img src="	https://s3.ap-south-1.amazonaws.com/readerearth/{{ book.img }}" alt="Ebook">
+					  <div class="container">
+					    <p class="title" data-id={{ forloop.counter }}>{{ book.name }}</p> 
+					    <p class="author" data-id={{ forloop.counter }}>{{ book.author }}</p>
+					    <p class="stars" data-rating="{{ book.rating }}"></p> 
+					    <span class="nprice"><b>&#x20b9; {{ book.price }}</b></span>
+					    <span class="oprice"></span>
+					  </div>
+					  </a>
+					</div>
+					{% endif %}
 					{% endfor %}
                 </div>
             </div>

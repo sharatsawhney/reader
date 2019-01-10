@@ -37,6 +37,11 @@
             margin-bottom: -10px;
             display: none;
     	}
+      #readerfooterlogo{
+        width: 200px;
+        margin-left:35px;
+        margin-top: 10px;
+      }
 {% block style %}
 {% endblock %}
     </style>
@@ -53,7 +58,7 @@
 	        <span class="icon-bar"></span>
 	        <span class="icon-bar"></span>
 	      </button>
-	      <a class="navbar-brand" href="/"></a>
+	      <a href="/"><svg id="navlogo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 235.75 103"><defs><style>.navlogo-1{isolation:isolate;}.navlogo-2{font-size:41.65px;fill:#fcfdff;font-family:Roboto-Light, Roboto;}.navlogo-3{letter-spacing:-0.01em;}.navlogo-4{letter-spacing:0em;}.navlogo-5{letter-spacing:0.02em;}.navlogo-6{fill:#585858;}.navlogo-7{opacity:0.75;mix-blend-mode:multiply;}.navlogo-8{fill:#f7f6f6;}.navlogo-9{fill:#565656;}</style></defs><g class="navlogo-1"><g id="Layer_2" data-name="Layer 2"><g id="top_nav" data-name="top nav"><text class="navlogo-2" transform="translate(38.55 67.56)">eaderearth</text><path class="navlogo-6" d="M19.46,52.08a24.13,24.13,0,0,1,3.28,7.64A22.59,22.59,0,0,1,23,67.89a42.2,42.2,0,0,1-2.16,7.77,21.19,21.19,0,0,0-1.2,7.87v0l0,0a23.87,23.87,0,0,1,1-7.95c.36-1.29.77-2.57,1.1-3.85a23,23,0,0,0,.62-3.91,19.52,19.52,0,0,0-.86-7.74,19.44,19.44,0,0,0-3.79-6.67A1.12,1.12,0,1,1,19.37,52l.09.12Z"/><path class="navlogo-6" d="M19.26,52.56a1.23,1.23,0,0,1,1.27.15c.36.2.71.4,1.06.62a18.18,18.18,0,0,1,2,1.43,12,12,0,0,1,3.12,3.92A15.54,15.54,0,0,1,28,68.22a29.89,29.89,0,0,1-1.33,4.59c-.51,1.49-1.15,2.95-1.73,4.42s-1.24,2.9-1.68,4.41a13,13,0,0,0-.7,4.62.05.05,0,0,1,0,.06.06.06,0,0,1-.06,0c-.33-3.21,1-6.29,2-9.21s2.38-5.88,2.93-8.93a13.23,13.23,0,0,0-1.82-8.8,11.24,11.24,0,0,0-3-3.2,16.41,16.41,0,0,0-1.89-1.21c-.33-.18-.67-.36-1-.53a1.21,1.21,0,0,1-.84-.92v0A.77.77,0,0,1,19.26,52.56Z"/><image class="navlogo-7" width="58" height="103" xlink:href="data:image/png;base64,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"/><path class="navlogo-8" d="M44.46,12.46A9.67,9.67,0,0,0,40,8.63,20.6,20.6,0,0,0,34.47,7.1a39.37,39.37,0,0,0-5.62-.41,62.14,62.14,0,0,0-11.15,1C14,8.37,10.42,9.2,6.78,10a.22.22,0,0,0-.17.26.22.22,0,0,0,.26.17c3.65-.67,7.29-1.42,10.94-2a59,59,0,0,1,11-.74,38.33,38.33,0,0,1,5.46.55,19.43,19.43,0,0,1,5.14,1.58,8.33,8.33,0,0,1,3.78,3.38,8.69,8.69,0,0,1,.82,5,25.08,25.08,0,0,1-3.79,10,58,58,0,0,1-6.59,8.72,63.55,63.55,0,0,1-8,7.54l-4.33,3.39c-.71.57-1.44,1.13-2.14,1.72l-.42.33-.68-35.89a.5.5,0,0,0-1,0L16.48,68s0,0,0,0A1.33,1.33,0,0,0,19.15,68l-.28-14.46a16.67,16.67,0,0,1,9.23,4.68,11.89,11.89,0,0,1,2.65,4.59,15,15,0,0,1,.65,5.43,20.32,20.32,0,0,1-1.5,5.42,23.49,23.49,0,0,1-1.24,2.58c-.45.87-.88,1.75-1.27,2.64C26,82.51,24.3,86.07,23.78,90a.05.05,0,0,0,0,.06.05.05,0,0,0,.06,0,27,27,0,0,1,1.66-5.54c.79-1.77,1.58-3.53,2.42-5.26.44-.86.9-1.7,1.41-2.52a24.36,24.36,0,0,0,1.46-2.57,21.48,21.48,0,0,0,2-5.63,16.63,16.63,0,0,0-.21-6.1A14.65,14.65,0,0,0,30,56.69a17.43,17.43,0,0,0-4.68-4.18A22.69,22.69,0,0,0,22.46,51c.31-.23.61-.47.9-.72,1.47-1.18,2.85-2.47,4.19-3.79,2.66-2.67,5.31-5.33,7.76-8.2a60,60,0,0,0,6.57-9.21,26.7,26.7,0,0,0,3.73-10.8A10.17,10.17,0,0,0,44.46,12.46Z"/><circle class="navlogo-9" cx="18.48" cy="51.57" r="1.42"/></g></g></g></svg></a>
 	    </div>
 
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -66,11 +71,11 @@
 	        <li class="reader-shop-search-li"><input type="text" name="reader-shop-search-input" placeholder="Search" class="reader-shop-search-input">
 	        <svg class="reader-shop-search-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/><path d="M0 0h24v24H0z" fill="none"/></svg></li>
 	        {% if user.is_authenticated %}
-	        <li class="nav-logout"><a href="/logout/" onclick="signOut();" class="logout-btn">LOGOUT</a></li>
+	        <li><a id="navlogoutbtn" href=""><span>Log out</span></a></li>
 	        {% else %}
-            <li><button id="navloginbtn">Login</button></li>
+            <li><button id="navloginbtn">Log in</button></li>
 			{% endif %}
-			<li {% block activeca %}{% endblock %}><a href="/cart/"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/><path d="M0 0h24v24H0z" fill="none"/></svg></a></li>
+			<li><a href="/cart/"><i class="fa fa-shopping-cart" aria-hidden="true" style="color:#FFD9CF;font-size:22px;position:relative;bottom: 2px;"></i><div style="background-color: red;width:17px;height:17px;border-radius: 50%;position: absolute;top: 6px;left: 30px;text-align: center;font-size: 12px"><span style="position: relative;bottom: 1px" id="cartvaluespan"></span></div></a></li>
 
 	      </ul>
 	    </div><!-- /.navbar-collapse -->
@@ -89,7 +94,7 @@
       			<div class="heading">LOGIN</div>
       			<form method="post">
       			  {% csrf_token %}
-      			    <div class="login-input-wrapper">
+      			  <div class="login-input-wrapper">
 	      				<input type="text" name="login-username" class="login-username" id="login-username" placeholder="Email">
 	      				<div class="login-reply-1"></div>
 	      			</div>
@@ -99,7 +104,9 @@
 	      			</div>
       				<a href="/password_reset/" class="forgot">Forgot Password?</a>
       				<button type="submit" class="btn btn-default login-submit submit">SUBMIT</button><br>
-      				<span id="loginsocialtext">Login With:</span>
+              <div style="position: absolute;border-bottom: 2px solid #9F9F9F;top: 354px;width: 32%;left: 14%;"></div>
+      				<span style="position: absolute;top:345px;color: #9F9F9F;left: 47.5%;">OR</span>
+              <div style="position: absolute;border-bottom: 2px solid #9F9F9F;top: 354px;width: 32%;left: 54%;"></div>
       				<i class="fa fa-google logingoogle" aria-hidden="true"></i>
       				<i class="fa fa-facebook loginfacebook" aria-hidden="true"></i>
       				<br>
@@ -136,7 +143,9 @@
       				    <div class="register-reply-3"></div>
       				</div>
       				<button type="submit" class="btn btn-default register-submit submit">SUBMIT</button><br>
-      				<span id="loginsocialtext">Register With:</span>
+      				<div style="position: absolute;border-bottom: 2px solid #9F9F9F;top: 420px;width: 32%;left: 14%;"></div>
+              <span style="position: absolute;top:410px;color: #9F9F9F;left: 47.5%;">OR</span>
+              <div style="position: absolute;border-bottom: 2px solid #9F9F9F;top: 420px;width: 32%;left: 54%;"></div>
       				<i class="fa fa-google logingoogle" aria-hidden="true"></i>
       				<i class="fa fa-facebook loginfacebook" aria-hidden="true"></i>
       				<br>
@@ -156,22 +165,22 @@
 
 	<div class="footer">
 		<div class="row">
-			<div class="col-sm-4 footer-1">
-				<img src="{% static 'images/logo.png' %}"><span class="title">ReaderEarth</span><br>
+			<div class="col-xs-4 footer-1">
+				<svg id="readerfooterlogo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 235.75 103"><defs><style>.readerfooterlogo-1{isolation:isolate;}.readerfooterlogo-2{font-size:41.65px;fill:#fcfdff;font-family:Roboto-Light, Roboto;}.readerfooterlogo-3{letter-spacing:-0.01em;}.readerfooterlogo-4{letter-spacing:0em;}.readerfooterlogo-5{letter-spacing:0.02em;}.readerfooterlogo-6{fill:#585858;}.readerfooterlogo-7{opacity:0.75;mix-blend-mode:multiply;}.readerfooterlogo-8{fill:#f7f6f6;}.readerfooterlogo-9{fill:#565656;}</style></defs><g class="readerfooterlogo-1"><g id="Layer_2" data-name="Layer 2"><g id="top_nav" data-name="top nav"><text class="readerfooterlogo-2" transform="translate(38.55 67.56)">eaderearth</text><path class="readerfooterlogo-6" d="M19.46,52.08a24.13,24.13,0,0,1,3.28,7.64A22.59,22.59,0,0,1,23,67.89a42.2,42.2,0,0,1-2.16,7.77,21.19,21.19,0,0,0-1.2,7.87v0l0,0a23.87,23.87,0,0,1,1-7.95c.36-1.29.77-2.57,1.1-3.85a23,23,0,0,0,.62-3.91,19.52,19.52,0,0,0-.86-7.74,19.44,19.44,0,0,0-3.79-6.67A1.12,1.12,0,1,1,19.37,52l.09.12Z"/><path class="readerfooterlogo-6" d="M19.26,52.56a1.23,1.23,0,0,1,1.27.15c.36.2.71.4,1.06.62a18.18,18.18,0,0,1,2,1.43,12,12,0,0,1,3.12,3.92A15.54,15.54,0,0,1,28,68.22a29.89,29.89,0,0,1-1.33,4.59c-.51,1.49-1.15,2.95-1.73,4.42s-1.24,2.9-1.68,4.41a13,13,0,0,0-.7,4.62.05.05,0,0,1,0,.06.06.06,0,0,1-.06,0c-.33-3.21,1-6.29,2-9.21s2.38-5.88,2.93-8.93a13.23,13.23,0,0,0-1.82-8.8,11.24,11.24,0,0,0-3-3.2,16.41,16.41,0,0,0-1.89-1.21c-.33-.18-.67-.36-1-.53a1.21,1.21,0,0,1-.84-.92v0A.77.77,0,0,1,19.26,52.56Z"/><image class="readerfooterlogo-7" width="58" height="103" xlink:href="data:image/png;base64,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"/><path class="readerfooterlogo-8" d="M44.46,12.46A9.67,9.67,0,0,0,40,8.63,20.6,20.6,0,0,0,34.47,7.1a39.37,39.37,0,0,0-5.62-.41,62.14,62.14,0,0,0-11.15,1C14,8.37,10.42,9.2,6.78,10a.22.22,0,0,0-.17.26.22.22,0,0,0,.26.17c3.65-.67,7.29-1.42,10.94-2a59,59,0,0,1,11-.74,38.33,38.33,0,0,1,5.46.55,19.43,19.43,0,0,1,5.14,1.58,8.33,8.33,0,0,1,3.78,3.38,8.69,8.69,0,0,1,.82,5,25.08,25.08,0,0,1-3.79,10,58,58,0,0,1-6.59,8.72,63.55,63.55,0,0,1-8,7.54l-4.33,3.39c-.71.57-1.44,1.13-2.14,1.72l-.42.33-.68-35.89a.5.5,0,0,0-1,0L16.48,68s0,0,0,0A1.33,1.33,0,0,0,19.15,68l-.28-14.46a16.67,16.67,0,0,1,9.23,4.68,11.89,11.89,0,0,1,2.65,4.59,15,15,0,0,1,.65,5.43,20.32,20.32,0,0,1-1.5,5.42,23.49,23.49,0,0,1-1.24,2.58c-.45.87-.88,1.75-1.27,2.64C26,82.51,24.3,86.07,23.78,90a.05.05,0,0,0,0,.06.05.05,0,0,0,.06,0,27,27,0,0,1,1.66-5.54c.79-1.77,1.58-3.53,2.42-5.26.44-.86.9-1.7,1.41-2.52a24.36,24.36,0,0,0,1.46-2.57,21.48,21.48,0,0,0,2-5.63,16.63,16.63,0,0,0-.21-6.1A14.65,14.65,0,0,0,30,56.69a17.43,17.43,0,0,0-4.68-4.18A22.69,22.69,0,0,0,22.46,51c.31-.23.61-.47.9-.72,1.47-1.18,2.85-2.47,4.19-3.79,2.66-2.67,5.31-5.33,7.76-8.2a60,60,0,0,0,6.57-9.21,26.7,26.7,0,0,0,3.73-10.8A10.17,10.17,0,0,0,44.46,12.46Z"/><circle class="readerfooterlogo-9" cx="18.48" cy="51.57" r="1.42"/></g></g></g></svg><br>
 				<span class="title-2">@ReaderEarth</span><br>
 				<span class="inform"><a>FAQ</a> / <a>Terms Of Use</a> / <a>Privacy Policy</a></span>
 			</div>
-			<div class="col-sm-4 footer-2">
+			<div class="col-xs-4 footer-2">
 				<div class="topic">Links</div>
 				<div class="row">
-					<div class="col-sm-6">
+					<div class="col-xs-6">
 						<h4>Customer Service</h4>
 						<ul>
 							<li><a href="/contact/">Contact Us</a></li>
 							<li><a>FAQs</a></li>
 						</ul>
 					</div>
-					<div class="col-sm-6">
+					<div class="col-xs-6">
 						<h4>Company</h4>
 						<ul>
 							<li><a>About Us</a></li>
@@ -180,7 +189,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-4 footer-3">
+			<div class="col-xs-4 footer-3">
 				<div class="topic">Follow Us</div>
                 <a href="https://www.facebook.com/ReaderEarth.2018/" target="_blank"><i class="fa fa-facebook first-child" aria-hidden="true" style="color: white"></i></a>
                 <a href="https://www.linkedin.com/company/readerearth/" target="_blank"><i class="fa fa-linkedin" aria-hidden="true" style="color: white"></i></a>
@@ -202,20 +211,20 @@
     <script src="https://www.paypalobjects.com/api/checkout.js"></script>
     <script>
 
-      $(".loginchangebtn").click(function(){
-      	$("#loginModal").animate({'opacity':0.0});
+    $(".loginchangebtn").click(function(){
+      $("#loginModal").animate({'opacity':0.0});
 	    $("#loginModal").hide();
      	$("#registerModal").show();
-       	$("#registerModal").animate({'opacity':1.0});
+      $("#registerModal").animate({'opacity':1.0});
 	  });
-     $(".registerchangebtn").click(function(){
-        $("#registerModal").animate({'opacity':0.0});
+    $(".registerchangebtn").click(function(){
+      $("#registerModal").animate({'opacity':0.0});
 	    $("#registerModal").hide();
      	$("#loginModal").show();
-       	$("#loginModal").animate({'opacity':1.0});
-       	$("#bodyopaquer").css('z-index','1');
-       	$("#loginModal").css('z-index','6');
-     });
+      $("#loginModal").animate({'opacity':1.0});
+      $("#bodyopaquer").css('z-index','1');
+      $("#loginModal").css('z-index','6');
+    });
 	 
 	/* setInterval(function(){
 		$.get("repeat.php", function(data){
@@ -290,12 +299,15 @@
                         $("#loginModal").animate({'opacity':0.0});
 					   	$("#bodyopaquer").hide();
 					   	$("#loginModal").hide();
+              location.reload();
 					}else if(data=='Email Entered is Incorrect!'){
                         $(".login-username").css({'border-bottom':'2px solid red'});
 			        	$(".login-reply-1").html(data);
+                $(".login-reply-2").html('');
 					}else if(data=='Password Entered is Incorrect!'){
                         $(".login-password").css({'border-bottom':'2px solid red'});
 			        	$(".login-reply-2").html(data);
+                $(".login-reply-1").html('');
 					}
 				}          
 			});
@@ -314,6 +326,7 @@
         	$(".register-reply-2").html('Password is required!');
         	$(".register-confirm-password").css({'border-bottom':'2px solid red'});
         	$(".register-reply-3").html('Password is required!');
+          $(".register-reply-4").html('');
         }else if(email != '' && password =='' && cpassword==''){
         	$(".register-password").focus();
         }else if(email != '' && password !='' && cpassword==''){
@@ -327,56 +340,81 @@
         }else if(email != '' && password =='' && cpassword!=''){
         	$(".register-password").focus();
         }else{
-        	$(".loader").show();
-        	$.ajax({
-				url: '/register/',
-				type:'POST',
-				data:
-				{
-					'email': email,
-					'cpassword': cpassword,
-					'password': password,
-                    'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
-				},
-				success: function(data)
-				{         
-					$(".loader").hide();
-					if(data=='This Email id has already been taken!'){
-						$(".register-email").css({'border-bottom':'2px solid red'});
-	        	        $(".register-reply-1").html(data);
-	        	    }else if(data=='Please confirm your email address to complete the registration'){
-                        $(".register-email").css({'border-bottom':'2px solid #7F70C9'});
-                        $(".register-reply-1").html('');
-                        $(".register-reply-4").html(data);
-	        	    }
-				}          
-			});
+          if(password==cpassword){
+          	$(".loader").show();
+          	$.ajax({
+      				url: '/register/',
+      				type:'POST',
+      				data:
+      				{
+      					'email': email,
+      					'cpassword': cpassword,
+      					'password': password,
+                          'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+      				},
+      				success: function(data)
+      				{         
+      					$(".loader").hide();
+      					if(data=='This Email id has already been taken!'){
+      						$(".register-email").css({'border-bottom':'2px solid red'});
+      	        	        $(".register-reply-1").html(data);
+                          $(".register-reply-2").html('');
+                          $(".register-reply-3").html('');
+                          $(".register-reply-4").html('');
+      	        	    }else if(data=='Please confirm your email address to complete the registration'){
+                              $(".register-email").css({'border-bottom':'2px solid #7F70C9'});
+                              $(".register-reply-1").html('');
+                              $(".register-reply-4").html(data);
+                              $(".register-reply-2").html('');
+                              $(".register-reply-3").html('');
+      	        	    }
+      				}          
+      			});
+          }else{
+            $(".register-reply-1").html('');
+            $(".register-reply-4").html('');
+            $(".register-password").css({'border-bottom':'2px solid red'});
+            $(".register-confirm-password").css({'border-bottom':'2px solid red'});
+            $(".register-reply-2").html('Passwords do not match!');
+            $(".register-reply-3").html('Passwords do not match!');
+          }
         }
     });
 
     $(".detail-atc i,.detail-atc span").click(function(){
-        if($(".logout-btn").html() == "LOGOUT"){
+        {% if user.is_authenticated %}
             var ebooknumber = parseInt($(".hidden-detail-ebook-id").html());
             $.ajax({
-				url: '/add_cart/',
-				type:'POST',
-				data:
-				{
-					'ebooknumber': ebooknumber,
-					'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
-				},
-				success: function(data)
-				{
-                    $(".cart-reply").html(data);
-					
-				},
-				error: function(xhr,status,error){
-				alert(xhr.responseText);
-			    }             
-			});
-        }else{
-        	$(".cart-reply").html("You must login to continue!");
-        }
+    				url: '/add_cart/',
+    				type:'POST',
+    				data:
+    				{
+    					'ebooknumber': ebooknumber,
+    					'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+    				},
+    				success: function(data)
+    				{
+              if(data == 'Added to cart successfully!'){
+                $("#addcartbox span").html('Book is successfully added to your cart');
+                $('#cartvaluespan').html(parseInt($('#cartvaluespan').html())+1);
+                $("#addcartbox").show();
+                setTimeout(function(){$("#addcartbox").hide()},2000);
+              }else if(data == 'This e-book is already in your cart!'){
+                $("#addcartbox span").html('This e-book is already in your cart!');
+                $("#addcartbox").show();
+                setTimeout(function(){$("#addcartbox").hide()},2000);
+              }
+    					
+    				},
+    				error: function(xhr,status,error){
+    				alert(xhr.responseText);
+    			    }             
+    			});
+        {% else %}
+        	$("#loginModal").show();
+          $("#bodyopaquer").show();
+          $("#loginModal").animate({'opacity':1.0});
+        {% endif %}
     });
 
     $(".durationcartselect").on('change',function(){
@@ -548,31 +586,32 @@
     });
 
     $(".detailHeart").click(function(){
-        if($(".logout-btn").html() == "LOGOUT"){
+        {% if user.is_authenticated %}
             var pathname = window.location.pathname;
             var number1 = pathname.substr(pathname.indexOf("/detail/") + 8);
             var ebooknumber = number1.substr(0,number1.indexOf("/"));
             $.ajax({
-				url: '/atw/',
-				type:'POST',
-				data:
-				{
-					'ebooknumber': ebooknumber,
-					'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
-				},
-				success: function(data)
-				{
-                    $(".cart-reply").html(data);
-                    $('.detailHeart i').css('color','#FF0000')
-					
-				},
-				error: function(xhr,status,error){
-				alert(xhr.responseText);
-			    }             
-			});
-        }else{
-        	$(".cart-reply").html("You must login to continue!");
-        }
+    				url: '/atw/',
+    				type:'POST',
+    				data:
+    				{
+    					'ebooknumber': ebooknumber,
+    					'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+    				},
+    				success: function(data)
+    				{
+                        $('.detailHeart i').css('color','#FF0000')
+    					
+    				},
+    				error: function(xhr,status,error){
+    				alert(xhr.responseText);
+    			    }             
+    			});
+        {% else %}
+        	$("#loginModal").show();
+          $("#bodyopaquer").show();
+          $("#loginModal").animate({'opacity':1.0});
+        {% endif %}
     });
 
     $(".loader3").hide();
@@ -1195,7 +1234,7 @@
 
 
 	var detailprice = parseFloat($('.detail-nprice').attr('data-price'));
-	var detailid = parseInt($(".hidden-detail-ebook-id").html());
+	var detailid = parseInt($(".hidden-detail-ebook-id").html())%80;
 	if(detailid == 0){
 		detailid = 80;
 	}
@@ -1240,7 +1279,7 @@
     
     $(".detail-similar-oprice").each(function(){
         var detailprice = parseFloat($(this).parent().find('.detail-similar-nprice').attr('data-price'));
-		var detailid = parseInt($(this).parent().parent().parent().parent().attr('data-id'));
+		var detailid = parseInt($(this).parent().parent().parent().parent().attr('data-id'))%80;
 		if(detailid == 0){
 			detailid = 80;
 		}
@@ -1359,6 +1398,10 @@
     	$(".detail-rstars i:nth-child(5)").css('color','#B2B2B2');
     	$(this).css('color','#FF8E19');
     	rateduser(1);
+      {% else %}
+      $("#loginModal").show();
+      $("#bodyopaquer").show();
+      $("#loginModal").animate({'opacity':1.0});
     	{% endif %}
     });
     $(".detail-rstars i:nth-child(2)").click(function(){
@@ -1369,6 +1412,10 @@
     	$(".detail-rstars i:nth-child(5)").css('color','#B2B2B2');
     	$(this).css('color','#FF8E19');
     	rateduser(2);
+      {% else %}
+      $("#loginModal").show();
+      $("#bodyopaquer").show();
+      $("#loginModal").animate({'opacity':1.0});
     	{% endif %}
     });
     $(".detail-rstars i:nth-child(3)").click(function(){
@@ -1379,6 +1426,10 @@
     	$(".detail-rstars i:nth-child(5)").css('color','#B2B2B2');
     	$(this).css('color','#FF8E19');
     	rateduser(3);
+      {% else %}
+      $("#loginModal").show();
+      $("#bodyopaquer").show();
+      $("#loginModal").animate({'opacity':1.0});
     	{% endif %}
     });
     $(".detail-rstars i:nth-child(4)").click(function(){
@@ -1389,6 +1440,10 @@
     	$(".detail-rstars i:nth-child(5)").css('color','#B2B2B2');
     	$(this).css('color','#FF8E19');
     	rateduser(4);
+      {% else %}
+      $("#loginModal").show();
+      $("#bodyopaquer").show();
+      $("#loginModal").animate({'opacity':1.0});
     	{% endif %}
     });
     $(".detail-rstars i:nth-child(5)").click(function(){
@@ -1399,6 +1454,10 @@
     	$(".detail-rstars i:nth-child(4)").css('color','#FF8E19');
     	$(this).css('color','#FF8E19');
     	rateduser(5);
+      {% else %}
+      $("#loginModal").show();
+      $("#bodyopaquer").show();
+      $("#loginModal").animate({'opacity':1.0});
     	{% endif %}
     });
     var detailbookrating = parseInt({{ rating|safe }});
@@ -1492,7 +1551,7 @@
 	    	}
     }
     $(".detail-similar-book .fa-heart").click(function(){
-    	if($(".logout-btn").html() == "LOGOUT"){
+    	{% if user.is_authenticated %}
     		var ebooknumber = parseInt($(this).parent().attr('data-id'));
             var curelem = $(this);
     		if($(this).css('color') != 'rgb(255, 0, 0)'){
@@ -1506,7 +1565,6 @@
 					},
 					success: function(data)
 					{
-	                    $(".cart-reply").html(data);
 	                    curelem.css('color','red')
 						
 					},
@@ -1525,7 +1583,6 @@
 					},
 					success: function(data)
 					{
-	                    $(".cart-reply").html(data);
 	                    curelem.css('color','rgb(178, 178, 178)');
 						
 					},
@@ -1534,15 +1591,17 @@
 				    }             
 				});
     		}
-        }else{
-        	$(".cart-reply").html("You must login to continue!");
-        }
+        {% else %}
+        	$("#loginModal").show();
+          $("#bodyopaquer").show();
+          $("#loginModal").animate({'opacity':1.0});
+        {% endif %}
     })
 
 
 
     $(".detail-img .fa-heart").click(function(){
-    	if($(".logout-btn").html() == "LOGOUT"){
+    	{% if user.is_authenticated %}
     		var ebooknumber = parseInt($(".hidden-detail-ebook-id").html());
             var curelem = $(this);
     		if($(this).css('color') != 'rgb(255, 0, 0)'){
@@ -1556,7 +1615,6 @@
 					},
 					success: function(data)
 					{
-	                    $(".cart-reply").html(data);
 	                    curelem.css('color','red')
 						
 					},
@@ -1575,7 +1633,6 @@
 					},
 					success: function(data)
 					{
-	                    $(".cart-reply").html(data);
 	                    curelem.css('color','rgb(178, 178, 178)');
 						
 					},
@@ -1584,9 +1641,11 @@
 				    }             
 				});
     		}
-        }else{
-        	$(".cart-reply").html("You must login to continue!");
-        }
+        {% else %}
+        	$("#loginModal").show();
+          $("#bodyopaquer").show();
+          $("#loginModal").animate({'opacity':1.0});
+        {% endif %}
     });
 
     $(".detail-sug-wrapper .card .container .title").each(function(){
@@ -1716,7 +1775,7 @@
 	    });
     }
     $(".detail-sug-wrapper2 .card .fa-heart").click(function(){
-    	if($(".logout-btn").html() == "LOGOUT"){
+    	{% if user.is_authenticated %}
     		var ebooknumber = parseInt($(this).parent().attr('data-eid'));
             var curelem = $(this);
     		if($(this).css('color') != 'rgb(255, 0, 0)'){
@@ -1730,7 +1789,6 @@
 					},
 					success: function(data)
 					{
-	                    $(".cart-reply").html(data);
 	                    curelem.css('color','red')
 						
 					},
@@ -1749,7 +1807,6 @@
 					},
 					success: function(data)
 					{
-	                    $(".cart-reply").html(data);
 	                    curelem.css('color','rgb(178, 178, 178)');
 						
 					},
@@ -1758,9 +1815,11 @@
 				    }             
 				});
     		}
-        }else{
-        	$(".cart-reply").html("You must login to continue!");
-        }
+        {% else %}
+        	$("#loginModal").show();
+          $("#bodyopaquer").show();
+          $("#loginModal").animate({'opacity':1.0});
+        {% endif %}
     })
 
     if(String(window.location.href).indexOf('/detail') != -1){
@@ -1773,7 +1832,7 @@
 	    });
     }
     $(".detail-sug-wrapper .card .fa-heart").click(function(){
-    	if($(".logout-btn").html() == "LOGOUT"){
+    	{% if user.is_authenticated %}
     		var ebooknumber = parseInt($(this).parent().attr('data-eid'));
             var curelem = $(this);
     		if($(this).css('color') != 'rgb(255, 0, 0)'){
@@ -1815,9 +1874,9 @@
 				    }             
 				});
     		}
-        }else{
+        {% else %}
         	$(".cart-reply").html("You must login to continue!");
-        }
+        {% endif %}
     })
 
     $(".dash-ebook-progress-text").each(function(){
@@ -1839,7 +1898,6 @@
 
 	}
 
-    $("#pm-nb").show();
     $("#pm-qp").hide();
     $("#pm-up").hide();
     $("#pm-wa").hide();
@@ -1857,6 +1915,11 @@
         var thisid = $(this).attr('id');
         var newid = thisid.substring(0,2) +thisid.substring(3,);
         $("#" + newid).show();
+      if($(this).attr('id') == 'pmo-ca'){
+        $('#payment-pay').css({'cursor':'not-allowed','opacity':'0.4'});
+      }else{
+        $('#payment-pay').css({'cursor':'pointer','opacity':'1.0'});
+      }
     })
     $("#phonepayment").change(function(){
     	var val = $(this).val();
@@ -2031,7 +2094,30 @@
 		    e.preventDefault();
     	}else if($("#pm-qp").css('display')== 'block'){
             $("#paypal-button").trigger('click');
-    	}
+    	}else if($("#pm-ca").css('display')== 'block'){
+        if($('#payment-pay').css('opacity') == '1'){
+          if($("#card-remember").val() == 'on'){
+            var cardcheck =1;
+          }else{
+            var cardcheck = 0;
+          }
+          var data = {
+          amount: parseFloat($("#payment-r .ordertotal").html().substring(2,))*100,
+          email: paymentemail,
+          contact: paymentnumber,
+          method: 'card',
+          'card[name]': $("#card-name").val(),
+          'card[number]':$(".cc-field input:nth-child(1)").val() + $(".cc-field input:nth-child(2)").val() + $(".cc-field input:nth-child(3)").val() + $(".cc-field input:nth-child(4)").val(),
+          'card[cvv]':$("#card-cvc").val(),
+          'card[expiry_month]':$("#card-expiry1").val(),
+          'card[expiry_year]' : $("#card-expiry2").val(),
+          'save': cardcheck,
+          }
+          
+          razorpay.createPayment(data);
+          e.preventDefault();
+        }
+      }
     })
 
 
@@ -2052,7 +2138,237 @@
    	$("#registerModal").hide();
    })
    
+      $(".cc-field input:nth-child(1)").keyup(function(){
+        var val = $(this).val().length;
+        if(val==4){
+          $(".cc-field input:nth-child(2)").focus();
+        }
+      });
+      $(".cc-field input:nth-child(2)").keyup(function(){
+        var val = $(this).val().length;
+        if(val==4){
+          $(".cc-field input:nth-child(3)").focus();
+        }
+      });
+      $(".cc-field input:nth-child(3)").keyup(function(){
+        var val = $(this).val().length;
+        if(val==4){
+          $(".cc-field input:nth-child(4)").focus();
+        }
+      });
+      $(".cc-field input:nth-child(4)").keyup(function(){
+        var val = $(this).val().length;
+        if(val==4){
+          $("#card-name").focus();
+        }
+      });
+      $("#card-expiry1").keyup(function(){
+        var val = $(this).val().length;
+        if(val==2){
+          $("#card-expiry2").focus();
+        }
+      });
+      $("#card-front input").keyup(function(){
+        if($(".cc-field input:nth-child(1)").val().length==4 && $(".cc-field input:nth-child(2)").val().length==4 && $(".cc-field input:nth-child(3)").val().length==4 && $(".cc-field input:nth-child(4)").val().length==4 && $("#card-name").val() != '' && $("#card-expiry1").val().length ==2 && $("#card-expiry2").val().length == 2){
+          $("#card-next").show();
+        }
+      })
+      $("#card-next").click(function(){
+        var elem = $("#card-front");
 
+        $({deg: 0}).animate({deg: 90}, {
+            duration: 300,
+            step: function(now){
+                elem.css({
+                     transform: "rotateY(" + now + "deg)"
+                });
+            }
+        });
+        setTimeout(revanim,300);
+        function revanim(){
+          $("#card-front").hide();
+          $("#card-back").show();
+          var elem2 = $("#card-back");
+
+          $({deg: 90}).animate({deg: 0}, {
+              duration: 300,
+              step: function(now){
+                  elem2.css({
+                       transform: "rotateY(" + now + "deg)"
+                  });
+              }
+          });
+          setTimeout(function(){$("#card-backer").show();$("#card-cvc").focus()},300);
+        }
+        $(this).hide();
+      })
+      $("#card-backer").click(function(){
+        var elem = $("#card-back");
+
+        $({deg: 0}).animate({deg: 90}, {
+            duration: 300,
+            step: function(now){
+                elem.css({
+                     transform: "rotateY(" + now + "deg)"
+                });
+            }
+        });
+        setTimeout(revanim,300);
+        function revanim(){
+          $("#card-back").hide();
+          $("#card-front").show();
+          var elem2 = $("#card-front");
+
+          $({deg: 90}).animate({deg: 0}, {
+              duration: 300,
+              step: function(now){
+                  elem2.css({
+                       transform: "rotateY(" + now + "deg)"
+                  });
+              }
+          });
+          setTimeout(function(){$("#card-next").show();},300);
+        }
+        $(this).hide();
+      })
+
+      $("#card-front input").keyup(function(){
+        if($(".cc-field input:nth-child(1)").val().length==4 && $(".cc-field input:nth-child(2)").val().length==4 && $(".cc-field input:nth-child(3)").val().length==4 && $(".cc-field input:nth-child(4)").val().length==4 && $("#card-name").val() != '' && $("#card-expiry1").val().length ==2 && $("#card-expiry2").val().length == 2 && $("#card-cvc").val().length==3){
+          $("#payment-pay").css({'cursor':'pointer','opacity':'1.0'});
+        }
+      })
+      $("#card-back input").keyup(function(){
+        if($(".cc-field input:nth-child(1)").val().length==4 && $(".cc-field input:nth-child(2)").val().length==4 && $(".cc-field input:nth-child(3)").val().length==4 && $(".cc-field input:nth-child(4)").val().length==4 && $("#card-name").val() != '' && $("#card-expiry1").val().length ==2 && $("#card-expiry2").val().length == 2 && $("#card-cvc").val().length==3){
+          $("#payment-pay").css({'cursor':'pointer','opacity':'1.0'});
+        }
+      })
+      $("#card-name").keypress(function(e){
+        if(e.which == 13){
+          $("#card-expiry1").focus();
+        }
+      })
+      $("#card-expiry2").keypress(function(e){
+        if(e.which == 13){
+          if($(".cc-field input:nth-child(1)").val().length==4 && $(".cc-field input:nth-child(2)").val().length==4 && $(".cc-field input:nth-child(3)").val().length==4 && $(".cc-field input:nth-child(4)").val().length==4 && $("#card-name").val() != '' && $("#card-expiry1").val().length ==2 && $("#card-expiry2").val().length == 2){
+            var elem = $("#card-front");
+
+            $({deg: 0}).animate({deg: 90}, {
+                duration: 300,
+                step: function(now){
+                    elem.css({
+                         transform: "rotateY(" + now + "deg)"
+                    });
+                }
+            });
+            setTimeout(revanim,300);
+            function revanim(){
+              $("#card-front").hide();
+              $("#card-back").show();
+              $("#card-next").hide();
+              var elem2 = $("#card-back");
+
+              $({deg: 90}).animate({deg: 0}, {
+                  duration: 300,
+                  step: function(now){
+                      elem2.css({
+                           transform: "rotateY(" + now + "deg)"
+                      });
+                  }
+              });
+              setTimeout(function(){$("#card-backer").show();$("#card-cvc").focus()},300);
+            }
+          }
+        }
+      })
+
+      $(".cc-field input:nth-child(2)").keyup(function(e){
+        if(e.keyCode == 8){
+          if($(this).val().length == 0){
+            $(".cc-field input:nth-child(1)").focus();
+          }
+        }
+      })
+      $(".cc-field input:nth-child(3)").keyup(function(e){
+        if(e.keyCode == 8){
+          if($(this).val().length == 0){
+            $(".cc-field input:nth-child(2)").focus();
+          }
+        }
+      })
+      $(".cc-field input:nth-child(4)").keyup(function(e){
+        if(e.keyCode == 8){
+          if($(this).val().length == 0){
+            $(".cc-field input:nth-child(3)").focus();
+          }
+        }
+      })
+      $("#navlogoutbtn").attr('href','/logout?page=' + location.pathname.substring(1,));
+
+      $.ajax({
+        url: '/getcartvalue/',
+        type:'GET',
+        success: function(data)
+        {
+          $('#cartvaluespan').html(data);
+        },
+        error: function(xhr,status,error){
+        alert(xhr.responseText);
+          }             
+      });
+
+      $(".detail-buy").click(function(){
+        {% if user.is_authenticated %}
+          $.ajax({
+            url: '/addbuyentry/',
+            type:'POST',
+            data:
+            {
+              'ebookid': parseInt($(".hidden-detail-ebook-id").html()),
+              'amount': parseFloat($(".detail-nprice").html().substring(2,)),
+              'duration':'Buy',
+              'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(data)
+            {
+                location.href= '/payment/?buyid=' + data;
+            },
+            error: function(xhr,status,error){
+            alert(xhr.responseText);
+              }             
+          }); 
+        {% else %}
+        $("#loginModal").show();
+        $("#bodyopaquer").show();
+        $("#loginModal").animate({'opacity':1.0});
+        {% endif %}
+      })
+
+      $(".detail-rent").click(function(){
+        {% if user.is_authenticated %}
+          $.ajax({
+            url: '/addbuyentry/',
+            type:'POST',
+            data:
+            {
+              'ebookid': parseInt($(".hidden-detail-ebook-id").html()),
+              'amount': parseFloat($(".detail-nprice").html().substring(2,)),
+              'duration':$(".detail-rentselect").val(),
+              'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(data)
+            {
+                location.href= '/payment/?buyid=' + data;
+            },
+            error: function(xhr,status,error){
+            alert(xhr.responseText);
+              }             
+          }); 
+        {% else %}
+        $("#loginModal").show();
+        $("#bodyopaquer").show();
+        $("#loginModal").animate({'opacity':1.0});
+        {% endif %}
+      })
     </script>
     
     

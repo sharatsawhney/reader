@@ -222,6 +222,16 @@ class Lastpage(models.Model):
         return str(self.epubcfi)
 
 
+class Lastpagesample(models.Model):
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
+    ebook = models.ForeignKey('Ebooks',on_delete=models.DO_NOTHING)
+    epubcfi = models.TextField(default='')
+    time = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.epubcfi)
+
+
 class Uploaded(models.Model):
     publisher = models.ForeignKey('Publishers',on_delete=models.DO_NOTHING)
     file = models.CharField(max_length=255)
@@ -537,3 +547,55 @@ class Publisherpayment(models.Model):
 
     def __str__(self):
         return self.paymentid
+
+
+class Subscriptiontry(models.Model):
+    subid = models.CharField(max_length=255)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING,null=True)
+    publicip = models.CharField(max_length=255)
+    localip = models.CharField(max_length=255,default='')
+    subplan = models.IntegerField()
+    CHOICES = (
+        (1,1),
+        (3,3),
+        (6,6),
+        (12,12),
+    )
+    subtime = models.IntegerField(choices=CHOICES,default=1)
+    amount = models.IntegerField()
+    time = models.DateTimeField(auto_now_add=True)
+    purchased = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.subid
+
+
+class Buyentry(models.Model):
+    buyid = models.CharField(max_length=255)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    ebook = models.ForeignKey(Ebooks,on_delete=models.DO_NOTHING)
+    CHOICES = (
+        ('3 days', '3 days'),
+        ('7 days', '7 days'),
+        ('14 days', '14 days'),
+        ('21 days', '21 days'),
+        ('1 month', '1 month'),
+        ('1.5 months', '1.5 months'),
+        ('2 months', '2 months'),
+        ('3 months', '3 months'),
+        ('4 months', '4 months'),
+        ('5 months', '5 months'),
+        ('6 months', '6 months'),
+        ('12 months', '12 months'),
+        ('18 months', '18 months'),
+        ('24 months', '24 months'),
+        ('Buy','Buy')
+    )
+    duration = models.CharField(max_length=255, choices=CHOICES, default='1 month')
+    amount = models.FloatField()
+    time = models.DateTimeField(auto_now_add=True)
+    purchased = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.buyid
+

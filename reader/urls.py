@@ -19,6 +19,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from haystack.forms import FacetedSearchForm
 from haystack.views import FacetedSearchView
+from django.conf.urls import handler400, handler403, handler404, handler500
+
+
+handler400 = 'rapp.views.error404'
+handler403 = 'rapp.views.error404'
+handler404 = 'rapp.views.error404'
+handler500 = 'rapp.views.error404'
 
 
 admin.site.site_header = settings.ADMIN_SITE_HEADER

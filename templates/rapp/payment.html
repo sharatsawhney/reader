@@ -5,6 +5,237 @@
 .navbar{
     margin-bottom: 0px;
 }
+#payment-container{
+	overflow-y: hidden;
+}
+#pm-ca{
+	display: none;
+}
+#card-front{
+	background-color: white;
+	width: 66%;
+	height: 220px;
+	margin-left: 17%;
+	margin-top: 75px;
+	border-radius: 15px;
+	box-shadow: 0px 0px 10px rgba(128,128,128,0.3);
+	padding: 25px 30px 25px 30px;
+	position: relative;
+}
+#cardlogosvg{
+	width: 60px;
+}
+#card-front-text{
+	color: #4C6E85;	
+	position: relative;
+	bottom: 15px;
+}
+#card-front-text span:nth-child(1){
+	font-style: italic;
+	font-size: 20px;
+}
+#card-front-text span:nth-child(2){
+	font-weight: bold;
+	font-size: 20px;
+	margin-left:28%;
+}
+#cardsmalllogo{
+	width: 30px;
+	position: absolute;
+	right: 0px;
+}
+.cc-field{
+	margin-top: 5px;
+}
+.cc-field input{
+	background-color: #DBE1E6;
+	width: 21%;
+	height: 28px;
+	border: none;
+	outline: none;
+	font-size: 18px;
+	margin-right: 5%;
+	padding-left: 14px;
+	padding-right: 14px;
+}
+.cc-field input:nth-child(4){
+	margin-right: 0% !important;
+}
+#card-name{
+    margin-top: 20px;
+	background-color: #DBE1E6;
+	width: 65%;
+	height: 33px;
+	border: none;
+	outline: none;
+	font-size: 16px;
+	margin-right: 12%;
+	border-radius: 9px;
+	padding-left: 14px;
+	padding-right: 14px;
+	padding-top: 2px;
+	text-transform: uppercase;
+}
+#card-expiry1{
+	background-color: #DBE1E6;
+	width: 10%;
+	height: 28px;
+	border: none;
+	outline: none;
+	font-size: 13px;
+	padding-left: 8px;
+	padding-right: 5px;
+	position: relative;
+	bottom: 2px;
+}
+#card-expiry2{
+	background-color: #DBE1E6;
+	width: 10%;
+	height: 28px;
+	border: none;
+	outline: none;
+	font-size: 13px;
+	padding-left: 5px;
+	padding-right: 8px;
+	position: relative;
+	bottom: 2px;
+	right: 3px;
+}
+#card-back{
+	background-color: white;
+	width: 66%;
+	height: 220px;
+	margin-left: 17%;
+	margin-top: 75px;
+	border-radius: 15px;
+	box-shadow: 0px 0px 10px rgba(128,128,128,0.3);
+	padding-top: 3px;
+	position: relative;
+	display: none;
+}
+#card-back-filler{
+	background-color: #3A6079;
+	height: 70px;
+	margin-top: 20px;
+	width: 100%;
+}
+#card-back-details{
+	background-color: #4C6E85;
+	width: 90%;
+	margin-top: 15px;
+	margin-left: 5%;
+	height: 40px;
+}
+#card-back-details span{
+	color: white;
+	font-size: 23px;
+	margin-left: 30px;
+	position: relative;
+	top: 4px;
+}
+#card-back-details input{
+	background-color: white;
+	border: none;
+	width: 25%;
+	height: 30px;
+	position: relative;
+	top: 4px;
+	margin-left: 4%;
+	padding-left: 21px;
+	padding-right: 21px;
+	outline: none;
+	font-size: 24px;
+}
+#card-remember{
+	margin-top: 40px;
+	margin-left: 6%;
+}
+#card-remember-text{
+	color: #4C6E85;
+	font-size: 18px;
+	position: absolute;
+	top: 178px;
+	left: 13%;
+}
+#card-remember {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 180px;
+  left: 6%;
+  height: 18px;
+  width: 18px;
+  background-color: white;
+  border: 1px solid #4C6E85;
+}
+
+/* On mouse-over, add a grey background color */
+.check-container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.check-container input:checked ~ .checkmark {
+  background-color: #4C6E85;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.check-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.check-container .checkmark:after {
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+#card-next{
+	position: absolute;
+	top: 180px;
+	right: 4%;
+	background-color: #008FF2;
+	border: none;
+	color: white;
+	width: 60px;
+	height: 30px;
+	font-size: 18px;
+	display: none;
+	outline: none;
+}
+#card-backer{
+	position: absolute;
+	top: 180px;
+	left: 4%;
+	background-color: #008FF2;
+	border: none;
+	color: white;
+	width: 60px;
+	height: 30px;
+	font-size: 18px;
+	display: none;
+	outline : none;
+}
 {% endblock %}
 {% block content %}
 <div id="payment-container">
@@ -182,7 +413,34 @@
                         <svg class="pselectsvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38.91 38.91"><defs><style>.selectsvg-1{fill:#1de9b6;}.selectsvg-2{fill:#fff;}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="body"><circle class="selectsvg-1" cx="19.45" cy="19.45" r="19.45"/><rect class="selectsvg-2" x="20.06" y="7.07" width="5.86" height="24.78" transform="matrix(0.73, 0.68, -0.68, 0.73, 19.41, -10.45)"/><rect class="selectsvg-2" x="10.08" y="15.34" width="5.86" height="15.51" transform="translate(-12.76 16.89) rotate(-47.07)"/></g></g></svg>
                         </div>
                     </div>
-                    <div id="pm-card"></div>
+                    <div id="pm-ca">
+                    	<div id="card-front">
+                    		<div id="card-front-text">
+                    		  <span>Card</span>
+                    		  <span>BANK</span>
+                    		  <svg id="cardsmalllogo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 81 149"><defs><style>.cardsmalllogo-1{isolation:isolate;}.cardsmalllogo-2{fill:#aa1e4c;}.cardsmalllogo-3{opacity:0.75;mix-blend-mode:multiply;}.cardsmalllogo-4{fill:url(#cardsmalllogofill);}.cardsmalllogo-5{fill:#cccbcb;}</style><linearGradient id="cardsmalllogofill" x1="7.68" y1="71.92" x2="69.26" y2="71.92" gradientUnits="userSpaceOnUse"><stop offset="0.02" stop-color="#c75fa3"/><stop offset="0.04" stop-color="#be5b9f"/><stop offset="0.14" stop-color="#944a8b"/><stop offset="0.25" stop-color="#703b7a"/><stop offset="0.37" stop-color="#522e6c"/><stop offset="0.49" stop-color="#3c2561"/><stop offset="0.62" stop-color="#2c1e5a"/><stop offset="0.76" stop-color="#221a55"/><stop offset="0.96" stop-color="#1f1954"/></linearGradient></defs><g class="cardsmalllogo-1"><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path class="cardsmalllogo-2" d="M27.8,78.54A37.5,37.5,0,0,1,33,90.48a35,35,0,0,1,.44,12.76c-.55,4.22-2.09,8.2-3.4,12.14a32.82,32.82,0,0,0-1.9,12.29,0,0,0,0,1,0,0,0,0,0,0,1,0,0,37,37,0,0,1,1.54-12.41c.57-2,1.21-4,1.74-6a35.58,35.58,0,0,0,1-6.11A29.78,29.78,0,0,0,25,80.61a1.73,1.73,0,0,1,.19-2.46,1.77,1.77,0,0,1,2.48.19l.14.19Z"/><path class="cardsmalllogo-2" d="M27.49,79.28a2,2,0,0,1,2,.23c.56.31,1.12.63,1.67,1a28.67,28.67,0,0,1,3.2,2.24,18.72,18.72,0,0,1,4.91,6.12,24.07,24.07,0,0,1,2,14.9,46.36,46.36,0,0,1-2.1,7.17c-.81,2.33-1.81,4.61-2.73,6.9s-1.95,4.54-2.64,6.89a20.16,20.16,0,0,0-1.1,7.22.08.08,0,0,1-.07.09.09.09,0,0,1-.1-.07c-.52-5,1.55-9.83,3.22-14.39s3.75-9.18,4.62-14a20.5,20.5,0,0,0-2.87-13.75,17.64,17.64,0,0,0-4.77-5,25.91,25.91,0,0,0-3-1.89c-.52-.29-1.05-.56-1.6-.82a1.9,1.9,0,0,1-1.32-1.44v0A1.2,1.2,0,0,1,27.49,79.28Z"/><image class="cardsmalllogo-3" width="81" height="149" xlink:href="data:image/png;base64,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"/><path class="cardsmalllogo-4" d="M67.38,15.85a15.21,15.21,0,0,0-7.06-6,32.73,32.73,0,0,0-8.69-2.4,62.67,62.67,0,0,0-8.87-.64,98.9,98.9,0,0,0-17.59,1.6c-5.79,1-11.48,2.33-17.22,3.51a.35.35,0,1,0,.14.68c5.75-1.05,11.5-2.22,17.26-3.12A93.85,93.85,0,0,1,42.73,8.34a61,61,0,0,1,8.61.86,30.86,30.86,0,0,1,8.11,2.47,13.1,13.1,0,0,1,6,5.27,13.46,13.46,0,0,1,1.3,7.78c-.57,5.48-3.06,10.74-6,15.58A90.7,90.7,0,0,1,50.35,53.93,99.83,99.83,0,0,1,37.78,65.71L31,71c-1.12.9-2.27,1.76-3.38,2.69l-.66.51L25.84,18.14a.79.79,0,0,0-1.58,0l-1,84.52s0,0,0,.06a2.1,2.1,0,0,0,4.21-.08L27,80.07c5.3.91,10.81,3.33,14.56,7.31a18.53,18.53,0,0,1,4.18,7.16,23.2,23.2,0,0,1,1,8.48,31.51,31.51,0,0,1-2.36,8.47,36.54,36.54,0,0,1-1.95,4c-.71,1.36-1.38,2.73-2,4.12-2.25,5.64-4.9,11.2-5.72,17.27a.08.08,0,0,0,.16,0,41.88,41.88,0,0,1,2.62-8.65c1.24-2.76,2.48-5.52,3.82-8.22.69-1.34,1.43-2.65,2.22-3.93a38,38,0,0,0,2.3-4,33.34,33.34,0,0,0,3.11-8.8,25.74,25.74,0,0,0-.33-9.52,22.79,22.79,0,0,0-4.15-8.84,27.4,27.4,0,0,0-7.38-6.53A35.9,35.9,0,0,0,32.69,76c.48-.37,1-.73,1.43-1.12,2.31-1.84,4.49-3.85,6.61-5.91C44.92,64.83,49.1,60.66,53,56.19A93.77,93.77,0,0,0,63.32,41.8c2.89-5.15,5.4-10.73,5.88-16.87A15.76,15.76,0,0,0,67.38,15.85Z"/><ellipse class="cardsmalllogo-5" cx="25.97" cy="77.05" rx="2.07" ry="2.05"/></g></g></g></svg>
+                    		</div>
+                    		<svg id="cardlogosvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 63.49 57.14"><defs><style>.cardlogo-1{fill:#536e86;}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path class="cardlogo-1" d="M0,46.91A10.22,10.22,0,0,0,10.23,57.14H21.06V45.7H0Z"/><rect class="cardlogo-1" y="30.39" width="21.06" height="11.68"/><path class="cardlogo-1" d="M0,10.23v1.22H21.06V0H10.23A10.23,10.23,0,0,0,0,10.23Z"/><path class="cardlogo-1" d="M53.26,0H24.69V57.14H39.22V11.45H63.49V10.23A10.23,10.23,0,0,0,53.26,0Z"/><rect class="cardlogo-1" y="15.08" width="21.06" height="11.68"/><rect class="cardlogo-1" x="42.85" y="15.08" width="20.64" height="11.68"/><rect class="cardlogo-1" x="42.85" y="30.39" width="20.64" height="11.68"/><path class="cardlogo-1" d="M42.85,57.14H53.26A10.23,10.23,0,0,0,63.49,46.91V45.7H42.85Z"/></g></g></svg><br>
+	                		<fieldset class="cc-field cc-number invalid filled"><input type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" pattern="[0-9]*" size="4" maxlength="4" class="group4"><input type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" pattern="[0-9]*" size="4" maxlength="4" class="group4"><input type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" pattern="[0-9]*" size="4" maxlength="4" class="group4"><input type="text" onkeypress="return event.charCode >= 48 && event.charCode <= 57" pattern="[0-9]*" size="4" maxlength="4" class="group4"></fieldset>
+	                		<input id="card-name" placeholder="Name on card">
+	                		<input id="card-expiry1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" type="tel" placeholder="MM" maxlength="2" x-autocompletetype="cc-exp" autocompletetype="cc-exp" autocorrect="off" spellcheck="off" autocapitalize="off">
+	                		<span style="position: absolute;top: 171px;right:66px;z-index:1;color: #897474">/</span>
+	                		<input id="card-expiry2" onkeypress="return event.charCode >= 48 && event.charCode <= 57" type="tel" placeholder="YY" maxlength="2" x-autocompletetype="cc-exp" autocompletetype="cc-exp" autocorrect="off" spellcheck="off" autocapitalize="off">
+                    	</div>
+                    	<button id="card-next">Next</button>
+                    	<button id="card-backer">Back</button>
+                    	<div id="card-back">
+                    	  <div id="card-back-filler"></div>
+                    	  <div id="card-back-details">
+                    	  	<span>Enter CVV</span>
+                    	    <input id="card-cvc" onkeypress="return event.charCode >= 48 && event.charCode <= 57" type="tel" maxlength="3" x-autocompletetype="cc-csc" autocompletetype="cc-csc" autocorrect="off" spellcheck="off" autocapitalize="off">
+                    	  </div>
+                    	  <label class="check-container">
+							<input type="checkbox" name="card-remember" id="card-remember">
+							<span class="checkmark"></span>
+						  </label><span id="card-remember-text">Remember me</span>
+                    	</div>
+                    </div>
                     <button id="payment-pay">Pay</button>
                 </div>
             </div>
@@ -205,7 +463,7 @@
     </div>
 </div>
 <script type="text/javascript">
-    paypal.Button.render({
+    /*paypal.Button.render({
         env: 'sandbox', // Or 'production'
         // Set up the payment:
         // 1. Add a payment callback
@@ -244,6 +502,6 @@
               // 3. Show the buyer a confirmation message.
             });
         }
-      }, '#paypal-button');
+      }, '#paypal-button');*/
 </script>
 {% endblock %}

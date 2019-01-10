@@ -8438,7 +8438,7 @@ var Rendition = function () {
 			flow: null,
 			layout: null,
 			spread: null,
-			minSpreadWidth: 800,
+			minSpreadWidth: 600,
 			stylesheet: null,
 			resizeOnOrientationChange: true,
 			script: null
@@ -8727,7 +8727,7 @@ var Rendition = function () {
 			section = this.book.spine.get(target);
 
 			if (!section) {
-				displaying.reject(new Error("No Section Found"));
+				
 				return displayed;
 			}
 
@@ -8974,7 +8974,7 @@ var Rendition = function () {
 			var orientation = this.settings.orientation || metadata.orientation || "auto";
 			var flow = this.settings.flow || metadata.flow || "auto";
 			var viewport = metadata.viewport || "";
-			var minSpreadWidth = this.settings.minSpreadWidth || metadata.minSpreadWidth || 800;
+			var minSpreadWidth = this.settings.minSpreadWidth || metadata.minSpreadWidth || 600;
 			var direction = this.settings.direction || metadata.direction || "ltr";
 
 			if ((this.settings.width === 0 || this.settings.width > 0) && (this.settings.height === 0 || this.settings.height > 0)) {
@@ -16539,7 +16539,7 @@ var Layout = function () {
 		this.settings = settings;
 		this.name = settings.layout || "reflowable";
 		this._spread = settings.spread === "none" ? false : true;
-		this._minSpreadWidth = settings.minSpreadWidth || 800;
+		this._minSpreadWidth = settings.minSpreadWidth || 600;
 		this._evenSpreads = settings.evenSpreads || false;
 
 		if (settings.flow === "scrolled" || settings.flow === "scrolled-continuous" || settings.flow === "scrolled-doc") {

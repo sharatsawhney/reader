@@ -5,7 +5,7 @@ from rapp.forms import UserForm,UploadForm,PriceRangeSearchForm
 from django.contrib.auth import authenticate, login,logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from rapp.models import Authors,Publishers,Category,Ebooks,Subscribers,Usercart,Wishlist,Transactions,Dashboard,Notes,Lastpage,Uploaded,UserP,Adminacc,Gmailid,Bookmark,Tag,Musicgenre,Musictag,Music,Musiclis,Playlist,Highlight,Notefile,Notefileitem,Uploadadmin,Keyvalue,Offer,Bestseller,Detailview,Readview,Sampleview,Genreview,Newreleaseview,Bestsellerview,Searchview,Rateduser,Percentageread,Readlocation,ConnectionHistory,Payment,Publisherpayment
+from rapp.models import Authors,Publishers,Category,Ebooks,Subscribers,Usercart,Wishlist,Transactions,Dashboard,Notes,Lastpage,Uploaded,UserP,Adminacc,Gmailid,Bookmark,Tag,Musicgenre,Musictag,Music,Musiclis,Playlist,Highlight,Notefile,Notefileitem,Uploadadmin,Keyvalue,Offer,Bestseller,Detailview,Readview,Sampleview,Genreview,Newreleaseview,Bestsellerview,Searchview,Rateduser,Percentageread,Readlocation,ConnectionHistory,Payment,Publisherpayment,Subscriptiontry,Lastpagesample,Buyentry
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
@@ -52,6 +52,12 @@ import razorpay
 from django.core.files.storage import FileSystemStorage
 import paypalrestsdk
 import logging
+import hashlib
+import pickle
+import numpy as np
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer,TfidfTransformer
+from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
 
 UserModel = get_user_model()
 
@@ -117,7 +123,11 @@ def user_login(request):
 @login_required
 def user_logout(request):
     logout(request)
-    return HttpResponseRedirect('/')
+    try:
+        pathname = request.GET['page']
+        return HttpResponseRedirect('/' + pathname)
+    except Exception as e:
+        return HttpResponseRedirect('/')
 
 
 def about(request):
@@ -381,19 +391,44 @@ def detail(request,id):
     if sugbooks.count() > 1:
         sfbooks = sugbooks.exclude(id=ebook.id).order_by('-rating')
         sftitle = 'Author'
-    elif Ebooks.objects.filter(publisher=ebook.publisher).count() > 1 and ebook.publisher.name != 'None':
-        sfbooks =  Ebooks.objects.filter(publisher=ebook.publisher).exclude(id=ebook.id).order_by('-rating')
-        sftitle = 'Publisher'
-    if sfbooks.count() <= 5:
-        sfless = True
+        if Ebooks.objects.filter(publisher=ebook.publisher).count() > 1 and ebook.publisher.name != 'None':
+            sfbooks = Ebooks.objects.filter(publisher=ebook.publisher).exclude(id=ebook.id).order_by('-rating')
+            sftitle = 'Publisher'
+        if sfbooks.count() <= 5:
+            sfless = True
+        else:
+            sfless = False
     else:
-        sfless = False
+        sfbooks = None
+        sfless = None
+        sftitle = None
 
-    return render(request,'rapp/detail.html',{'ebook':ebook,'ebooks':ebooks,'rating':rating,'wisharray':wisharray,'sfbooks':sfbooks,'sfless':sfless,'sftitle':sftitle})
+    count_matrix = pickle.load(open("rapp/model.pkl", 'rb'))
+    tf1 = pickle.load(open('rapp/modelv.pkl', 'rb'))
+
+    count = TfidfVectorizer(analyzer='word', min_df=0, stop_words='english', vocabulary=tf1.vocabulary_)
+
+    cosine_sim2 = cosine_similarity(count_matrix, count_matrix)
+    ds = pd.read_csv('rapp/output.csv')
+    indices = pd.Series(ds.index, index=ds['id'])
+    recommendarr = []
+    idlin = indices[int(id)]
+    sim_scores = list(enumerate(cosine_sim2[idlin]))
+    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+    sim_scores = sim_scores[1:11]
+    book_indices = [i[0] for i in sim_scores]
+    recommendds = ds['id'].iloc[book_indices]
+    for item in recommendds:
+        recommendarr.append(int(item))
+    similarbooks = Ebooks.objects.filter(id__in=recommendarr)
 
 
-@login_required
+    return render(request,'rapp/detail.html',{'ebook':ebook,'ebooks':ebooks,'rating':rating,'wisharray':wisharray,'sfbooks':sfbooks,'sfless':sfless,'sftitle':sftitle,'similarbooks':similarbooks})
+
+
 def cart(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('/raccess')
     products = Usercart.objects.filter(user=request.user)
     tprice = 0
     for product in products:
@@ -540,9 +575,9 @@ def delete_cart(request):
         return HttpResponse('Success')
 
 
-
-@login_required
 def wishlist(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('/raccess')
     list = Wishlist.objects.filter(user=request.user)
     return render(request,'rapp/wishlist.html',{'list':list})
 
@@ -629,8 +664,10 @@ def atw(request):
         else:
             return HttpResponse('This e-book is already in your Wishlist!')
 
-@login_required
+
 def payment(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('/raccess')
     try:
         products = Usercart.objects.filter(user=request.user)
         tprice = 0
@@ -641,8 +678,20 @@ def payment(request):
                 tprice = tprice + product.ebook.price
     except Exception as e:
         tprice = 0
+    try:
+        subid = request.GET['subid']
+        subpayment = Subscriptiontry.objects.filter(subid=subid)[0]
+        tprice= subpayment.amount
+    except Exception as e:
+        subid = ''
+    try:
+        buyid = request.GET['buyid']
+        buypayment = Buyentry.objects.filter(buyid=buyid)[0]
+        tprice= buypayment.amount
+    except Exception as e:
+        buyid = ''
 
-    return render(request, "rapp/payment.html", {'tprice':tprice})
+    return render(request, "rapp/payment.html", {'tprice':tprice,'subid':subid})
 
 
 @login_required
@@ -704,8 +753,9 @@ def payment_failure(request):
     return render(request, "rapp/failure.html", data)
 
 
-@login_required()
 def dashboard(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('/raccess')
     remaind = []
     remainh = []
     remainm = []
@@ -1065,45 +1115,99 @@ def read(request,id):
     else:
         lastcfi = ''
         ratingbox = 0
+    if check != True and int(id) != 68:
+        return HttpResponseRedirect('/raccess')
+    if int(id) == 68:
+        check = True
 
     return render(request,'rapp/read.html',{'pages':pages,'id':id,'check':check,'bookmarkarr':bookmarkarr,'musicp':musicp,'musicr':musicrr,'musicgenre':musicgenre,'musiclis':new_lis2,'musiclislen':len(musiclis),'playlist':playlist,'esource':str(esource),'ename':ename,'eauthor':eauthor,'highlightarr':highlightarr,'highlightcolorarr':highlightcolorarr,'highlighttextarr':highlighttextarr,'elang':elang,'bookmarkdataarr':bookmarkdataarr,'notetextarr':notetextarr,'noteselectedtextarr':noteselectedtextarr,'notecfiarr':notecfiarr,'notefilearr':notefilearr,'lastcfi':lastcfi,'ratingbox':ratingbox})
 
 
 def sample(request,id):
+    try:
+        musdict = recommender(request.user)
+    except Exception as e:
+        musdict = {}
     book = Ebooks.objects.filter(id=id)[0]
-    pagesfull = book.pages
-    if pagesfull <= 300:
-        pages = round(0.08*pagesfull)
-    elif 300 < pagesfull <= 600:
-        pages = round(0.07*pagesfull)
-    elif 600 < pagesfull <= 900:
-        pages = round(0.06*pagesfull)
-    elif 900 < pagesfull <= 1200:
-        pages = round(0.05*pagesfull)
-    else:
-        pages =round(0.04*pagesfull)
-    if request.user.is_authenticated():
-        if len(Notes.objects.filter(user=request.user)) >0:
-            notes = Notes.objects.filter(user=request.user)
+    pages = book.pages
+    esource = book.content
+    ename = book.name
+    eauthor = book.author
+    elang = book.language
+    musicp = Music.objects.all().order_by('-listennum')
+    musicr = Music.objects.all().order_by('-priority')
+    def musicsorter(i,musdict):
+        if i in musdict:
+            p = musdict[i]
         else:
-            notes = False
-    else:
-        user = User.objects.filter(email='trialuser@gmail.com')[0]
-        if len(Notes.objects.filter(user=user)) >0:
-            notes = Notes.objects.filter(user=user)
-        else:
-            notes = False
-    if request.user.is_authenticated:
-        if len(Lastpage.objects.filter(user=request.user,ebook=book))>0:
-            if (datetime.now(timezone.utc) - Lastpage.objects.filter(user=request.user,ebook=book)[0].time).total_seconds() <10:
-                lastpage = Lastpage.objects.filter(user=request.user,ebook=book)[0].page
-            else:
-                lastpage = False
-        else:
-            lastpage = False
-    else:
-        lastpage = False
+            p = 0
+        return p
 
+    musicrr = sorted(musicr, key=lambda i:musicsorter(i,musdict),reverse=True)
+    musicgenre = Musicgenre.objects.all()
+    existing_lis = []
+    new_lis = []
+    try:
+        musiclis = Musiclis.objects.filter(user=request.user,queue=True)
+        for lisi in musiclis:
+            if lisi.music in existing_lis:
+                thu = {i for i, t in enumerate(new_lis) if t[0] == lisi.music.id}
+                new_lis[list(thu)[0]][5] = new_lis[list(thu)[0]][5] + 1
+            else:
+                existing_lis.append(lisi.music)
+                new_lis.append([lisi.music.id,lisi.music.name,lisi.music.artist,lisi.music.duration,lisi.music.media,1,lisi.music.image])
+        new_lis2 = sorted(new_lis,key=lambda i:i[5],reverse=True)
+        playlist = Playlist.objects.filter(user=request.user)
+    except Exception as e:
+        new_lis2 = []
+        musiclis = ''
+        playlist = ''
+    if request.user.is_authenticated:
+        bookmarks = Bookmark.objects.filter(user=request.user,ebook=book)
+        bookmarkarr = []
+        bookmarkdataarr = []
+        for bookmark in bookmarks:
+            bookmarkarr.append(bookmark.location)
+            bookmarkdataarr.append(bookmark.data)
+        highlightarr = []
+        highlightcolorarr = []
+        highlighttextarr = []
+        highlights = Highlight.objects.filter(user=request.user,ebook=book)
+        for highlight in highlights:
+            highlightarr.append(highlight.cfirange)
+            highlightcolorarr.append(highlight.color)
+            if highlight.text != None:
+                highlighttextarr.append(highlight.text)
+            else:
+                highlighttextarr.append('')
+        notes = Highlight.objects.filter(user=request.user,ebook=book,note=True)
+        notetextarr = []
+        noteselectedtextarr = []
+        notecfiarr = []
+        for note in notes:
+            notetextarr.append(note.text)
+            noteselectedtextarr.append(note.selectedtext)
+            notecfiarr.append(note.cfirange)
+        notefiles = Notefile.objects.filter(user=request.user,ebook=book)
+        notefileitems = Notefileitem.objects.filter(notefile__in=notefiles)
+        notefilearr = []
+        for file in notefiles:
+            filenotearr = []
+            filetextarr = []
+            for item in notefileitems.filter(notefile=file):
+                filenotearr.append(item.note)
+                filetextarr.append(item.text)
+            notefilearr.append([file.name,file.date,filenotearr,filetextarr])
+    else:
+        bookmarkarr = []
+        highlightarr = []
+        highlightcolorarr = []
+        highlighttextarr = []
+        bookmarkdataarr = []
+        notetextarr = []
+        noteselectedtextarr = []
+        notecfiarr = []
+        notefilearr = []
     if request.user.is_authenticated:
         profilevector = ''
         profile_author = str(book.author.name).replace(" ","").lower()
@@ -1116,8 +1220,14 @@ def sample(request,id):
             tag = str(tag).replace(" ","").lower()
             profilevector = profilevector + ' ' + tag + ' ' + tag + ' ' + tag + ' ' + tag
         Sampleview.objects.create(ebook=book,user=request.user,duration=0,profilevector=profilevector)
+        if Lastpagesample.objects.filter(user=request.user,ebook=book).exists():
+            lastcfi = Lastpagesample.objects.filter(user=request.user,ebook=book)[0].epubcfi
+        else:
+            lastcfi = ''
+    else:
+        lastcfi = ''
 
-    return render(request,'rapp/sample.html',{'pages':pagesfull,'id':id,'notes':notes,'lastpage':lastpage,'pagesaccess':pages})
+    return render(request,'rapp/sample.html',{'pages':pages,'id':id,'check':True,'bookmarkarr':bookmarkarr,'musicp':musicp,'musicr':musicrr,'musicgenre':musicgenre,'musiclis':new_lis2,'musiclislen':len(musiclis),'playlist':playlist,'esource':str(esource),'ename':ename,'eauthor':eauthor,'highlightarr':highlightarr,'highlightcolorarr':highlightcolorarr,'highlighttextarr':highlighttextarr,'elang':elang,'bookmarkdataarr':bookmarkdataarr,'notetextarr':notetextarr,'noteselectedtextarr':noteselectedtextarr,'notecfiarr':notecfiarr,'notefilearr':notefilearr,'lastcfi':lastcfi})
 
 
 def add_notes(request):
@@ -1160,6 +1270,21 @@ def save_page(request):
                 last.save()
             else:
                 Lastpage.objects.create(user=request.user,ebook=ebook,epubcfi=epubcfi)
+        return HttpResponse('Success')
+
+
+def save_page_sample(request):
+    if request.method == 'POST':
+        ebookid = int(request.POST['ebookid'])
+        epubcfi = request.POST['epubcfi']
+        ebook = Ebooks.objects.filter(id=ebookid)[0]
+        if request.user.is_authenticated:
+            if Lastpagesample.objects.filter(user=request.user,ebook=ebook).exists():
+                last = Lastpagesample.objects.filter(user=request.user,ebook=ebook)[0]
+                last.epubcfi = epubcfi
+                last.save()
+            else:
+                Lastpagesample.objects.create(user=request.user,ebook=ebook,epubcfi=epubcfi)
         return HttpResponse('Success')
 
 
@@ -1335,12 +1460,15 @@ def search(request):
             sqs = sqs.filter(publisher__in=publist)
         except Exception as e:
             pass
-        spellres = sqs.spelling_suggestion()
+        try:
+            spellres = sqs.spelling_suggestion()
+        except Exception as e:
+            spellres = ''
         searchtitle = q
     except Exception as e:
         try:
             cat = request.GET['cat']
-            category = Category.objects.filter(cat=cat)[0]
+            category = Category.objects.filter(cat='Fiction, Literature & Novels')[0]
             sqs = Ebooks.objects.filter(category=category)
             spellres = ''
             query = True
@@ -1371,8 +1499,7 @@ def search(request):
                 try:
                     bs = request.GET['bs']
                     if bs == 'true':
-                        sqs0 = Bestseller.objects.filter(name='Bestsellers')[0]
-                        sqs = sqs0.ebooks.all
+                        sqs = Bestseller.objects.filter(name='Bestsellers')[0].ebooks.all()
                         spellres = ''
                         query = True
                         egeneralquery = False
@@ -1386,12 +1513,74 @@ def search(request):
                         egeneralquery = ''
                         searchtitle = ''
                 except Exception as e:
-                    sqs = ''
-                    spellres = ''
-                    query = False
-                    egeneralquery = ''
-                    searchtitle = ''
+                    try:
+                        rec = request.GET['rec']
+                        if rec == 'true':
+                            if request.user.is_authenticated:
+                                soup = ''
+                                for item in Readview.objects.filter(user=request.user):
+                                    soup = soup + item.profilevector
+                                for item in Sampleview.objects.filter(user=request.user):
+                                    soup = soup + item.profilevector
+                                for item in Detailview.objects.filter(user=request.user):
+                                    soup = soup + item.profilevector
+                                for item in Genreview.objects.filter(user=request.user):
+                                    soup = soup + item.profilevector
+                                for item in Searchview.objects.filter(user=request.user):
+                                    soup = soup + item.profilevector
+                                count_matrix = pickle.load(open("rapp/model.pkl", 'rb'))
+                                tf1 = pickle.load(open('rapp/modelv.pkl', 'rb'))
 
+                                count = TfidfVectorizer(analyzer='word', min_df=0, stop_words='english',
+                                                        vocabulary=tf1.vocabulary_)
+                                series = pd.Series([soup, ])
+                                count_matrixuser = count.fit_transform(series)
+
+                                cosine_sim2 = cosine_similarity(count_matrix, count_matrixuser)
+                                ds = pd.read_csv('rapp/output.csv')
+                                indices = pd.Series(ds.index, index=ds['id'])
+                                recommendarr = []
+                                sim_scores = list(enumerate(cosine_sim2))
+                                sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+                                sim_scores = sim_scores[1:91]
+                                book_indices = [i[0] for i in sim_scores]
+                                recommendds = ds['id'].iloc[book_indices]
+                                for item in recommendds:
+                                    recommendarr.append(int(item))
+                                sqs = Ebooks.objects.filter(id__in=recommendarr)
+                            else:
+                                sqs = Ebooks.objects.all().order_by('-priority')[:90]
+                            spellres = ''
+                            query = True
+                            egeneralquery = False
+                            searchtitle = 'Recommended'
+                        else:
+                            sqs = ''
+                            spellres = ''
+                            query = False
+                            egeneralquery = ''
+                            searchtitle = ''
+                    except Exception as e:
+                        try:
+                            mp = request.GET['mp']
+                            if mp == 'true':
+                                sqs = Ebooks.objects.all().order_by('pages')[:90]
+                                spellres = ''
+                                query = True
+                                egeneralquery = False
+                                searchtitle = 'Most Popular'
+                            else:
+                                sqs = ''
+                                spellres = ''
+                                query = False
+                                egeneralquery = ''
+                                searchtitle = ''
+                        except Exception as e:
+                            sqs = ''
+                            spellres = ''
+                            query = False
+                            egeneralquery = ''
+                            searchtitle = ''
         if egeneralquery == True:
             try:
                 hl = request.GET['hl']
@@ -1463,6 +1652,43 @@ def search(request):
             except Exception as e:
                 pass
 
+    if query == False and request.user.is_authenticated:
+        soup = ''
+        for item in Readview.objects.filter(user=request.user):
+            soup = soup + item.profilevector
+        for item in Sampleview.objects.filter(user=request.user):
+            soup = soup + item.profilevector
+        for item in Detailview.objects.filter(user=request.user):
+            soup = soup + item.profilevector
+        for item in Genreview.objects.filter(user=request.user):
+            soup = soup + item.profilevector
+        for item in Searchview.objects.filter(user=request.user):
+            soup = soup + item.profilevector
+        count_matrix = pickle.load(open("rapp/model.pkl", 'rb'))
+        tf1 = pickle.load(open('rapp/modelv.pkl', 'rb'))
+
+        count = TfidfVectorizer(analyzer='word', min_df=0, stop_words='english', vocabulary=tf1.vocabulary_)
+        series = pd.Series([soup, ])
+        count_matrixuser = count.fit_transform(series)
+
+        cosine_sim2 = cosine_similarity(count_matrix, count_matrixuser)
+        ds = pd.read_csv('rapp/output.csv')
+        indices = pd.Series(ds.index, index=ds['id'])
+        recommendarr = []
+        sim_scores = list(enumerate(cosine_sim2))
+        sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+        sim_scores = sim_scores[1:31]
+        book_indices = [i[0] for i in sim_scores]
+        recommendds = ds['id'].iloc[book_indices]
+        for item in recommendds:
+            recommendarr.append(int(item))
+        recommendedbooks = Ebooks.objects.filter(id__in=recommendarr)
+    else:
+        recommendedbooks = Ebooks.objects.all().order_by('-priority')[:30]
+    bestsellers = Bestseller.objects.filter(name='Bestsellers')[0].ebooks.all
+    latestbooks = Ebooks.objects.all().order_by('-publishdate')[:30]
+    mostpopularbooks = Ebooks.objects.all().order_by('pages')[:30]
+
     paginator = Paginator(sqs, 36)
     page = request.GET.get('pag')
     try:
@@ -1475,8 +1701,11 @@ def search(request):
         items = paginator.page(paginator.num_pages)
 
     pubs = Publishers.objects.all()
-    offermp2 = Offer.objects.all()[0]
-    ebooks = Ebooks.objects.all()
+    try:
+       offermp2 = Offer.objects.all()[0]
+    except Exception as e:
+        offermp2 = ''
+    ebooks = Ebooks.objects.all()[:30]
     if request.user.is_authenticated:
         wishlist = Wishlist.objects.filter(user=request.user)
         wisharray = []
@@ -1485,7 +1714,7 @@ def search(request):
     else:
         wisharray = []
 
-    return render(request,'rapp/searchshop.html',{'sqs':items,'pubs':pubs,'offermp2':offermp2,'ebooks':ebooks,'spellres':spellres,'query':query,'searchtitle':searchtitle,'wisharray':wisharray})
+    return render(request,'rapp/searchshop.html',{'sqs':items,'pubs':pubs,'offermp2':offermp2,'ebooks':ebooks,'spellres':spellres,'query':query,'searchtitle':searchtitle,'wisharray':wisharray,'recommendedbooks':recommendedbooks,'bestsellers':bestsellers,'latestbooks':latestbooks,'mostpopularbooks':mostpopularbooks})
 
 
 def autocomplete(request):
@@ -1535,368 +1764,373 @@ class FacetedSearchView(SearchView):
         return extra
 
 
-@login_required
 def publisher(request):
-    if request.method == 'POST':
-        files = request.FILES.getlist('file')
-        pub = Publishers.objects.filter(name=request.POST['publisher'])[0]
-        for f in files:
-            fs = FileSystemStorage(location='media/pubupload')
-            file = fs.save(f.name, f)
-            Uploaded.objects.create(publisher=pub,file='/media/pubupload/' + fs.url(file)[7:])
-        return HttpResponse('Success')
+    if request.user.is_authenticated:
+        if UserP.objects.filter(user=request.user,pub=True).exists():
+            if request.method == 'POST':
+                files = request.FILES.getlist('file')
+                pub = Publishers.objects.filter(name=request.POST['publisher'])[0]
+                for f in files:
+                    fs = FileSystemStorage(location='media/pubupload')
+                    file = fs.save(f.name, f)
+                    Uploaded.objects.create(publisher=pub,file='/media/pubupload/' + fs.url(file)[7:])
+                return HttpResponse('Success')
+            else:
+                pass
+
+            if len(UserP.objects.filter(user=request.user)) ==1:
+                allow = True
+                publisher = UserP.objects.filter(user=request.user)[0].publisher
+                publisherName = publisher.name
+                numBooks = len(Ebooks.objects.filter(publisher=Publishers.objects.filter(name=publisherName)[0]))
+                monthlabel = []
+                weeklabel = []
+                daylabel = []
+
+                def monthlabelextractor(month, year):
+                    yeari = str(year)[2:]
+
+                    def switch_month(argument):
+                        switcher = {
+                            1: "Jan",
+                            2: "Feb",
+                            3: "Mar",
+                            4: "Apr",
+                            5: "May",
+                            6: "Jun",
+                            7: "Jul",
+                            8: "Aug",
+                            9: "Sep",
+                            10: "Oct",
+                            11: "Nov",
+                            12: "Dec"
+                        }
+                        return switcher.get(argument, "Invalid month")
+
+                    monthi = switch_month(month)
+                    return monthi + ' ' + yeari
+
+                curmonth = datetime.now().month
+                curyear = datetime.now().year
+                curweek = datetime.now().isocalendar()[1]
+                curdate = datetime.now().day
+                for i in range(0, 12):
+                    if curmonth - i <= 0:
+                        curyeari = curyear - 1
+                        curmonthi = curmonth - i + 12
+                    else:
+                        curyeari = curyear
+                        curmonthi = curmonth - i
+                    monthlabel.append(monthlabelextractor(curmonthi, curyeari))
+                monthlabel.reverse()
+                for i in range(0, 12):
+                    weeklabel.append('Week ' + str(curweek-i))
+                weeklabel.reverse()
+                def switch_month(argument):
+                    switcher = {
+                        1: "Jan",
+                        2: "Feb",
+                        3: "Mar",
+                        4: "Apr",
+                        5: "May",
+                        6: "Jun",
+                        7: "Jul",
+                        8: "Aug",
+                        9: "Sep",
+                        10: "Oct",
+                        11: "Nov",
+                        12: "Dec"
+                    }
+                    return switcher.get(argument, "Invalid month")
+
+                for i in range(0, 12):
+                    daten = datetime.now() - timedelta(days=i)
+                    daylabel.append(str(daten.day) + ' ' + switch_month(daten.month))
+                daylabel.reverse()
+                totalearn = 0
+                try:
+                    earningmonth = Payment.objects.filter(ebook__publisher=publisher)
+                    for item in earningmonth:
+                        totalearn = totalearn + item.amount
+                    earningmonthbuyq = earningmonth.filter(duration='Buy')
+                    earningmonthrentq = earningmonth.exclude(duration='Buy')
+                    earningmonthbuy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    earningmonthrent = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    earningweekbuy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    earningweekrent = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    earningdaybuy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    earningdayrent = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    tearnm = 0
+                    tearnw = 0
+                    tearnd = 0
+                    tearny = 0
+                    tearnmp = 0
+                    tearnwp = 0
+                    tearndp = 0
+                    tearnyp = 0
+                    for item in earningmonth:
+                        if item.time.year == curyear:
+                            tearny = tearny + item.amount
+                            if item.time.month == curmonth:
+                                tearnm = tearnm + item.amount
+                                if item.time.isocalendar()[1] == curweek:
+                                    tearnw = tearnw + item.amount
+                                    if item.time.day == curdate:
+                                        tearnd = tearnd + item.amount
+                                    elif item.time.day == curdate -1:
+                                        tearndp = tearndp + item.amount
+                                elif item.time.isocalendar()[1] == curweek - 1:
+                                    tearnwp = tearnwp + item.amount
+                            elif item.time.month == curmonth - 1:
+                                tearnmp = tearnmp + item.amount
+                        elif item.time.year == curyear - 1:
+                            tearnyp = tearnyp + item.amount
+                            if item.time.month == 12 and curmonth == 1:
+                                tearnmp = tearnmp + item.amount
+                                if curweek == 1 and (item.time.isocalendar()[1] == 52 or item.time.isocalendar()[1] == 53):
+                                    tearnwp = tearnwp + item.amount
+                                    if curdate == 1 and item.time.day == 31:
+                                        tearndp = tearndp + item.amount
+                    if tearnmp != 0 :
+                        tearnmi = str(((tearnm - tearnmp)/tearnmp)*100) + '%'
+                    else:
+                        tearnmi = str(tearnm - tearnmp)
+                    if tearnwp != 0:
+                        tearnwi = str(((tearnw - tearnwp) / tearnwp) * 100) + '%'
+                    else:
+                        tearnwi = str(tearnw - tearnwp)
+                    if tearndp != 0:
+                        tearndi = str(((tearnd - tearndp) / tearndp) * 100) + '%'
+                    else:
+                        tearndi = str(tearnd - tearndp)
+                    if tearnyp != 0:
+                        tearnyi = str(((tearny - tearnyp) / tearnyp) * 100) + '%'
+                    else:
+                        tearnyi = str(tearny - tearnyp)
+                    for item in earningmonthbuyq:
+                        diffmonth = (curyear - item.time.year)*12 + (curmonth-item.time.month)
+                        if diffmonth == 11:
+                            earningmonthbuy[0] = item.amount
+                        elif diffmonth == 10:
+                            earningmonthbuy[1] = item.amount
+                        elif diffmonth == 9:
+                            earningmonthbuy[2] = item.amount
+                        elif diffmonth == 8:
+                            earningmonthbuy[3] = item.amount
+                        elif diffmonth == 7:
+                            earningmonthbuy[4] = item.amount
+                        elif diffmonth == 6:
+                            earningmonthbuy[5] = item.amount
+                        elif diffmonth == 5:
+                            earningmonthbuy[6] = item.amount
+                        elif diffmonth == 4:
+                            earningmonthbuy[7] = item.amount
+                        elif diffmonth == 3:
+                            earningmonthbuy[8] = item.amount
+                        elif diffmonth == 2:
+                            earningmonthbuy[9] = item.amount
+                        elif diffmonth == 1:
+                            earningmonthbuy[10] = item.amount
+                        elif diffmonth == 0:
+                            earningmonthbuy[11] = item.amount
+                    for item in earningmonthrentq:
+                        diffmonth = (curyear - item.time.year) * 12 + (curmonth - item.time.month)
+                        if diffmonth == 11:
+                            earningmonthrent[0] = item.amount
+                        elif diffmonth == 10:
+                            earningmonthrent[1] = item.amount
+                        elif diffmonth == 9:
+                            earningmonthrent[2] = item.amount
+                        elif diffmonth == 8:
+                            earningmonthrent[3] = item.amount
+                        elif diffmonth == 7:
+                            earningmonthrent[4] = item.amount
+                        elif diffmonth == 6:
+                            earningmonthrent[5] = item.amount
+                        elif diffmonth == 5:
+                            earningmonthrent[6] = item.amount
+                        elif diffmonth == 4:
+                            earningmonthrent[7] = item.amount
+                        elif diffmonth == 3:
+                            earningmonthrent[8] = item.amount
+                        elif diffmonth == 2:
+                            earningmonthrent[9] = item.amount
+                        elif diffmonth == 1:
+                            earningmonthrent[10] = item.amount
+                        elif diffmonth == 0:
+                            earningmonthrent[11] = item.amount
+                    for item in earningmonthbuyq:
+                        diffweek = datetime.now().isocalendar()[1] - item.time.isocalendar()[1]
+                        if diffweek == 11:
+                            earningweekbuy[0] = item.amount
+                        elif diffweek == 10:
+                            earningweekbuy[1] = item.amount
+                        elif diffweek == 9:
+                            earningweekbuy[2] = item.amount
+                        elif diffweek == 8:
+                            earningweekbuy[3] = item.amount
+                        elif diffweek == 7:
+                            earningweekbuy[4] = item.amount
+                        elif diffweek == 6:
+                            earningweekbuy[5] = item.amount
+                        elif diffweek == 5:
+                            earningweekbuy[6] = item.amount
+                        elif diffweek == 4:
+                            earningweekbuy[7] = item.amount
+                        elif diffweek == 3:
+                            earningweekbuy[8] = item.amount
+                        elif diffweek == 2:
+                            earningweekbuy[9] = item.amount
+                        elif diffweek == 1:
+                            earningweekbuy[10] = item.amount
+                        elif diffweek == 0:
+                            earningweekbuy[11] = item.amount
+                    for item in earningmonthrentq:
+                        diffweek = datetime.now().isocalendar()[1] - item.time.isocalendar()[1]
+                        if diffweek == 11:
+                            earningweekrent[0] = item.amount
+                        elif diffweek == 10:
+                            earningweekrent[1] = item.amount
+                        elif diffweek == 9:
+                            earningweekrent[2] = item.amount
+                        elif diffweek == 8:
+                            earningweekrent[3] = item.amount
+                        elif diffweek == 7:
+                            earningweekrent[4] = item.amount
+                        elif diffweek == 6:
+                            earningweekrent[5] = item.amount
+                        elif diffweek == 5:
+                            earningweekrent[6] = item.amount
+                        elif diffweek == 4:
+                            earningweekrent[7] = item.amount
+                        elif diffweek == 3:
+                            earningweekrent[8] = item.amount
+                        elif diffweek == 2:
+                            earningweekrent[9] = item.amount
+                        elif diffweek == 1:
+                            earningweekrent[10] = item.amount
+                        elif diffweek == 0:
+                            earningweekrent[11] = item.amount
+                    for item in earningmonthbuyq:
+                        diffday = datetime.now().day - item.time.day
+                        if diffday == 11:
+                            earningdaybuy[0] = item.amount
+                        elif diffday == 10:
+                            earningdaybuy[1] = item.amount
+                        elif diffday == 9:
+                            earningdaybuy[2] = item.amount
+                        elif diffday == 8:
+                            earningdaybuy[3] = item.amount
+                        elif diffday == 7:
+                            earningdaybuy[4] = item.amount
+                        elif diffday == 6:
+                            earningdaybuy[5] = item.amount
+                        elif diffday == 5:
+                            earningdaybuy[6] = item.amount
+                        elif diffday == 4:
+                            earningdaybuy[7] = item.amount
+                        elif diffday == 3:
+                            earningdaybuy[8] = item.amount
+                        elif diffday == 2:
+                            earningdaybuy[9] = item.amount
+                        elif diffday == 1:
+                            earningdaybuy[10] = item.amount
+                        elif diffday == 0:
+                            earningdaybuy[11] = item.amount
+                    for item in earningmonthrentq:
+                        diffday = datetime.now().day - item.time.day
+                        if diffday == 11:
+                            earningdayrent[0] = item.amount
+                        elif diffday == 10:
+                            earningdayrent[1] = item.amount
+                        elif diffday == 9:
+                            earningdayrent[2] = item.amount
+                        elif diffday == 8:
+                            earningdayrent[3] = item.amount
+                        elif diffday == 7:
+                            earningdayrent[4] = item.amount
+                        elif diffday == 6:
+                            earningdayrent[5] = item.amount
+                        elif diffday == 5:
+                            earningdayrent[6] = item.amount
+                        elif diffday == 4:
+                            earningdayrent[7] = item.amount
+                        elif diffday == 3:
+                            earningdayrent[8] = item.amount
+                        elif diffday == 2:
+                            earningdayrent[9] = item.amount
+                        elif diffday == 1:
+                            earningdayrent[10] = item.amount
+                        elif diffday == 0:
+                            earningdayrent[11] = item.amount
+                except Exception as e:
+                    earningmonthbuy = [0,0,0,0,0,0,0,0,0,0,0,0]
+                    earningmonthrent = [0,0,0,0,0,0,0,0,0,0,0,0]
+                    earningweekbuy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    earningweekrent = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    earningdaybuy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    earningdayrent = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                    tearnm = 0
+                    tearnw = 0
+                    tearnd = 0
+                    tearny = 0
+                    tearnmi = str(0) + '%'
+                    tearnwi = str(0) + '%'
+                    tearndi = str(0) + '%'
+                    tearnyi = str(0) + '%'
+                pubpaym = []
+                pubpayw = []
+                pubpayd = []
+                pubpayy = []
+                totalpayment = 0
+                try:
+                    pubpay = Publisherpayment.objects.filter(publisher=publisher).order_by('-id')
+                    for item in pubpay:
+                        totalpayment = totalpayment + item.amount
+                        if item.time.year == curyear:
+                            pubpayy.append([item.time,item.amount])
+                            if item.time.month == curmonth:
+                                pubpaym.append([item.time,item.amount])
+                                if item.time.isocalendar()[1] == curweek:
+                                    pubpayw.append([item.time,item.amount])
+                                    if item.time.day == curdate:
+                                        pubpayd.append([item.time,item.amount])
+                    pubpayy = pubpayy[0:4]
+                    pubpaym = pubpaym[0:4]
+                    pubpayw = pubpayw[0:4]
+                    pubpayd = pubpayd[0:4]
+                except Exception as e:
+                    pass
+                totalremain = totalearn - totalpayment
+                totalremain = "{0:.2f}".format(totalremain)
+
+                try:
+                    pbooks = Ebooks.objects.filter(publisher=publisher)
+                    pbookarr = []
+                    pbooknamearr = []
+                    payment = Payment.objects.filter(ebook__publisher=publisher)
+                    for book in pbooks:
+                        tb = payment.filter(ebook=book,duration='Buy').count()
+                        tr = payment.filter(ebook=book).exclude(duration='Buy').count()
+                        te = 0
+                        for item in payment.filter(ebook=book):
+                            te = te + item.amount
+                        pbookarr.append([book.img,book.name,tb,tr,te])
+                        pbooknamearr.append(book.name)
+                    pbookarr = sorted(pbookarr,key=lambda x: float(x[4]),reverse=True)
+                except Exception as e:
+                    pbookarr = []
+                    pbooknamearr = []
+
+                return render(request,'rapp/publisher.html',{'allow':allow,'publisherName':publisherName,'numBooks':numBooks,'earningmonthbuy':earningmonthbuy,'earningmonthrent':earningmonthrent,'monthlabel':monthlabel,'earningweekbuy':earningweekbuy,'earningweekrent':earningweekrent,'weeklabel':weeklabel,'earningdaybuy':earningdaybuy,'earningdayrent':earningdayrent,'daylabel':daylabel,
+                                                             'tearnm':tearnm,'tearnw':tearnw,'tearnd':tearnd,'tearny':tearny,'tearnmi':tearnmi,'tearnwi':tearnwi,'tearndi':tearndi,'tearnyi':tearnyi,'pubpayy':pubpayy,'pubpaym':pubpaym,'pubpayw':pubpayw,'pubpayd':pubpayd,'totalremain':totalremain,'pbookarr':pbookarr,'pbooknamearr':pbooknamearr})
+            else:
+                allow = False
+                return render(request,'rapp/publisher.html',{'allow':allow})
+        else:
+            return render(request,'rapp/publisherhome.html')
     else:
-        pass
-
-    if len(UserP.objects.filter(user=request.user)) ==1:
-        allow = True
-        publisher = UserP.objects.filter(user=request.user)[0].publisher
-        publisherName = publisher.name
-        numBooks = len(Ebooks.objects.filter(publisher=Publishers.objects.filter(name=publisherName)[0]))
-        monthlabel = []
-        weeklabel = []
-        daylabel = []
-
-        def monthlabelextractor(month, year):
-            yeari = str(year)[2:]
-
-            def switch_month(argument):
-                switcher = {
-                    1: "Jan",
-                    2: "Feb",
-                    3: "Mar",
-                    4: "Apr",
-                    5: "May",
-                    6: "Jun",
-                    7: "Jul",
-                    8: "Aug",
-                    9: "Sep",
-                    10: "Oct",
-                    11: "Nov",
-                    12: "Dec"
-                }
-                return switcher.get(argument, "Invalid month")
-
-            monthi = switch_month(month)
-            return monthi + ' ' + yeari
-
-        curmonth = datetime.now().month
-        curyear = datetime.now().year
-        curweek = datetime.now().isocalendar()[1]
-        curdate = datetime.now().day
-        for i in range(0, 12):
-            if curmonth - i <= 0:
-                curyeari = curyear - 1
-                curmonthi = curmonth - i + 12
-            else:
-                curyeari = curyear
-                curmonthi = curmonth - i
-            monthlabel.append(monthlabelextractor(curmonthi, curyeari))
-        monthlabel.reverse()
-        for i in range(0, 12):
-            weeklabel.append('Week ' + str(curweek-i))
-        weeklabel.reverse()
-        def switch_month(argument):
-            switcher = {
-                1: "Jan",
-                2: "Feb",
-                3: "Mar",
-                4: "Apr",
-                5: "May",
-                6: "Jun",
-                7: "Jul",
-                8: "Aug",
-                9: "Sep",
-                10: "Oct",
-                11: "Nov",
-                12: "Dec"
-            }
-            return switcher.get(argument, "Invalid month")
-
-        for i in range(0, 12):
-            daten = datetime.now() - timedelta(days=i)
-            daylabel.append(str(daten.day) + ' ' + switch_month(daten.month))
-        daylabel.reverse()
-        totalearn = 0
-        try:
-            earningmonth = Payment.objects.filter(ebook__publisher=publisher)
-            for item in earningmonth:
-                totalearn = totalearn + item.amount
-            earningmonthbuyq = earningmonth.filter(duration='Buy')
-            earningmonthrentq = earningmonth.exclude(duration='Buy')
-            earningmonthbuy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            earningmonthrent = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            earningweekbuy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            earningweekrent = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            earningdaybuy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            earningdayrent = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            tearnm = 0
-            tearnw = 0
-            tearnd = 0
-            tearny = 0
-            tearnmp = 0
-            tearnwp = 0
-            tearndp = 0
-            tearnyp = 0
-            for item in earningmonth:
-                if item.time.year == curyear:
-                    tearny = tearny + item.amount
-                    if item.time.month == curmonth:
-                        tearnm = tearnm + item.amount
-                        if item.time.isocalendar()[1] == curweek:
-                            tearnw = tearnw + item.amount
-                            if item.time.day == curdate:
-                                tearnd = tearnd + item.amount
-                            elif item.time.day == curdate -1:
-                                tearndp = tearndp + item.amount
-                        elif item.time.isocalendar()[1] == curweek - 1:
-                            tearnwp = tearnwp + item.amount
-                    elif item.time.month == curmonth - 1:
-                        tearnmp = tearnmp + item.amount
-                elif item.time.year == curyear - 1:
-                    tearnyp = tearnyp + item.amount
-                    if item.time.month == 12 and curmonth == 1:
-                        tearnmp = tearnmp + item.amount
-                        if curweek == 1 and (item.time.isocalendar()[1] == 52 or item.time.isocalendar()[1] == 53):
-                            tearnwp = tearnwp + item.amount
-                            if curdate == 1 and item.time.day == 31:
-                                tearndp = tearndp + item.amount
-            if tearnmp != 0 :
-                tearnmi = str(((tearnm - tearnmp)/tearnmp)*100) + '%'
-            else:
-                tearnmi = str(tearnm - tearnmp)
-            if tearnwp != 0:
-                tearnwi = str(((tearnw - tearnwp) / tearnwp) * 100) + '%'
-            else:
-                tearnwi = str(tearnw - tearnwp)
-            if tearndp != 0:
-                tearndi = str(((tearnd - tearndp) / tearndp) * 100) + '%'
-            else:
-                tearndi = str(tearnd - tearndp)
-            if tearnyp != 0:
-                tearnyi = str(((tearny - tearnyp) / tearnyp) * 100) + '%'
-            else:
-                tearnyi = str(tearny - tearnyp)
-            for item in earningmonthbuyq:
-                diffmonth = (curyear - item.time.year)*12 + (curmonth-item.time.month)
-                if diffmonth == 11:
-                    earningmonthbuy[0] = item.amount
-                elif diffmonth == 10:
-                    earningmonthbuy[1] = item.amount
-                elif diffmonth == 9:
-                    earningmonthbuy[2] = item.amount
-                elif diffmonth == 8:
-                    earningmonthbuy[3] = item.amount
-                elif diffmonth == 7:
-                    earningmonthbuy[4] = item.amount
-                elif diffmonth == 6:
-                    earningmonthbuy[5] = item.amount
-                elif diffmonth == 5:
-                    earningmonthbuy[6] = item.amount
-                elif diffmonth == 4:
-                    earningmonthbuy[7] = item.amount
-                elif diffmonth == 3:
-                    earningmonthbuy[8] = item.amount
-                elif diffmonth == 2:
-                    earningmonthbuy[9] = item.amount
-                elif diffmonth == 1:
-                    earningmonthbuy[10] = item.amount
-                elif diffmonth == 0:
-                    earningmonthbuy[11] = item.amount
-            for item in earningmonthrentq:
-                diffmonth = (curyear - item.time.year) * 12 + (curmonth - item.time.month)
-                if diffmonth == 11:
-                    earningmonthrent[0] = item.amount
-                elif diffmonth == 10:
-                    earningmonthrent[1] = item.amount
-                elif diffmonth == 9:
-                    earningmonthrent[2] = item.amount
-                elif diffmonth == 8:
-                    earningmonthrent[3] = item.amount
-                elif diffmonth == 7:
-                    earningmonthrent[4] = item.amount
-                elif diffmonth == 6:
-                    earningmonthrent[5] = item.amount
-                elif diffmonth == 5:
-                    earningmonthrent[6] = item.amount
-                elif diffmonth == 4:
-                    earningmonthrent[7] = item.amount
-                elif diffmonth == 3:
-                    earningmonthrent[8] = item.amount
-                elif diffmonth == 2:
-                    earningmonthrent[9] = item.amount
-                elif diffmonth == 1:
-                    earningmonthrent[10] = item.amount
-                elif diffmonth == 0:
-                    earningmonthrent[11] = item.amount
-            for item in earningmonthbuyq:
-                diffweek = datetime.now().isocalendar()[1] - item.time.isocalendar()[1]
-                if diffweek == 11:
-                    earningweekbuy[0] = item.amount
-                elif diffweek == 10:
-                    earningweekbuy[1] = item.amount
-                elif diffweek == 9:
-                    earningweekbuy[2] = item.amount
-                elif diffweek == 8:
-                    earningweekbuy[3] = item.amount
-                elif diffweek == 7:
-                    earningweekbuy[4] = item.amount
-                elif diffweek == 6:
-                    earningweekbuy[5] = item.amount
-                elif diffweek == 5:
-                    earningweekbuy[6] = item.amount
-                elif diffweek == 4:
-                    earningweekbuy[7] = item.amount
-                elif diffweek == 3:
-                    earningweekbuy[8] = item.amount
-                elif diffweek == 2:
-                    earningweekbuy[9] = item.amount
-                elif diffweek == 1:
-                    earningweekbuy[10] = item.amount
-                elif diffweek == 0:
-                    earningweekbuy[11] = item.amount
-            for item in earningmonthrentq:
-                diffweek = datetime.now().isocalendar()[1] - item.time.isocalendar()[1]
-                if diffweek == 11:
-                    earningweekrent[0] = item.amount
-                elif diffweek == 10:
-                    earningweekrent[1] = item.amount
-                elif diffweek == 9:
-                    earningweekrent[2] = item.amount
-                elif diffweek == 8:
-                    earningweekrent[3] = item.amount
-                elif diffweek == 7:
-                    earningweekrent[4] = item.amount
-                elif diffweek == 6:
-                    earningweekrent[5] = item.amount
-                elif diffweek == 5:
-                    earningweekrent[6] = item.amount
-                elif diffweek == 4:
-                    earningweekrent[7] = item.amount
-                elif diffweek == 3:
-                    earningweekrent[8] = item.amount
-                elif diffweek == 2:
-                    earningweekrent[9] = item.amount
-                elif diffweek == 1:
-                    earningweekrent[10] = item.amount
-                elif diffweek == 0:
-                    earningweekrent[11] = item.amount
-            for item in earningmonthbuyq:
-                diffday = datetime.now().day - item.time.day
-                if diffday == 11:
-                    earningdaybuy[0] = item.amount
-                elif diffday == 10:
-                    earningdaybuy[1] = item.amount
-                elif diffday == 9:
-                    earningdaybuy[2] = item.amount
-                elif diffday == 8:
-                    earningdaybuy[3] = item.amount
-                elif diffday == 7:
-                    earningdaybuy[4] = item.amount
-                elif diffday == 6:
-                    earningdaybuy[5] = item.amount
-                elif diffday == 5:
-                    earningdaybuy[6] = item.amount
-                elif diffday == 4:
-                    earningdaybuy[7] = item.amount
-                elif diffday == 3:
-                    earningdaybuy[8] = item.amount
-                elif diffday == 2:
-                    earningdaybuy[9] = item.amount
-                elif diffday == 1:
-                    earningdaybuy[10] = item.amount
-                elif diffday == 0:
-                    earningdaybuy[11] = item.amount
-            for item in earningmonthrentq:
-                diffday = datetime.now().day - item.time.day
-                if diffday == 11:
-                    earningdayrent[0] = item.amount
-                elif diffday == 10:
-                    earningdayrent[1] = item.amount
-                elif diffday == 9:
-                    earningdayrent[2] = item.amount
-                elif diffday == 8:
-                    earningdayrent[3] = item.amount
-                elif diffday == 7:
-                    earningdayrent[4] = item.amount
-                elif diffday == 6:
-                    earningdayrent[5] = item.amount
-                elif diffday == 5:
-                    earningdayrent[6] = item.amount
-                elif diffday == 4:
-                    earningdayrent[7] = item.amount
-                elif diffday == 3:
-                    earningdayrent[8] = item.amount
-                elif diffday == 2:
-                    earningdayrent[9] = item.amount
-                elif diffday == 1:
-                    earningdayrent[10] = item.amount
-                elif diffday == 0:
-                    earningdayrent[11] = item.amount
-        except Exception as e:
-            earningmonthbuy = [0,0,0,0,0,0,0,0,0,0,0,0]
-            earningmonthrent = [0,0,0,0,0,0,0,0,0,0,0,0]
-            earningweekbuy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            earningweekrent = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            earningdaybuy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            earningdayrent = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            tearnm = 0
-            tearnw = 0
-            tearnd = 0
-            tearny = 0
-            tearnmi = str(0) + '%'
-            tearnwi = str(0) + '%'
-            tearndi = str(0) + '%'
-            tearnyi = str(0) + '%'
-        pubpaym = []
-        pubpayw = []
-        pubpayd = []
-        pubpayy = []
-        totalpayment = 0
-        try:
-            pubpay = Publisherpayment.objects.filter(publisher=publisher).order_by('-id')
-            for item in pubpay:
-                totalpayment = totalpayment + item.amount
-                if item.time.year == curyear:
-                    pubpayy.append([item.time,item.amount])
-                    if item.time.month == curmonth:
-                        pubpaym.append([item.time,item.amount])
-                        if item.time.isocalendar()[1] == curweek:
-                            pubpayw.append([item.time,item.amount])
-                            if item.time.day == curdate:
-                                pubpayd.append([item.time,item.amount])
-            pubpayy = pubpayy[0:4]
-            pubpaym = pubpaym[0:4]
-            pubpayw = pubpayw[0:4]
-            pubpayd = pubpayd[0:4]
-        except Exception as e:
-            pass
-        totalremain = totalearn - totalpayment
-        totalremain = "{0:.2f}".format(totalremain)
-
-        try:
-            pbooks = Ebooks.objects.filter(publisher=publisher)
-            pbookarr = []
-            pbooknamearr = []
-            payment = Payment.objects.filter(ebook__publisher=publisher)
-            for book in pbooks:
-                tb = payment.filter(ebook=book,duration='Buy').count()
-                tr = payment.filter(ebook=book).exclude(duration='Buy').count()
-                te = 0
-                for item in payment.filter(ebook=book):
-                    te = te + item.amount
-                pbookarr.append([book.img,book.name,tb,tr,te])
-                pbooknamearr.append(book.name)
-            pbookarr = sorted(pbookarr,key=lambda x: float(x[4]),reverse=True)
-        except Exception as e:
-            pbookarr = []
-            pbooknamearr = []
-
-        return render(request,'rapp/publisher.html',{'allow':allow,'publisherName':publisherName,'numBooks':numBooks,'earningmonthbuy':earningmonthbuy,'earningmonthrent':earningmonthrent,'monthlabel':monthlabel,'earningweekbuy':earningweekbuy,'earningweekrent':earningweekrent,'weeklabel':weeklabel,'earningdaybuy':earningdaybuy,'earningdayrent':earningdayrent,'daylabel':daylabel,
-                                                     'tearnm':tearnm,'tearnw':tearnw,'tearnd':tearnd,'tearny':tearny,'tearnmi':tearnmi,'tearnwi':tearnwi,'tearndi':tearndi,'tearnyi':tearnyi,'pubpayy':pubpayy,'pubpaym':pubpaym,'pubpayw':pubpayw,'pubpayd':pubpayd,'totalremain':totalremain,'pbookarr':pbookarr,'pbooknamearr':pbooknamearr})
-    else:
-        allow = False
-        return render(request,'rapp/publisher.html',{'allow':allow})
+        return render(request, 'rapp/publisherhome.html')
 
 
 def secure(request):
@@ -2154,6 +2388,7 @@ def googlesignin(request):
 
 def addbookmark(request):
     if request.method == 'POST':
+      if request.user.is_authenticated:
         ebookid = request.POST['ebookid']
         ebook = Ebooks.objects.filter(id=ebookid)[0]
         bookloc = request.POST['bookloc']
@@ -2164,6 +2399,8 @@ def addbookmark(request):
         else:
             Bookmark.objects.create(user=request.user,ebook=ebook,location = bookloc,data=data)
             return HttpResponse('Added')
+      else:
+          return HttpResponse('Failure')
 
 
 def addmusiclis(request):
@@ -2223,6 +2460,7 @@ def addplaylist(request):
 
 def addhighlight(request):
     if request.method == 'POST':
+      if request.user.is_authenticated:
         cfirange = request.POST['cfirange']
         ebookid = request.POST['ebookid']
         ebook = Ebooks.objects.filter(id=ebookid)[0]
@@ -2231,6 +2469,8 @@ def addhighlight(request):
         Highlight.objects.create(cfirange=cfirange,user=request.user,ebook=ebook,color=colora,note=False,selectedtext=selected)
 
         return HttpResponse('success')
+      else:
+        return HttpResponse('Failure')
 
 
 def removehighlight(request):
@@ -2245,6 +2485,7 @@ def removehighlight(request):
 
 def changehighlight(request):
     if request.method == 'POST':
+      if request.user.is_authenticated:
         cfirange = request.POST['cfirange']
         ebookid = request.POST['ebookid']
         ebook = Ebooks.objects.filter(id=ebookid)[0]
@@ -2271,6 +2512,8 @@ def changehighlight(request):
                 Highlight.objects.create(cfirange=cfirange, user=request.user, ebook=ebook, color=colora, note=True,text=notetext,selectedtext=selected)
 
         return HttpResponse('success')
+      else:
+        return HttpResponse('Failure')
 
 
 
@@ -2531,19 +2774,23 @@ def remove_notefile(request):
 
 def updateconn(request):
     if request.method == 'POST':
-        publicip = request.POST['publicip']
-        localip = request.POST['localip']
-        status = request.POST['status']
-        if ConnectionHistory.objects.filter(user=request.user,publicip=publicip,localip=localip).exists():
-            conn = ConnectionHistory.objects.filter(user=request.user,publicip=publicip,localip=localip)[0]
-            if status == 'online':
-                conn.status = conn.status + 1
-            elif status == 'offline':
-                conn.status = conn.status - 1
-            conn.save()
+        if request.user.is_authenticated:
+            publicip = request.POST['publicip']
+            localip = request.POST['localip']
+            status = request.POST['status']
+            if ConnectionHistory.objects.filter(user=request.user,publicip=publicip,localip=localip).exists():
+                conn = ConnectionHistory.objects.filter(user=request.user,publicip=publicip,localip=localip)[0]
+                if status == 'online':
+                    conn.status = conn.status + 1
+                elif status == 'offline':
+                    conn.status = conn.status - 1
+                conn.save()
+            else:
+                ConnectionHistory.objects.create(user=request.user,publicip=publicip,localip=localip,status=1)
+            return HttpResponse('Success')
         else:
-            ConnectionHistory.objects.create(user=request.user,publicip=publicip,localip=localip,status=1)
-        return HttpResponse('Success')
+            return HttpResponse('Failure')
+
 
 
 def catchpayment(request):
@@ -2602,3 +2849,88 @@ def paypalexecute(request):
             return HttpResponse('Success')
         else:
             return HttpResponse(payment.error)
+
+
+def pricing(request):
+    return render(request,'rapp/pricing.html',{})
+
+
+def addsubtry(request):
+    if request.method == 'POST':
+        amount = request.POST['amount']
+        subplan = request.POST['subplan']
+        subtime = request.POST['subtime']
+        publicip = request.POST['publicip']
+        localip = request.POST['localip']
+        s = str(localip) + ' ' + str(publicip) + ' ' + str(subplan) + ' ' + str(subtime) + ' ' + str(int((datetime.utcnow() - datetime(1970, 1, 1)).total_seconds() * 1000))
+        subid = int(hashlib.sha1(s.encode()).hexdigest(), 16) % (10 ** 32)
+        if request.user.is_authenticated:
+            Subscriptiontry.objects.create(subid=subid,user=request.user,publicip=publicip,localip=localip,
+                                           subplan=subplan,subtime=subtime,amount=amount)
+        else:
+            Subscriptiontry.objects.create(subid=subid, publicip=publicip, localip=localip,
+                                           subplan=subplan, subtime=subtime, amount=amount)
+
+        return HttpResponse(subid)
+
+
+def pub_login(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+
+        user = authenticate(username=email, password=password)
+
+        if user and UserP.objects.filter(user=user).exists():
+            login(request, user)
+            return HttpResponseRedirect('/publisher')
+        elif user and not UserP.objects.filter(user=user).exists():
+            return HttpResponse('Please Login using Publisher Email Address!')
+        elif not User.objects.filter(email=email).exists():
+            return HttpResponse("This Email Address is not registered with us!")
+        else:
+            return HttpResponse("Invalid Credentials!")
+
+
+def pub_reg(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        number = request.POST['phone']
+        html_content = '<br>Number: ' + number + '<br>Email: ' + email
+        msg = EmailMultiAlternatives(
+            'Publisher Contact - Reader Earth',
+            'Details:',
+            to=['contact@readerearth.com',]
+        )
+        msg.attach_alternative(html_content,"text/html")
+        msg.send()
+        return HttpResponse('Success')
+
+
+def error404(request):
+    return render(request,'rapp/404.html',{})
+
+
+def getcartvalue(request):
+    try:
+      value = Usercart.objects.filter(user=request.user).count()
+    except Exception as e:
+        value = 0
+    return HttpResponse(value)
+
+
+def raccess(request):
+    return render(request,'rapp/raccess.html',{})
+
+
+def addbuyentry(request):
+    if request.method == 'POST':
+        ebookid = int(request.POST['ebookid'])
+        ebook = Ebooks.objects.filter(id=ebookid)[0]
+        duration = request.POST['duration']
+        amount = int(request.POST['amount'])
+        s = str(ebookid) + ' ' + str(amount) + ' ' + str(request.user) + str(
+            int((datetime.utcnow() - datetime(1970, 1, 1)).total_seconds() * 1000))
+        buyid = int(hashlib.sha1(s.encode()).hexdigest(), 16) % (10 ** 32)
+        Buyentry.objects.create(buyid=buyid,user=request.user,ebook=ebook,duration=duration,amount=amount)
+        return HttpResponse(buyid)

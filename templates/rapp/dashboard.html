@@ -30,9 +30,15 @@
 	    			  <span class="dash-dl" data-id={{ forloop.counter}}><span></span><span>Days</span></span>
 	    			  <span class="dash-hl" data-id={{ forloop.counter}}><span></span><span>Hours</span></span>
 	    			  <span class="dash-ml" data-id={{ forloop.counter}}><span></span><span>Mins</span></span>
-					  <img src="/{{ dash.ebook.img }}" alt="Ebook">	
+					  <img src="https://s3.ap-south-1.amazonaws.com/readerearth/{{ dash.ebook.img }}" alt="Ebook">	
 					  <div class="container">
-					  	<div class="dash-ebook-progress"><span class="dash-ebook-progress-text" data-percent="{{dash.ebook.percentageread_set.all.0.percent}}"></span></div>
+					  	<div class="dash-ebook-progress">
+					  		{% if dash.ebook.percentageread_set.all.0.percent != NaN %}
+					  		<span class="dash-ebook-progress-text" data-percent="{{dash.ebook.percentageread_set.all.0.percent}}"></span>
+					  		{% else %}
+					  		<span class="dash-ebook-progress-text" data-percent="0"></span>
+					  		{% endif %}
+					  	</div>
 					    <p class="title" data-id={{ forloop.counter }}>{{ dash.ebook.name }}</p> 
 					    <p class="author" data-id={{ forloop.counter }}>{{ dash.ebook.author }}</p> 
 					  </div>
@@ -43,23 +49,27 @@
         		{% endfor %}
         		{% for dash in bdashes %}
 				{% if dash.active == True %}
-				<a href="/read/{{dash.ebook.id}}" target="_blank">
-				<div class="col-sm-4 bdashes">
+				<div class="bdashes">
+					<a href="/read/{{ dash.ebook.id}}/" target="_blank">
         			<div class="card">
-					  <img src="/{{ dash.ebook.img }}" alt="Ebook">
-					  <div class="overlay">
-					  	Buyed
-					  </div>
+        			  <div class="overlay">
+        			  	Buyed
+        			  </div>
+					  <img src="https://s3.ap-south-1.amazonaws.com/readerearth/{{ dash.ebook.img }}" alt="Ebook">	
 					  <div class="container">
-					    <p class="title" data-id={{ forloop.counter }}><b>{{ dash.ebook.name }}</b></p> 
-					    <p class="author" data-id={{ forloop.counter }}><b>- {{ dash.ebook.author }}</b></p> 
-					    <p class="publisher" data-id={{ forloop.counter }}>{{dash.ebook.language}}, {{ dash.ebook.publisher }}</p>
-					    
+					  	<div class="dash-ebook-progress">
+					  		{% if dash.ebook.percentageread_set.all.0.percent != NaN %}
+					  		<span class="dash-ebook-progress-text" data-percent="{{dash.ebook.percentageread_set.all.0.percent}}"></span>
+					  		{% else %}
+					  		<span class="dash-ebook-progress-text" data-percent="0"></span>
+					  		{% endif %}
+					  	</div>
+					    <p class="title" data-id={{ forloop.counter }}>{{ dash.ebook.name }}</p> 
+					    <p class="author" data-id={{ forloop.counter }}>{{ dash.ebook.author }}</p> 
 					  </div>
 					</div>
-        		</div>
-        	    </a>
-        		
+				  </a>
+        		</div>	
         		{% endif %}
         		{% endfor %}
 			</div>

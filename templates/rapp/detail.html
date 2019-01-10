@@ -5,8 +5,48 @@
 .mp-1{
 	margin-top: -15px;
 }
+#addcartbox{
+	position: absolute;
+	top: 50px;
+	background-color: #FFFFFF;
+	height: 40px;
+	color: #4DBE44;
+	right: 2.6%;
+	border-radius: 5px;
+	box-shadow: 0px 0px 25px rgba(239,58,71,1.0);
+	padding-left: 15px;
+	padding-right: 15px;
+	z-index: 10;
+	display: none;
+}
+#addcartarrow{
+  position: absolute;
+  top: -10px;
+  right: 11.5%;
+	width: 0; 
+  height: 0; 
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  
+  border-bottom: 10px solid  #FFFFFF;
+}
+#detailaddcartsvg{
+	width: 15px;
+	position:relative;
+	top: 11px;
+}
+#addcartbox span{
+	position: relative;
+	top: 9px;
+	left: 2px;
+}
 {% endblock %}
 {% block content %}
+    <div id="addcartbox">
+    	<div id="addcartarrow"></div>
+    	<svg id="detailaddcartsvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9.64 9.64"><defs><style>.detailaddcartsvg-1{fill:#fff;stroke:#75c152;stroke-miterlimit:10;stroke-width:0.4px;}.detailaddcartsvg-2{fill:#75c152;}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><circle class="detailaddcartsvg-1" cx="4.82" cy="4.82" r="4.62"/><rect class="detailaddcartsvg-2" x="3.18" y="3.98" width="0.4" height="2.91" rx="0.2" ry="0.2" transform="translate(-2.88 4.08) rotate(-45.91)"/><rect class="detailaddcartsvg-2" x="5.52" y="2.55" width="0.4" height="4.54" rx="0.2" ry="0.2" transform="translate(4.97 -2.62) rotate(44.09)"/></g></g></svg>
+    	<span>Book is successfully added to your cart</span>
+    </div>
 	<div class="detail-container">
 	    <div class="detail-1">
 	    	<div class="mp-1-wrapper">
@@ -41,7 +81,7 @@
 			</div>
 		    </div>
 		    <div class="detail-core">
-		    	<div class="detail-img" data-img="/{{ebook.img}}">
+		    	<div class="detail-img" data-img="https://s3.ap-south-1.amazonaws.com/readerearth/{{ebook.img}}">
 		    		<i class="fa fa-heart" style="font-size:18px;color:rgb(178,178,178);"></i>
 		    	</div>
 		    	<div class="detail-text">
@@ -52,7 +92,7 @@
 		    		<span class="detail-stars" data-rating="{{ ebook.rating }}"></span>
 		    		<span class="detail-starusers">({{ ebook.ratedusers }} reviews)</span>
 		    	    </p>
-		    		<a class="detail-sample" href="/sample/{{ebook.id}}">Read free sample</a>
+		    		<a class="detail-sample" href="/sample/{{ebook.id}}" target="_blank">Read free sample</a>
 		    		<span class="detail-atc"><i class="fa fa-shopping-cart" aria-hidden="true"></i><span>Add to Cart</span></span>
 		    		<p class="detail-price-wrapper">
 		    		<span class="detail-nprice" data-price="{{ ebook.price }}">&#8377; {{ ebook.price }}</span>
@@ -60,6 +100,7 @@
 		    		<span class="detail-discount"></span>
 		    	    </p>
 		    	    <p class="detail-buy-wrapper">
+		    	    {% csrf_token %}
 		    		<button class="detail-buy">Buy <span>Ebook</span></button>
 		    		<span class="detail-or">or</span>
 		    		<span class="detail-duration-title">Select duration</span>
@@ -68,6 +109,7 @@
 		    			<option value="{{ opt }}">{{ opt }}</option>
 		    			{% endfor %}
 		    		</select>
+		    		{% csrf_token %}
 		    		<button class="detail-rent">Rent</button>
 		    		<span class="detail-lmore">Learn more</span>
 		    	    </p>
@@ -123,6 +165,7 @@
 		    		</table>
 		    	</div>
 		    </div>
+		    {% if sfbooks != None %}
 		    <h3 class="detail-sug-title">Other books by this {{sftitle}}</h3>
 		    {% if sfless == False %}
 		    <div class="detail-sug-wrapper">
@@ -130,7 +173,7 @@
 				<div class="card" data-eid="{{ book.id }}">
 				  <i class="fa fa-heart" style="font-size:16px;color:#E4E4E4;position: absolute;top: 10px;margin-left: 135px;"></i>
     			  <a href="/detail/{{book.id}}/">
-				  <img src="/{{ book.img }}" alt="Ebook">
+				  <img src="https://s3.ap-south-1.amazonaws.com/readerearth/{{ book.img }}" alt="Ebook">
 				  <div class="container">
 				    <p class="title" data-id={{ forloop.counter }}>{{ book.name }}</p> 
 				    <p class="author" data-id={{ forloop.counter }}>{{ book.author }}</p>
@@ -148,7 +191,7 @@
 				<div class="card" data-eid="{{ book.id }}">
 				  <i class="fa fa-heart" style="font-size:16px;color:#E4E4E4;position: absolute;top: 10px;margin-left: 135px;"></i>
     			  <a href="/detail/{{book.id}}/">
-				  <img src="/{{ book.img }}" alt="Ebook">
+				  <img src="https://s3.ap-south-1.amazonaws.com/readerearth/{{ book.img }}" alt="Ebook">
 				  <div class="container">
 				    <p class="title" data-id={{ forloop.counter }}>{{ book.name }}</p> 
 				    <p class="author" data-id={{ forloop.counter }}>{{ book.author }}</p>
@@ -161,16 +204,17 @@
 				{% endfor %}
 		    </div>
 		    {% endif %}
+		    {% endif %}
 	    </div>
 	    <div class="detail-2">
 	    	<span class="detail-similar-title">Similar Ebooks</span>
 	    	<a href="/search/" class="detail-s-viewall">View All</a>
 	    	<div class="detail-similar">
-	    		{% for book in ebooks %}
+	    		{% for book in similarbooks %}
 	    		<div class="detail-similar-book" data-id="{{ book.id }}">
 	    			<i class="fa fa-heart" style="font-size:12px;color:rgb(178,178,178);"></i>
 	    			<a href="/detail/{{book.id}}/">
-	    			<div class="detail-similar-img" data-img="/{{book.img}}">
+	    			<div class="detail-similar-img" data-img="https://s3.ap-south-1.amazonaws.com/readerearth/{{book.img}}">
 		    		  
 		    	    </div>
 		    	    <div class="detail-similar-rating">

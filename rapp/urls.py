@@ -44,6 +44,7 @@ urlpatterns = [
     url(r'^sample/(?P<id>\d+)/$',views.sample,name='sample'),
     url(r'^add_notes/$',views.add_notes,name='add_notes'),
     url(r'^save_page/$',views.save_page,name='save_page'),
+    url(r'^save_page_sample/$',views.save_page_sample,name='save_page_sample'),
     url(r'^searchi/$',views.searchi,name='searchi'),
     url(r'^search/', views.search, name='search_view'),
     url(r'^publisher',views.publisher,name='publisher'),
@@ -77,6 +78,14 @@ urlpatterns = [
     url(r'^catchpayment/$',views.catchpayment,name='catchpayment'),
     url(r'^paypalcreate/$',views.paypalcreate,name='paypalcreate'),
     url(r'^paypalexecute/$',views.paypalexecute,name='paypalexecute'),
+    url(r'^pricing/$',views.pricing,name='pricing'),
+    url(r'^addsubtry/$',views.addsubtry,name='addsubtry'),
+    url(r'^pub_login/$',views.pub_login,name='pub_login'),
+    url(r'^pub_reg/$',views.pub_reg,name='pub_reg'),
+    url(r'^404/$',views.error404,name='error404'),
+    url(r'^getcartvalue/$',views.getcartvalue,name='getcartvalue'),
+    url(r'^raccess/$',views.raccess,name='raccess'),
+    url(r'^addbuyentry/$',views.addbuyentry,name='addbuyentry'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG is True:

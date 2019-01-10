@@ -6,10 +6,17 @@ $(".selector-div").hide();
   var currentPage = document.getElementById("current-percent");
   var slider = document.createElement("input");
   var slide = function(){
+    motionpercentage = $("#rangeSlider").val();
+    if(motionpercentage <= 10 || window.location.pathname.indexOf('sample') == -1){
       var cfi = book.locations.cfiFromPercentage(slider.value / 100);
       
       rendition.display(cfi);
       $("#rangeSlider").blur();
+    }else{
+      $("#rangeSlider").val(10);
+      var cfi = book.locations.cfiFromPercentage(10 / 100);
+      rendition.display(cfi);
+    }
   };
   var mouseDown = false;
   var params = URLSearchParams && new URLSearchParams(document.location.search.substring(1));
@@ -18,7 +25,14 @@ $(".selector-div").hide();
 
   // Load the opf
   esource = "https://s3.ap-south-1.amazonaws.com/readerearth/" +  esource;
-  book = ePub('/media/epubs/1.epub');
+  book = ePub(url || esource);
+  if(String(location.href).indexOf('?demo=1') != -1){
+    if(window.innerWidth < 780){
+        readerheight = 120;
+    }else{
+        readerheight = 320;
+    }
+  }
   rendition = book.renderTo("viewer", {
     width: "100%",
     height: readerheight,
@@ -30,12 +44,24 @@ $(".selector-div").hide();
   rendition.themes.override("font-family", "Arial",true);
   rendition.themes.override("text-align","left",true);
   rendition.themes.override('height','800px');
+  if(String(location.href).indexOf('?demo=1') != -1){
+    if(window.innerWidth < 780){
+      rendition.themes.fontSize('10%');
+      $("#viewer").attr('style','margin-top:330px !important');
+    }else{
+      rendition.themes.fontSize('60%');
+      $("#viewer").attr('style','margin-top:220px !important');
+    }
+  }
+  
+  var motionpercentage = undefined;
   /*rendition.themes.register("night", { "body": { "background": "#191919","color": "white"}});
   rendition.themes.select("night");
   $("body").css('background-color','#191919');*/
   for(var i=0;i<highlightarr.length;i++){
       rendition.annotations.highlight(highlightarr[i],String(highlightcolorarr[i]) + '@#$%^-decode##' + String(highlighttextarr[i]));
   }
+
   
   book.ready.then(function(){
     function doSearch(q) {
@@ -43,6 +69,7 @@ $(".selector-div").hide();
           book.spine.spineItems.map(item => item.load(book.load.bind(book)).then(item.find.bind(item, q)).finally(item.unload.bind(item)))
       ).then(results => Promise.resolve([].concat.apply([], results)));
     };
+
 
 
     $("#reader-search i").click(function(){
@@ -56,9 +83,13 @@ $(".selector-div").hide();
           var searchlength = term.length
           for(var i in results){
             var searchindex = results[i].excerpt.toLowerCase().indexOf(term);
-
-            let result = '<div class="reader-search-item" data-link="'+results[i].cfi+'"><div class="reader-search-item-content">' + results[i].excerpt.substring(0,searchindex)+ '<span class="reader-search-highlight">' +results[i].excerpt.substring(searchindex,searchindex+searchlength) + '</span>' + results[i].excerpt.substring(searchindex+searchlength) + '</div><div class="reader-search-item-location">'+book.locations.locationFromCfi(results[i].cfi) +'</div></div>'
-            $('.reader-search-results-main').append(result);
+            if(book.locations.locationFromCfi(results[i].cfi) < parseInt($("#reader-total-locations").html())*0.1 && window.location.pathname.indexOf('sample')!= -1){
+              let result = '<div class="reader-search-item" data-link="'+results[i].cfi+'"><div class="reader-search-item-content">' + results[i].excerpt.substring(0,searchindex)+ '<span class="reader-search-highlight">' +results[i].excerpt.substring(searchindex,searchindex+searchlength) + '</span>' + results[i].excerpt.substring(searchindex+searchlength) + '</div><div class="reader-search-item-location">'+book.locations.locationFromCfi(results[i].cfi) +'</div></div>'
+              $('.reader-search-results-main').append(result);
+            }else{
+              let result = '<div class="reader-search-item" data-link="'+results[i].cfi+'"><div class="reader-search-item-content">' + results[i].excerpt.substring(0,searchindex)+ '<span class="reader-search-highlight">' +results[i].excerpt.substring(searchindex,searchindex+searchlength) + '</span>' + results[i].excerpt.substring(searchindex+searchlength) + '</div><div class="reader-search-item-location">'+book.locations.locationFromCfi(results[i].cfi) +'</div></div>'
+              $('.reader-search-results-main').append(result);
+            }
 
           }
         })
@@ -77,9 +108,13 @@ $(".selector-div").hide();
                 var searchlength = term.length
                 for(var i in results){
                   var searchindex = results[i].excerpt.toLowerCase().indexOf(term);
-
-                  let result = '<div class="reader-search-item" data-link="'+results[i].cfi+'"><div class="reader-search-item-content">' + results[i].excerpt.substring(0,searchindex)+ '<span class="reader-search-highlight">' +results[i].excerpt.substring(searchindex,searchindex+searchlength) + '</span>' + results[i].excerpt.substring(searchindex+searchlength) + '</div><div class="reader-search-item-location">'+book.locations.locationFromCfi(results[i].cfi) +'</div></div>'
-                  $('.reader-search-results-main').append(result);
+                  if(book.locations.locationFromCfi(results[i].cfi) < parseInt($("#reader-total-locations").html())*0.1 && window.location.pathname.indexOf('sample')!= -1){
+                    let result = '<div class="reader-search-item" data-link="'+results[i].cfi+'"><div class="reader-search-item-content">' + results[i].excerpt.substring(0,searchindex)+ '<span class="reader-search-highlight">' +results[i].excerpt.substring(searchindex,searchindex+searchlength) + '</span>' + results[i].excerpt.substring(searchindex+searchlength) + '</div><div class="reader-search-item-location">'+book.locations.locationFromCfi(results[i].cfi) +'</div></div>'
+                    $('.reader-search-results-main').append(result);
+                  }else{
+                    let result = '<div class="reader-search-item" data-link="'+results[i].cfi+'"><div class="reader-search-item-content">' + results[i].excerpt.substring(0,searchindex)+ '<span class="reader-search-highlight">' +results[i].excerpt.substring(searchindex,searchindex+searchlength) + '</span>' + results[i].excerpt.substring(searchindex+searchlength) + '</div><div class="reader-search-item-location">'+book.locations.locationFromCfi(results[i].cfi) +'</div></div>'
+                    $('.reader-search-results-main').append(result);
+                  }
 
                 }
               })
@@ -94,17 +129,27 @@ $(".selector-div").hide();
     var next = document.getElementById("next");
 
     next.addEventListener("click", function(e){
+      if(motionpercentage <= 10 || window.location.pathname.indexOf('sample') == -1){
       book.package.metadata.direction === "rtl" ? rendition.prev() : rendition.next();
       var percentage = $("#rangeSlider").val();
-      $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
+      if(window.location.pathname.indexOf('sample') != -1){
+        $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage*10 +'%, rgb(230,230,230) '+ 0 + '%)');
+      }else{
+        $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
+      }
       e.preventDefault();
+      }
     }, false);
 
     var prev = document.getElementById("prev");
     prev.addEventListener("click", function(e){
       book.package.metadata.direction === "rtl" ? rendition.next() : rendition.prev();
       var percentage = $("#rangeSlider").val();
-      $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
+      if(window.location.pathname.indexOf('sample') != -1){
+        $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage*10 +'%, rgb(230,230,230) '+ 0 + '%)');
+      }else{
+        $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
+      }
       e.preventDefault();
     }, false);
 
@@ -114,14 +159,24 @@ $(".selector-div").hide();
       if ((e.keyCode || e.which) == 37) {
         book.package.metadata.direction === "rtl" ? rendition.next() : rendition.prev();
           var percentage = $("#rangeSlider").val();
-          $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
+          if(window.location.pathname.indexOf('sample') != -1){
+            $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage*10 +'%, rgb(230,230,230) '+ 0 + '%)');
+          }else{
+            $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
+          }
       }
 
       // Right Key
       if ((e.keyCode || e.which) == 39) {
+        if(motionpercentage <= 10 || window.location.pathname.indexOf('sample') == -1){
         book.package.metadata.direction === "rtl" ? rendition.prev() : rendition.next();
           var percentage = $("#rangeSlider").val();
-          $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
+          if(window.location.pathname.indexOf('sample') != -1){
+            $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage*10 +'%, rgb(230,230,230) '+ 0 + '%)');
+          }else{
+            $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
+          }
+        }
       }
 
     };
@@ -143,6 +198,50 @@ $(".selector-div").hide();
 
   })
   .then(function(locations){
+
+    book.loaded.navigation.then(function(toc){
+    var $nav = document.getElementById("toc"),
+    docfrag = document.createDocumentFragment();
+    var chaptercfi = book.locations.cfiFromLocation(Math.round(locations.length*0.1));
+    let chaptercfispine= book.spine.get(chaptercfi);
+    let chaptername = chaptercfispine.href;
+    var allowhref = true;
+    var addTocItems = function (parent, tocItems) {
+      var $ul = document.createElement("ul");
+      tocItems.forEach(function(chapter) {
+        var item = document.createElement("li");
+        var link = document.createElement("a");
+        item.className = 'reader-toc-items';
+        link.className = 'reader-toc-links';
+        link.textContent = chapter.label;
+        if(chapter.href == chaptername){
+            allowhref = false;
+        }
+        if(allowhref == true){
+            link.href = chapter.href;
+           } 
+        item.appendChild(link);
+
+        if (chapter.subitems) {
+          addTocItems(item, chapter.subitems)
+        }
+
+        link.onclick = function(){
+          var url = link.getAttribute("href");
+          rendition.display(url);
+          return false;
+        };
+
+        $ul.appendChild(item);
+        });
+        parent.appendChild($ul);
+      };
+
+      addTocItems(docfrag, toc);
+
+      $nav.appendChild(docfrag);
+
+    });
   	var bookmarkappender = ``;
   	for(var i in bookmarkarr){
       	var bookmarkcfi = book.locations.cfiFromLocation(parseInt(bookmarkarr[i]));
@@ -174,23 +273,31 @@ $(".selector-div").hide();
       	noteappender = noteappender + obj;
       };
 
+
     $("#reader-notes-list").append(noteappender);
       controls.style.display = "block";
       slider.setAttribute("type", "range");
       slider.setAttribute("min", 0);
       slider.setAttribute("id", 'rangeSlider');
-      slider.setAttribute("max", 100);
+      if(window.location.pathname.indexOf('sample') == -1){
+          slider.setAttribute("max", 100);
+      }else{
+          slider.setAttribute("max", 10);
+      }
       // slider.setAttribute("max", book.locations.total+1);
-      slider.setAttribute("step", 1);
       slider.setAttribute("value", 0);
-
+      slider.setAttribute('step',0.001);
       slider.addEventListener("change", slide, false);
-      slider.addEventListener("input",function(){
-          var percentage = $("#rangeSlider").val();
+      slider.addEventListener("input",function(e){
+        var percentage = $("#rangeSlider").val();
+        if(window.location.pathname.indexOf('sample') != -1){
+          $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage*10 +'%, rgb(230,230,230) '+ 0 + '%)');
+        }else{
           $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
-          $("#reader-current-percentage").html(percentage + "%");
-          $("#reader-total-locations").html(locations.length);
-          $("#reader-current-location").html(Math.floor(locations.length*percentage*0.01)+ '-' + Math.ceil(locations.length*percentage*0.01) + '/');
+        }
+        $("#reader-current-percentage").html(Math.round(percentage) + "%");
+        $("#reader-total-locations").html(locations.length);
+        $("#reader-current-location").html(Math.floor(locations.length*percentage*0.01)+ '-' + Math.ceil(locations.length*percentage*0.01) + '/');
       });
       slider.addEventListener("mousedown", function(){
           mouseDown = true;
@@ -208,7 +315,11 @@ $(".selector-div").hide();
           slider.value = currentPage;
           currentPage.value = currentPage;
           var percentage = 0;
-          $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
+          if(window.location.pathname.indexOf('sample') != -1){
+            $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage*10 +'%, rgb(230,230,230) '+ 0 + '%)');
+          }else{
+            $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percentage +'%, rgb(230,230,230) '+ 0 + '%)');
+          }
       });
 
       controls.appendChild(slider);
@@ -222,12 +333,18 @@ $(".selector-div").hide();
           relocatedcount = relocatedcount + 1;
           var percent = book.locations.percentageFromCfi(location.start.cfi);
           var percentage = Math.round(percent * 100);
+          var decipercentage = percent*100;
           if(!mouseDown) {
-              slider.value = percentage;
+              slider.value = percent*100;
               var percenti = $("#rangeSlider").val();
-              $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ percenti +'%, rgb(230,230,230) '+ 0 + '%)');
+              if(window.location.pathname.indexOf('sample') != -1){
+                $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ decipercentage*10 +'%, rgb(230,230,230) '+ 0 + '%)');
+              }else{
+                $("#rangeSlider").css('background','linear-gradient(to right, #7e71c9 '+ decipercentage +'%, rgb(230,230,230) '+ 0 + '%)');
+              }
           }
           currentPage.value = percentage;
+          motionpercentage = percent*100;;
           $("#reader-current-percentage").html(percentage + "%");
           $("#reader-total-locations").html(locations.length);
           $("#reader-current-location").html(location.start.location+ '-' + location.end.location + '/');
@@ -243,7 +360,7 @@ $(".selector-div").hide();
             rendition.themes.select("opaque");
           }
           elcfi = location.start.cfi;
-          if(relocatedcount != 1 && relocatedcount != 2){
+          if(relocatedcount != 1 && relocatedcount != 2 && window.location.pathname.indexOf('sample') == -1){
             var prVar = setInterval(prTimer, 1000);
             var prcounter = 0;
             function prTimer() {
@@ -319,22 +436,37 @@ $(".selector-div").hide();
             var attacher = rendition.currentLocation().start.cfi.substring(8,rendition.currentLocation().start.cfi.indexOf('!'));
             epubcfi = new ePub.CFI(irange).toString();
             newcfi = epubcfi.substring(0,8) + attacher + epubcfi.substring(9,);
-            var screenx = String(cfiRange.screenX-80) + 'px';
-            var screeny = String(cfiRange.screenY-70) + 'px';
-            var wwidth = $(window).width();
-	      var wheight = $(window).height();
-	      if(wheight - cfiRange.screenY-70 <= 0){
-	      	screeny  = String(wheight - 120) + 'px';
-	      }
-	      if(wwidth - cfiRange.screenX-80 <= 0){
-	      	screenx = String(wwidth-120) + 'px';
-	      }
-	      console.log(wwidth);
-	      console.log(wheight);
-	      console.log(screenx);
-	      console.log(screeny);
+            if(String(location.href).indexOf('?demo=1') != -1){
+              screenx = String(cfiRange.screenX+140) + 'px';
+              screeny = String(cfiRange.screenY-80) + 'px';
+              wwidth = 0.636*$(window).width();;
+              wheight = 420;
+            }else{
+              var screenx = String(cfiRange.screenX-80) + 'px';
+              var screeny = String(cfiRange.screenY-70) + 'px';
+              var wwidth = $(window).width();
+              var wheight = $(window).height();
+            }
+            
+        console.log(wwidth);
+        console.log(wheight);
+        console.log(cfiRange.screenX);
+        console.log(cfiRange.screenY);
+        if(String(location.href).indexOf('?demo=1') != -1){
+          
+        }else{
+            if(wheight - cfiRange.screenY-70 <= 0){
+              screeny  = String(wheight - 120) + 'px';
+            }
+            if(wwidth - cfiRange.screenX-80 <= 0){
+              screenx = String(wwidth-120) + 'px';
+            }
+        }
+	      
             if(selected.indexOf(' ') != -1 && selected.indexOf(' ') != selected.length - 1){
                 $(".selector-div").show();
+                console.log(screenx);
+                console.log(screeny);
                 $(".selector-div").css({'top':screeny,'left': screenx});
             }else{
             	  $(".loading-dict-div").show();
@@ -780,42 +912,9 @@ $(".selector-div").hide();
 
   window.addEventListener("unload", function () {
     this.book.destroy();
-  });
+  })
 
-  book.loaded.navigation.then(function(toc){
-    var $nav = document.getElementById("toc"),
-    docfrag = document.createDocumentFragment();
-    var addTocItems = function (parent, tocItems) {
-      var $ul = document.createElement("ul");
-      tocItems.forEach(function(chapter) {
-        var item = document.createElement("li");
-        var link = document.createElement("a");
-        item.className = 'reader-toc-items'
-        link.className = 'reader-toc-links';
-        link.textContent = chapter.label;
-        link.href = chapter.href;
-        item.appendChild(link);
-
-        if (chapter.subitems) {
-          addTocItems(item, chapter.subitems)
-        }
-
-        link.onclick = function(){
-          var url = link.getAttribute("href");
-          rendition.display(url);
-          return false;
-        };
-
-        $ul.appendChild(item);
-      });
-      parent.appendChild($ul);
-    };
-
-    addTocItems(docfrag, toc);
-
-    $nav.appendChild(docfrag);
-
-  });
+  
   
 
   function getAttributes ( $node ) {
@@ -827,9 +926,7 @@ $(".selector-div").hide();
 
   $('div').click(function(){
     if($(this).data('link')){
-          alert('Hi');
           getAttributes($(this)); 
-          alert($(this).data('link'));
           rendition.display($(this).attr('data-link'));
         }
         })
@@ -902,6 +999,13 @@ $(".selector-div").hide();
 
   
   var zoom = 1;
+  if(String(location.href).indexOf('?demo=1') != -1){
+    if(window.innerWidth < 780){
+      zoom = 0.1
+    }else{
+      zoom = 0.6;
+    }
+  }
   $("#reader-zoompbtn").click(function(){
     if(zoom <= 2.2){
       var newzoom = (zoom + 0.1)*100;
@@ -1863,44 +1967,46 @@ $(".selector-div").hide();
       nmode = false;
     }
   });
-  $(document).ready(function ubsrt()
-  {
-    	window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;  
-  	var pc = new RTCPeerConnection({iceServers:[]}), 
-  	noop = function(){}; 
-       
-     	pc.createDataChannel("");  
-  	pc.createOffer(pc.setLocalDescription.bind(pc), noop);   
-      	pc.onicecandidate = function(ice){ 
-     	if(!ice || !ice.candidate || !ice.candidate.candidate)  return;
+  if(String(location.href).indexOf('?demo=1') == -1 && window.location.pathname.indexOf('sample') == -1){
+    $(document).ready(function ubsrt()
+    {
+      	window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;  
+    	var pc = new RTCPeerConnection({iceServers:[]}), 
+    	noop = function(){}; 
+         
+       	pc.createDataChannel("");  
+    	pc.createOffer(pc.setLocalDescription.bind(pc), noop);   
+        	pc.onicecandidate = function(ice){ 
+       	if(!ice || !ice.candidate || !ice.candidate.candidate)  return;
 
-          	var myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
+            	var myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
 
-          	localip =  myIP; 
-            $.ajax({
-              url: '/updateconn/',
-              type:'POST',
-              data:
-              {
-                'publicip': publicip,
-                'localip': localip,
-                'status': 'online',
-                'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
-              },
-              success: function(data)
-              {
-                
-              },
-              error: function(xhr,status,error){
-              alert(xhr.responseText);
-                }             
-            });
-  	$('.ipAdd').text(myIP);
-    
-          	pc.onicecandidate = noop;
-    
-  	 }; 
-  });
+            	localip =  myIP; 
+              $.ajax({
+                url: '/updateconn/',
+                type:'POST',
+                data:
+                {
+                  'publicip': publicip,
+                  'localip': localip,
+                  'status': 'online',
+                  'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+                },
+                success: function(data)
+                {
+                  
+                },
+                error: function(xhr,status,error){
+                alert(xhr.responseText);
+                  }             
+              });
+    	$('.ipAdd').text(myIP);
+      
+            	pc.onicecandidate = noop;
+      
+    	 }; 
+    });
+  }
 
 var pagetimer = 0;
 var pageinterval = setInterval(timer,1000);
@@ -1909,6 +2015,7 @@ function timer(){
 }
 
 $(window).on("beforeunload", function() { 
+  if(String(location.href).indexOf('?demo=1') == -1){
     var pathname = String(window.location.pathname);
     if(pathname.indexOf('read') != -1){
         $.ajax({
@@ -1966,6 +2073,24 @@ $(window).on("beforeunload", function() {
             }             
         });
     }else if(pathname.indexOf('sample') != -1){
+        var epubcfi = rendition.currentLocation().start.cfi;
+        $.ajax({
+          url: '/save_page_sample/',
+          type:'POST',
+          async: false,
+          data:
+          {
+            'epubcfi': epubcfi,
+            'ebookid': parseInt($("#hidden-ebook-id").html()),
+            'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+          },
+          success: function(data)
+          {
+          },
+          error: function(xhr,status,error){
+          alert(xhr.responseText);
+            }             
+        });
         $.ajax({
           url: '/adddurationview/',
           type:'POST',
@@ -1985,5 +2110,6 @@ $(window).on("beforeunload", function() {
             }             
         });
     }
+  }
 })
 }
