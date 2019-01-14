@@ -75,77 +75,76 @@
 	</nav>
 	<div id="bodyopaquer"></div>
 	<div id="loginModal" role="dialog">
-      	<div class="row">
-      		<div class="col-sm-5">
-      			<div class="heading">Login</div>
-      			<div class="sub-heading">Get access to thousands<br>of ebooks.</div>
-      			<img src="{% static 'images/login.png' %}">
-      		</div>
-      		<div class="col-sm-7">
-      			<button type="button" class="close loginclose" style="outline: none;">&times;</button>
-      			<div class="heading">LOGIN</div>
-      			<form method="post">
-      			  {% csrf_token %}
-      				<div class="login-input-wrapper">
-	      				<input type="text" name="login-username" class="login-username" id="login-username" placeholder="Email">
-	      				<div class="login-reply-1"></div>
-	      			</div>
-	      			<div class="login-input-wrapper">
-	      				<input type="password" name="login-password" class="login-password" id="login-password" placeholder="Password">
-	      				<div class="login-reply-2"></div>
-	      			</div>
-	      			<a href="/password_reset/" class="forgot">Forgot my Password?</a>
-      				<button type="submit" class="btn btn-default login-submit submit">SUBMIT</button><br>
-      				<div style="position: absolute;border-bottom: 2px solid #9F9F9F;top: 354px;width: 32%;left: 14%;"></div>
-              <span style="position: absolute;top:345px;color: #9F9F9F;left: 47.5%;">OR</span>
-              <div style="position: absolute;border-bottom: 2px solid #9F9F9F;top: 354px;width: 32%;left: 54%;"></div>
-      				<i class="fa fa-google logingoogle" aria-hidden="true"></i>
-      				<i class="fa fa-facebook loginfacebook" aria-hidden="true"></i>
-      				<br>
-      				<div class="g-signin2" data-onsuccess="onSignIn"></div>
-      				<button type="button" class="btn btn-default loginchangebtn other">Create an Account</button><br>
-      			</form>
-      		</div>
-      	</div>
+      <div class="row">          <div class="col-xs-5">
+          <div class="heading">Login</div>
+          <div class="sub-heading">Get access to thousands<br>of ebooks.</div>
+          <img src="{% static 'images/login.png' %}">
+        </div>
+        <div class="col-xs-7">
+          <button type="button" class="close loginclose" style="outline: none;">&times;</button>
+          <div class="heading">LOGIN</div>
+          <form method="post">
+            {% csrf_token %}
+            <div class="login-input-wrapper">
+              <input type="text" name="login-username" class="login-username" id="login-username" placeholder="Email">
+              <div class="login-reply-1"></div>
+            </div>
+            <div class="login-input-wrapper">
+              <input type="password" name="login-password" class="login-password" id="login-password" placeholder="Password">
+              <div class="login-reply-2"></div>
+            </div>
+            <a href="/password_reset/" class="forgot">Forgot Password?</a>
+            <button type="submit" class="btn btn-default login-submit submit">SUBMIT</button><br>
+            <div style="position: absolute;border-bottom: 2px solid #9F9F9F;top: 354px;width: 32%;left: 14%;"></div>
+            <span style="position: absolute;top:345px;color: #9F9F9F;left: 47.5%;">OR</span>
+            <div id="loginorline" style="position: absolute;border-bottom: 2px solid #9F9F9F;top: 354px;width: 32%;left: 54%;"></div>
+            <i class="fa fa-google logingoogle" aria-hidden="true"></i>
+            <i class="fa fa-facebook loginfacebook" aria-hidden="true"></i>
+            <br>
+            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+            <button type="button" class="btn btn-default loginchangebtn other">Create an Account</button><br>
+          </form>
+        </div>
+      </div>
     </div>
-	
-	<div id="registerModal" role="dialog">
-      	<div class="row">
-      		<div class="col-sm-5">
-      			<div class="heading">Register</div>
-      			<div class="sub-heading">Get access to thousands<br>of ebooks.</div>
-      			<img src="{% static 'images/login.png' %}">
-      		</div>
-      		<div class="col-sm-7">
-      			<button type="button" class="close loginclose" style="outline: none;">&times;</button>
-      			<div class="heading">REGISTER</div>
-      			<form method="post">
-      			  {% csrf_token %}
-      			    <div class="login-input-wrapper">
-      			        <input type="email" name="register-email" class="register-email" id="register-email" placeholder="Email">
-      			        <div class="register-reply-1"></div>
-      			        <div class="register-reply-4"></div>
-      			    </div>
-      			    <div class="login-input-wrapper">
-      				    <input type="password" name="register-password" class="register-password" id="register-password" placeholder="Password">
-      				    <div class="register-reply-2"></div>
-      				</div>
-      				<div class="login-input-wrapper">
-      				    <input type="password" name="register-confirm-password" class="register-confirm-password" id="register-confirm-password" placeholder="Confirm Password">
-      				    <div class="register-reply-3"></div>
-      				</div>
-      				<button type="submit" class="btn btn-default register-submit submit">SUBMIT</button><br>
-      				<div style="position: absolute;border-bottom: 2px solid #9F9F9F;top: 420px;width: 32%;left: 14%;"></div>
-              <span style="position: absolute;top:410px;color: #9F9F9F;left: 47.5%;">OR</span>
-              <div style="position: absolute;border-bottom: 2px solid #9F9F9F;top: 420px;width: 32%;left: 54%;"></div>
-      				<i class="fa fa-google logingoogle" aria-hidden="true"></i>
-      				<i class="fa fa-facebook loginfacebook" aria-hidden="true"></i>
-      				<br>
-      				<button type="button" class="btn btn-default registerchangebtn other">Already have an Account</button>
-      			</form>
-      		</div>
-      	</div>
-	    <div class="loader"></div>
+    
+    <div id="registerModal" role="dialog">
+      <div class="row">
+        <div class="col-xs-5">
+          <div class="heading">Register</div>
+          <div class="sub-heading">Get access to thousands<br>of ebooks.</div>
+          <img src="{% static 'images/login.png' %}">
+        </div>
+        <div class="col-xs-7">
+          <button type="button" class="close loginclose" style="outline: none;">&times;</button>
+          <div class="heading">REGISTER</div>
+          <form method="post">
+            {% csrf_token %}
+              <div class="login-input-wrapper">
+                  <input type="email" name="register-email" class="register-email" id="register-email" placeholder="Email">
+                  <div class="register-reply-1"></div>
+                  <div class="register-reply-4"></div>
+              </div>
+              <div class="login-input-wrapper">
+                <input type="password" name="register-password" class="register-password" id="register-password" placeholder="Password">
+                <div class="register-reply-2"></div>
+            </div>
+            <div class="login-input-wrapper">
+                <input type="password" name="register-confirm-password" class="register-confirm-password" id="register-confirm-password" placeholder="Confirm Password">
+                <div class="register-reply-3"></div>
+            </div>
+            <button type="submit" class="btn btn-default register-submit submit">SUBMIT</button><br>
+            <div style="position: absolute;border-bottom: 2px solid #9F9F9F;top: 76.3%;width: 32%;left: 14%;"></div>
+            <span style="position: absolute;top:74.7%;color: #9F9F9F;left: 47.5%;">OR</span>
+            <div style="position: absolute;border-bottom: 2px solid #9F9F9F;top: 76.3%;width: 32%;left: 54%;"></div>
+            <i class="fa fa-google logingoogle" aria-hidden="true"></i>
+            <i class="fa fa-facebook loginfacebook" aria-hidden="true"></i>
+            <br>
+            <button type="button" class="btn btn-default registerchangebtn other">Already have an Account</button>
+          </form>
+        </div>
+      </div>
+      <div class="loader"></div>
     </div>
     {% if user.is_authenticated %}
         <p style="display: none" class="authcheck">True</p>
@@ -935,18 +934,22 @@
     	$(this).find('img').css('height','190px');
     	$(this).find('.fa-heart').css({'font-size':'18px','top':'15px','margin-left':'198px'});
       $(".mp-2-wrapper .slick-list").css('padding-left','0px');
-    	if($(this).attr('data-slick-index') != '1'){
+      if(window.innerWidth < 1450){
+        if($(this).attr('data-slick-index') != '1'){
             $(".mp-2 .card").first().css({'margin-top':'46px','height':'265px','width':'204','margin-left':'0%','margin-right':'0%','z-index':'0','box-shadow':'none'});
-	    	$(".mp-2 .card").first().find('img').css('height','150px');
-	    	$(".mp-2 .card").first().find('.fa-heart').css({'font-size':'16px','top':'10px','margin-left':'170px'});
-	    }
-	    if(parseInt($(this).attr('data-slick-index'))%5 == 4){
-	    	$(this).parent().parent().parent().css('width','90.5%');
-	    	$(this).css('margin-right','18px');
-	    }else if(parseInt($(this).attr('data-slick-index'))%5 == 0 && parseInt($(this).attr('data-slick-index'))!= 0){
-	    	$(".mp-2-wrapper .slick-list").css('padding-left','18px');
+        $(".mp-2 .card").first().find('img').css('height','150px');
+        $(".mp-2 .card").first().find('.fa-heart').css({'font-size':'16px','top':'10px','margin-left':'170px'});
+      }
+      if(parseInt($(this).attr('data-slick-index'))%5 == 4){
+        $(this).parent().parent().parent().css('width','90.5%');
+        $(this).css('margin-right','18px');
+      }else if(parseInt($(this).attr('data-slick-index'))%5 == 0 && parseInt($(this).attr('data-slick-index'))!= 0){
+        $(".mp-2-wrapper .slick-list").css('padding-left','18px');
         $(this).css('margin-right','-36px');
-	    } 
+      } 
+      }else{
+
+      }
     });
     $(".mp-2 .card").mouseleave(function(){
     	$(this).css({'margin-top':'46px','height':'265px','width':'204','margin-left':'0.0%','margin-right':'0.0%','z-index':'0','box-shadow':'none'});
@@ -1212,13 +1215,13 @@
     $(".mp-search .card").mouseover(function(){
     	$(this).css({'height':'285px','width':'16.5%','z-index':'3','margin-top':'-10px','border-radius':'5px','box-shadow':'10px 0 15px -4px rgba(160, 100, 245, 0.4),-10px 0 15px -4px rgba(160, 100, 245, 0.4),0px 6px 15px -4px rgba(160, 100, 245, 0.4),0px -6px 15px -4px rgba(160, 100, 245, 0.4)','margin-left':'-0.05%','margin-right':'-0.05%','margin-bottom':'-10px'});
     	$(this).find('img').css('height','170px');
-    	$(this).find('.fa-heart').css({'font-size':'17px','top':'11px','margin-left':'145px'});
+    	$(this).find('.fa-heart').css({'font-size':'17px','top':'11px','margin-left':'85%'});
     });
     $(".mp-search .card").mouseleave(function(){
     	$(this).css({'height':'265px','width':'16.4%','z-index':'0','margin-top':'0px','border-radius':'0px','box-shadow':'none','margin-left':'0%','margin-right':'0%','margin-bottom':'0px'});
 
     	$(this).find('img').css('height','150px');
-    	$(this).find('.fa-heart').css({'font-size':'16px','top':'10px','margin-left':'145px'});
+    	$(this).find('.fa-heart').css({'font-size':'16px','top':'10px','margin-left':'85%'});
     });
 
     $(".reader-shop-search-input").keypress(function(e){

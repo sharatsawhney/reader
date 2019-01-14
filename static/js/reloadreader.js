@@ -27,7 +27,7 @@ $(".selector-div").hide();
   esource = "https://s3.ap-south-1.amazonaws.com/readerearth/" +  esource;
   book = ePub(url || esource);
   if(String(location.href).indexOf('?demo=1') != -1){
-    if(window.innerWidth < 780){
+    if(window.innerWidth < 600){
         readerheight = 120;
     }else{
         readerheight = 320;

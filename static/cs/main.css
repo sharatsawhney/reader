@@ -1163,13 +1163,13 @@ html{
 	margin-left: 170px;
 	margin-bottom: 20px;
 }
-.footer-2 .col-sm-6 h4{
+.footer-2 .col-xs-6 h4{
 	margin-left: 30px;
 }
-.footer-2 .col-sm-6 ul{
+.footer-2 .col-xs-6 ul{
 	list-style-type: none;
 }
-.footer-2 .col-sm-6 li a{
+.footer-2 .col-xs-6 li a{
 	color: white;
 }
 .footer-3 .topic{
@@ -1555,7 +1555,7 @@ html{
 	margin-left: 20px;
 	color:#2e2e2e;
 }
-.cart-right .sub-head .row .col-sm-5{
+.cart-right .sub-head .row .col-xs-5{
 	text-align: right;
 	margin-left: -10%;
 }
@@ -1799,43 +1799,43 @@ html{
     opacity: 0;
     left: 25%;
 }
-#loginModal .col-sm-5{
+#loginModal .col-xs-5{
 	background-color:#CBC5E9;
 	height: 500px;
 	border-radius: 10px 0px 0px 10px;
 }
-#loginModal .col-sm-7{
+#loginModal .col-xs-7{
 	background-color: #F6F9FE;
 	height: 500px;
 	border-radius: 0px 10px 10px 0px;
 	padding-top: 40px;
 	text-align: center;
 }
-#loginModal .col-sm-5 .heading{
+#loginModal .col-xs-5 .heading{
 	color: black;
 	font-size: 40px;
 	margin-top: 40px;
 	margin-left: 20px;
 	font-weight: bold;
 }
-#loginModal .col-sm-5 .sub-heading{
+#loginModal .col-xs-5 .sub-heading{
 	color: #5FACE4;
 	font-size: 17px;
 	margin-top: 35px;
 	margin-left: 20px;
 	font-weight: bold;
 }
-#loginModal .col-sm-5 img{
+#loginModal .col-xs-5 img{
 	margin-top: 180px;
 	height: 150px;
 	margin-left: -75px;
 }
-#loginModal .col-sm-7 .heading{
+#loginModal .col-xs-7 .heading{
 	color: #0A7FD5;
 	font-size: 40px;
 	font-weight: bold;
 }
-#loginModal .col-sm-7 input{
+#loginModal .col-xs-7 input{
 	border: none;
 	background-color: #F6F9FE;
 	width: 80%;
@@ -1890,7 +1890,7 @@ html{
 	color:#7F70C9;
 	font-size: 10px;
 }
-#loginModal .col-sm-7 .submit{
+#loginModal .col-xs-7 .submit{
 	margin-top: 20px;
 	border: none;
 	color: white;
@@ -1902,26 +1902,26 @@ html{
 	outline: none;
 	box-shadow: 0px 5px 7px rgb(128,128,128,0.6);
 }
-#loginModal .col-sm-7 .submit:hover{
+#loginModal .col-xs-7 .submit:hover{
 	box-shadow: 0px 5px 9px rgb(128,128,128,0.9);
 }
-#loginModal .col-sm-7 .other{
+#loginModal .col-xs-7 .other{
 	margin-top: 40px;
 	border: 2px solid #7F70C9;
 	color: #7F70C9;
 	background-color: #F6F9FE;
-	width: 80%;
+	width: 79%;
 	border-radius: 8px;
 	padding: 3px;
 	font-size: 15px;
 	outline: none;
 	margin-bottom: 15px;
 }
-#loginModal .col-sm-7 .other:hover{
+#loginModal .col-xs-7 .other:hover{
 	background-color: #7F70C9;
 	color: white;
 }
-#loginModal .col-sm-7 .forgot{
+#loginModal .col-xs-7 .forgot{
 	color: #7F70C9;
 	margin-top: 25px;
 	font-size: 17px;
@@ -1931,10 +1931,10 @@ html{
 	position: relative;
 	top: 10px;
 }
-#loginModal .col-sm-7 .forgot:hover{
+#loginModal .col-xs-7 .forgot:hover{
 	color: rgb(110,110,110);
 }
-#loginModal .col-sm-7 .close{
+#loginModal .col-xs-7 .close{
 	color: rgba(0,0,0,0.6) !important;
     font-size: 30px;
     position: absolute;
@@ -1946,7 +1946,7 @@ html{
     padding: 0px;
     opacity: 0.8 !important;
 }
-#loginModal .col-sm-7 .close:hover{
+#loginModal .col-xs-7 .close:hover{
 	opacity: 1.0 !important;
 	color: rgba(0,0,0,0.7) !important;
 }
@@ -2015,43 +2015,43 @@ html{
     display: none;
     opacity: 0;
 }
-#registerModal .col-sm-5{
+#registerModal .col-xs-5{
 	background-color: #CBC5E9;
 	height: 550px;
 	border-radius: 10px 0px 0px 10px;
 }
-#registerModal .col-sm-7{
+#registerModal .col-xs-7{
 	background-color: #F6F9FE;
 	height: 550px;
 	border-radius: 0px 10px 10px 0px;
 	padding-top: 40px;
 	text-align: center;
 }
-#registerModal .col-sm-5 .heading{
+#registerModal .col-xs-5 .heading{
 	color: black;
 	font-size: 40px;
 	margin-top: 40px;
 	margin-left: 20px;
 	font-weight: bold;
 }
-#registerModal .col-sm-5 .sub-heading{
+#registerModal .col-xs-5 .sub-heading{
 	color: #5FACE4;
 	font-size: 17px;
 	margin-top: 35px;
 	margin-left: 20px;
 	font-weight: bold;
 }
-#registerModal .col-sm-5 img{
+#registerModal .col-xs-5 img{
 	margin-top: 180px;
 	height: 150px;
 	margin-left: -75px;
 }
-#registerModal .col-sm-7 .heading{
+#registerModal .col-xs-7 .heading{
 	color: #0A7FD5;
 	font-size: 40px;
 	font-weight: bold;
 }
-#registerModal .col-sm-7 input{
+#registerModal .col-xs-7 input{
 	border: none;
 	background-color: #F6F9FE;
 	width: 80%;
@@ -2061,7 +2061,7 @@ html{
     border-bottom: 2px solid #9F9F9F;
     outline: none;
 }
-#registerModal .col-sm-7 .submit{
+#registerModal .col-xs-7 .submit{
 	margin-top: 40px;
 	border: none;
 	color: white;
@@ -2073,32 +2073,32 @@ html{
 	outline: none;
 	box-shadow: 0px 5px 7px rgb(128,128,128,0.6);
 }
-#registerModal .col-sm-7 .submit:hover{
+#registerModal .col-xs-7 .submit:hover{
 	box-shadow: 0px 5px 9px rgb(128,128,128,0.9);
 }
-#registerModal .col-sm-7 .other{
+#registerModal .col-xs-7 .other{
 	margin-top: 40px;
 	border: 2px solid #7F70C9;
 	color: #7F70C9;
 	background-color: #F6F9FE;
-	width: 55%;
+	width: 79%;
 	border-radius: 8px;
 	padding: 3px;
 	font-size: 15px;
 	outline: none;
 	margin-bottom: 15px;
 }
-#registerModal .col-sm-7 .other:hover{
+#registerModal .col-xs-7 .other:hover{
 	background-color: #7F70C9;
 	color: white;
 }
-#registerModal .col-sm-7 .forgot{
+#registerModal .col-xs-7 .forgot{
 	color: #9F9F9F;
 	margin-top: 15px;
 	font-size: 17px;
 	font-weight: bold;
 }
-#registerModal .col-sm-7 .close{
+#registerModal .col-xs-7 .close{
 	color: rgba(0,0,0,0.6) !important;
     font-size: 30px;
     position: absolute;
@@ -2110,7 +2110,7 @@ html{
     padding: 0px;
     opacity: 0.8 !important;
 }
-#registerModal .col-sm-7 .close:hover{
+#registerModal .col-xs-7 .close:hover{
 	opacity: 1.0 !important;
 	color: rgba(0,0,0,0.7) !important;
 }
@@ -2366,6 +2366,15 @@ html{
 	padding-right: 3px;
 	font-size: 12px;
 }
+@media screen and (min-width: 1450px) {
+    .detail-duration-title{
+    	left: 43%;
+    }
+    .detail-rentselect{
+    	left: 56%;
+    }
+}
+
 .detail-rent{
 	color: white;
 	border: none;
@@ -2471,7 +2480,7 @@ html{
 	padding-bottom: 10px;
 }
 .detail-sug-wrapper .card{
-	width: 0.52%;
+	width: 0.21%;
 	margin-top: 0px;
 	height: 265px;
 	background-color: #FFFFFF;
@@ -2849,12 +2858,67 @@ html{
 /* Responsiveness Starts */
 @media screen and (max-width: 768px) {
 	body{
-		zoom: 0.4;
-		overflow: auto;
+		zoom: 0.3;
 	}
 	.footer{
 		height: 320px;
 	}
+	#loginModal .col-xs-7 .other{
+          padding: 7px;
+        }
+    #loginModal{
+      -ms-transform: scale(2, 3); /* IE 9 */
+      -webkit-transform: scale(2, 3); /* Safari */
+      transform: scale(1.3, 1.3);
+      top: 200px;
+    }
+    #registerModal .col-xs-7 .other{
+      padding-top: 10px;
+      margin-top: 30px;
+    }
+    #registerModal{
+      -ms-transform: scale(2, 3); /* IE 9 */
+      -webkit-transform: scale(2, 3); /* Safari */
+      transform: scale(1.3, 1.3);
+      top: 200px;
+    }
+    #loginorline{
+      left: 56% !important;
+      width: 30% !important;
+    }
+    #pd-email{
+    	padding-top: 5px;
+    }
+    .selected-dial-code{
+    	padding-top: 6px;
+    }
+    #payment-r .row .col-sm-5{
+    	position: relative;
+    	bottom: 27px;
+    	right: 5px;
+    }
+    .cart-right .sub-head .total .col-xs-7{
+    	-ms-transform: scale(0.7,0.7); /* IE 9 */
+		-webkit-transform: scale(0.7, 0.7); /* Safari */
+		transform: scale(0.7, 0.7);
+		position: relative;
+		bottom: 15px;
+		right: 20px;
+    }
+    .cart-left .product span:nth-child(6) div:nth-child(1){
+        -ms-transform: scale(0.7,0.7); /* IE 9 */
+		-webkit-transform: scale(0.7, 0.7); /* Safari */
+		transform: scale(0.7, 0.7);
+		position: relative;
+		bottom: 15%;
+    }
+    .cart-left .product span:nth-child(6) div:nth-child(2){
+        -ms-transform: scale(0.7,0.7); /* IE 9 */
+		-webkit-transform: scale(0.7, 0.7); /* Safari */
+		transform: scale(0.7, 0.7);
+		position: relative;
+		bottom: 17%;
+    }
 }
 @media screen and (min-width: 768px) {
 	.navbar-toggle{
@@ -3099,7 +3163,7 @@ html{
 	position: relative;
 	bottom: 2px;
 }
-#pm-wa .row .col-sm-6 .pselectsvg{
+#pm-wa .row .col-xs-6 .pselectsvg{
 	width: 20px;
 	position: absolute;
 	right: -8px;

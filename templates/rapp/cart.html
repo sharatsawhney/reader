@@ -10,7 +10,7 @@
 	
      <div class="cart-container container-fluid">
     	<div class="row">
-    		<div class="col-sm-9 cart-left">
+    		<div class="col-xs-9 cart-left">
     			<div class="heading"><i class="fa fa-shopping-cart" aria-hidden="true"></i><span>My Cart (<span class="itemsCart"></span>)</span></div>
     			<div class="sub-head">
     				<span>Product</span>
@@ -53,23 +53,23 @@
     			</div>
                 {% endfor %}
     			
-    			<div class="continue"><div><a href="/search/?q=bookActive">CONTINUE SHOPPING</a></div></div>
+    			<div class="continue"><div><a href="/search/">CONTINUE SHOPPING</a></div></div>
     		</div>
-    		<div class="col-sm-3 cart-right">
+    		<div class="col-xs-3 cart-right">
     			<div class="heading">Price Details</div>
     			<div class="sub-head">
     				<div class="price row">
-    					<div class="col-sm-7">Price</div>
-    					<div class="col-sm-5 totalprice">&#8377; {{ tprice }}</div>
+    					<div class="col-xs-7">Price</div>
+    					<div class="col-xs-5 totalprice">&#8377; {{ tprice }}</div>
     				</div>
     				<div class="tax row">
-    					<div class="col-sm-7">Tax</div>
-    					<div class="col-sm-5">&#8377; 0.00</div>
+    					<div class="col-xs-7">Tax</div>
+    					<div class="col-xs-5">&#8377; 0.00</div>
     				</div>
     				<img src="{% static 'images/bue-hr.png' %}" class="blue-hr">
                     <div class="total row">
-    					<div class="col-sm-7">Amount Payable</div>
-    					<div class="col-sm-5 ordertotal">&#8377; {{ tprice }}</div>
+    					<div class="col-xs-7">Amount Payable</div>
+    					<div class="col-xs-5 ordertotal">&#8377; {{ tprice }}</div>
     				</div>
     				<div class="checkout">CHECKOUT</div>
     			</div>

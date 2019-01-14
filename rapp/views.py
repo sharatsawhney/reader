@@ -2883,7 +2883,7 @@ def pub_login(request):
 
         if user and UserP.objects.filter(user=user).exists():
             login(request, user)
-            return HttpResponseRedirect('/publisher')
+            return HttpResponse('success')
         elif user and not UserP.objects.filter(user=user).exists():
             return HttpResponse('Please Login using Publisher Email Address!')
         elif not User.objects.filter(email=email).exists():

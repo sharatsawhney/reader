@@ -261,13 +261,13 @@
         margin-left: 170px;
         margin-bottom: 20px;
       }
-      .footer-2 .col-sm-6 h4{
+      .footer-2 .col-xs-6 h4{
         margin-left: 30px;
       }
-      .footer-2 .col-sm-6 ul{
+      .footer-2 .col-xs-6 ul{
         list-style-type: none;
       }
-      .footer-2 .col-sm-6 li a{
+      .footer-2 .col-xs-6 li a{
         color: white;
       }
       .footer-3 .topic{
@@ -351,8 +351,7 @@
       }
       @media screen and (max-width: 768px) {
         body{
-          zoom: 0.4;
-          overflow: auto;
+          zoom: 0.30;
         }
         .footer{
           height: 320px;
@@ -493,7 +492,9 @@
         return emailReg.test( $email );
       }
 
-      $("#pub-nav-right button").click(function(){
+      $("#pub-nav-right button").click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
         var email = $("#pub-email").val();
         var password = $("#pub-password").val();
         if(email == '' && password == ''){
@@ -517,6 +518,9 @@
             },
             success: function(data)
             {
+              if(data == 'success'){
+                window.location.reload();
+              }
               $("#pub-email").val('');
               $("#pub-password").val('');
               $("#pubnavmessage").html(data); 
@@ -554,6 +558,9 @@
               },
               success: function(data)
               {
+                if(data=='success'){
+                  window.location.reload();
+                }
                 $("#pub-email").val('');
                 $("#pub-password").val('');
                 $("#pubnavmessage").html(data)
