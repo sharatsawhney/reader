@@ -1217,7 +1217,7 @@ html{
 	background-color: #FAFAFA;
 }
 .dash-top #dash-title{
-	margin-left: 35%;
+	margin-left: 33%;
 	font-size: 22px;
 	color: #666666;
 }
@@ -1270,6 +1270,9 @@ html{
     margin-bottom: 100px;
     display: flex;
     flex-wrap: wrap;
+}
+.dash-bottom .bdashes{
+	display: none;
 }
 .dash-bottom .dashes,.dash-bottom .bdashes{
 	width: 20%;
@@ -2919,6 +2922,191 @@ html{
 		position: relative;
 		bottom: 17%;
     }
+    .dash-top #dash-title{
+    	margin-left: 29%;
+    }
+    .dash-bottom .card .dash-dl span:nth-child(1){
+		-ms-transform: scale(0.7, 0.7); /* IE 9 */
+		-webkit-transform: scale(0.7, 0.7); /* Safari */
+		transform: scale(0.7, 0.7);
+	}
+	.dash-bottom .card .dash-dl span:nth-child(2){
+		-ms-transform: scale(0.6, 0.6); /* IE 9 */
+		-webkit-transform: scale(0.6, 0.6); /* Safari */
+		transform: scale(0.6, 0.6);
+	}
+	.dash-bottom .card .dash-hl span:nth-child(1){
+		-ms-transform: scale(0.7, 0.7); /* IE 9 */
+		-webkit-transform: scale(0.7, 0.7); /* Safari */
+		transform: scale(0.7, 0.7);
+	}
+	.dash-bottom .card .dash-hl span:nth-child(2){
+		-ms-transform: scale(0.6, 0.6); /* IE 9 */
+		-webkit-transform: scale(0.6, 0.6); /* Safari */
+		transform: scale(0.6, 0.6);
+	}
+	.dash-bottom .card .dash-ml span:nth-child(1){
+		-ms-transform: scale(0.7, 0.7); /* IE 9 */
+		-webkit-transform: scale(0.7, 0.7); /* Safari */
+		transform: scale(0.7, 0.7);
+	}
+	.dash-bottom .card .dash-ml span:nth-child(2){
+		-ms-transform: scale(0.6, 0.6); /* IE 9 */
+		-webkit-transform: scale(0.6, 0.6); /* Safari */
+		transform: scale(0.6, 0.6);
+	}
+	.dash-bottom .card .dash-tl-title{
+		-ms-transform: scale(0.7, 0.7); /* IE 9 */
+		-webkit-transform: scale(0.7, 0.7); /* Safari */
+		transform: scale(0.7, 0.7);
+		left: 15px;
+	}
+	.dash-bottom .ebooks .card{
+        height: 420px;
+	}
+	.dash-ebook-progress{
+		margin-bottom: 20px;
+	}
+	.dash-ebook-progress-text{
+		margin-top: 4px !important;
+		-ms-transform: scale(0.7, 0.7); /* IE 9 */
+		-webkit-transform: scale(0.7, 0.7); /* Safari */
+		transform: scale(0.7, 0.7);
+	}
+	.detail-sample{
+		left: 45%;
+		padding: 12px 20px 4px 20px;
+	}
+	.detail-atc{
+		top: 7px;
+	}
+	.detail-atc span{
+		display: none;
+	}
+	.detail-buy{
+		padding-top:10px;
+	}
+	.detail-duration-title{
+		display: none;
+	}
+	.detail-rentselect{
+		margin-left: -10%;
+		width: 40%;
+		padding-top: 6px !important;
+		bottom: 65px;
+	}
+	.detail-rent{
+		width: 150px;
+		font-size: 17px;
+		border-radius: 4px;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		font-weight: bold;
+		margin-left: 56%;
+		position: relative;
+		bottom: 32px;
+	}
+	.detail-lmore{
+		bottom: 0px;
+		right: 0px;
+		-ms-transform: scale(0.8, 0.8); /* IE 9 */
+		-webkit-transform: scale(0.8, 0.8); /* Safari */
+		transform: scale(0.8, 0.8);
+	}
+	.mp-1{
+	    width: 600px;
+	}
+	.mp-1 span:nth-child(1) i{
+		top: 0px;
+	}
+	.mp-1 span:nth-child(3){
+		left: 260px;
+	}
+	.mp-1 span:nth-child(4){
+		left: 370px;
+	}
+	.mp-1 span:nth-child(5){
+		left: 480px;
+	}
+	.detail-container{
+		display: block;
+	}
+	.detail-1{
+		zoom: 1.4;
+		width: 92%;
+	}
+	.detail-2{
+		margin-top: 6%;
+		width: 54%;
+		text-align: center;
+		margin-left: 23%;
+	}
+	.detail-similar-title{
+		font-size: 45px;
+	}
+	.detail-similar{
+		padding-top: 95px;
+	}
+	.detail-similar-book{
+		height: 250px;
+		margin-bottom: 90px;
+	}
+	.detail-similar-img{
+		height: 200px;
+	}
+	.detail-similar-book .fa-heart{
+		padding: 5px 4px 5px 4px;
+		left: -19%;
+	}
+	.detail-similar-rating{
+		top: 150px;
+	}
+	.detail-img i{
+		padding: 10px 6px 5px 7px;
+	}
+	.detail-sug-wrapper2 .card{
+		height: 305px;
+	}
+	.detail-sug-wrapper2 .card .fa-heart{
+        right: 3px;
+	}
+	.filter-pane .fp-0{
+		margin-top: 30px;
+	}
+	.dash2wishbtn{
+		padding: 5px 10px 5px 10px;
+	}
+	.mp-search .card{
+		width: 25%;
+		height:400px;
+	}
+	.mp-search .card img{
+		height: 200px;
+	}
+	.main-pane .mp-2{
+	    margin-top: 70px;
+	    margin-bottom: 100px;
+	    height: 400px;
+	}
+	.mp-2-title{
+		margin-top: 240px;
+	}
+	.mp-2 .card{
+		height: 405px;
+	}
+	.mp-3-backlay-fillerl,.mp-4-backlay-fillerl,.mp-5-backlay-fillerl,.mp-6-backlay-fillerl{
+		height: 405px;
+	}
+	.mp-3-backlay-fillerr,.mp-4-backlay-fillerr,.mp-5-backlay-fillerr,.mp-6-backlay-fillerr{
+		height:405px;
+	}
+	.mp-3 .card,.mp-4 .card,.mp-5 .card,.mp-6 .card{
+		height: 405px;
+	}
+	.main-pane .mp-1s .shop-searchby{
+		height: 180px;
+	}
+	
 }
 @media screen and (min-width: 768px) {
 	.navbar-toggle{

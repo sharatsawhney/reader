@@ -2,7 +2,15 @@
 {% load staticfiles %}
 {% block title %}Wishlist{% endblock %}
 {% block style %}
-	
+@media screen and (max-width: 768px) {
+  .wl-cards .card{
+    height:350px;
+  }
+  .wl-remove{
+    width: 70%;
+    margin-left: 15% !important;
+  }
+}
 {% endblock %}
 {% block activew %}class="active"{% endblock %}    
 {% block content %}
