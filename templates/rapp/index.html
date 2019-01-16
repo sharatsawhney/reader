@@ -1334,6 +1334,63 @@
       $(".g-signinother").show();
       $(".g-signinmain").hide();
     }
+    var googleUser = {};
+    var startApp = function() {
+      gapi.load('auth2', function(){
+        // Retrieve the singleton for the GoogleAuth library and set up the client.
+        auth2 = gapi.auth2.init({
+          client_id: '18205974359-scm2ogghtt91dkgfb9id3lpprfnvd3f4.apps.googleusercontent.com',
+          cookiepolicy: 'single_host_origin',
+          // Request scopes in addition to 'profile' and 'email'
+          //scope: 'additional_scope'
+        });
+        attachSignin($(".g-signin2"));
+      });
+    };
+    //startApp();
+
+    function attachSignin(element) {
+      console.log(element.id);
+      auth2.attachClickHandler(element, {},
+          function(googleUser) {
+            document.getElementById('name').innerText = "Signed in: " +
+                googleUser.getBasicProfile().getName();
+          }, function(error) {
+            alert(JSON.stringify(error, undefined, 2));
+          });
+    }
+
+    function onSignIn(googleUser) {
+      var id_token = googleUser.getAuthResponse().id_token;
+      if($(".authcheck").html() == 'False'){
+        $.ajax({
+              url: '/googlesignin/',
+              type:'POST',
+              data:
+              {
+                'id_token': id_token,
+                'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+              },
+              success: function(data)
+              {
+                          if(data=='Success'){
+                            location.reload();
+                          }
+                
+              },
+              error: function(xhr,status,error){
+              alert(xhr.responseText);
+                }             
+            });
+    }
+  }
+
+  function signOut() {
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+        console.log('User signed out.');
+      });
+    }
     $(".loginchangebtn").click(function(){
       $("#loginModal").animate({'opacity':0.0});
       $("#loginModal").hide();
