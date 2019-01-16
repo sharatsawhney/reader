@@ -1285,7 +1285,7 @@ html{
 }
 .dash-bottom .ebooks .card{
 	position: relative;
-	height: 310px;
+	height: 340px;
 	background-color: #FFFFFF;
 	margin-right: 1%;
 	width: 99%;
@@ -2376,6 +2376,21 @@ html{
     .detail-rentselect{
     	left: 56%;
     }
+    .g-signin2{
+	  margin-left: 10.5% !important;
+	}
+	.fb-login-button{
+	  -ms-transform: scale(1.05, 1.8) !important; /* IE 9 */
+	  -webkit-transform: scale(1.05, 1.8) !important; /* Safari */
+	  transform: scale(1.05, 1.8) !important;
+	  left: 51.8% !important;
+	}
+	.fb-register-button{
+	  -ms-transform: scale(1.05, 1.8) !important; /* IE 9 */
+	  -webkit-transform: scale(1.05, 1.8) !important; /* Safari */
+	  transform: scale(1.05, 1.8) !important;
+	  left: 51.8% !important;
+	}
 }
 
 .detail-rent{

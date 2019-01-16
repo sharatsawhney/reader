@@ -86,6 +86,7 @@ urlpatterns = [
     url(r'^getcartvalue/$',views.getcartvalue,name='getcartvalue'),
     url(r'^raccess/$',views.raccess,name='raccess'),
     url(r'^addbuyentry/$',views.addbuyentry,name='addbuyentry'),
+    url(r'^fbsignin/$',views.fbsignin,name='fbsignin'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG is True:

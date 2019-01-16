@@ -5,7 +5,7 @@ from rapp.forms import UserForm,UploadForm,PriceRangeSearchForm
 from django.contrib.auth import authenticate, login,logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from rapp.models import Authors,Publishers,Category,Ebooks,Subscribers,Usercart,Wishlist,Transactions,Dashboard,Notes,Lastpage,Uploaded,UserP,Adminacc,Gmailid,Bookmark,Tag,Musicgenre,Musictag,Music,Musiclis,Playlist,Highlight,Notefile,Notefileitem,Uploadadmin,Keyvalue,Offer,Bestseller,Detailview,Readview,Sampleview,Genreview,Newreleaseview,Bestsellerview,Searchview,Rateduser,Percentageread,Readlocation,ConnectionHistory,Payment,Publisherpayment,Subscriptiontry,Lastpagesample,Buyentry
+from rapp.models import Authors,Publishers,Category,Ebooks,Subscribers,Usercart,Wishlist,Transactions,Dashboard,Notes,Lastpage,Uploaded,UserP,Adminacc,Gmailid,Bookmark,Tag,Musicgenre,Musictag,Music,Musiclis,Playlist,Highlight,Notefile,Notefileitem,Uploadadmin,Keyvalue,Offer,Bestseller,Detailview,Readview,Sampleview,Genreview,Newreleaseview,Bestsellerview,Searchview,Rateduser,Percentageread,Readlocation,ConnectionHistory,Payment,Publisherpayment,Subscriptiontry,Lastpagesample,Buyentry,Facebookid
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
@@ -1423,9 +1423,15 @@ def search(request):
             for author in Authors.objects.select_related():
                 autharr = [i for i in str(author.name).lower().split()]
                 if autharr == tokenarr:
-                    print('Yes')
-            profilevector = str(q).replace(" ","").lower()
-            #Searchview.objects.create(user=request.user, duration=0,profilevector=profilevector)
+                    print(autharr)
+                    profilevector = str(q).replace(" ","").lower()
+                    Searchview.objects.create(user=request.user, duration=0,profilevector=profilevector)
+            for publisher in Publishers.objects.select_related():
+                pubarr = [i for i in str(publisher.name).lower().split()]
+                if pubarr == tokenarr:
+                    print(pubarr)
+                    profilevector = str(q).replace(" ","").lower()
+                    Searchview.objects.create(user=request.user, duration=0,profilevector=profilevector)
         try:
             hl = request.GET['hl']
             if hl == 'true':
@@ -2375,7 +2381,6 @@ def googlesignin(request):
                 user = user[0]
                 login(request,user)
                 return HttpResponse('Success')
-
             else:
                 password = User.objects.make_random_password()
                 user = User.objects.create_user(name,email,password)
@@ -2384,6 +2389,24 @@ def googlesignin(request):
                 return HttpResponse('Success')
         except ValueError:
             pass
+
+
+def fbsignin(request):
+    if request.method == 'POST':
+        name = request.POST['fb-name']
+        email = request.POST['fb-email']
+        origin = request.POST['fb-origin']
+        user = User.objects.filter(email=email)
+        if user.exists():
+            user = user[0]
+            login(request,user)
+            return HttpResponseRedirect(origin)
+        else:
+            password = User.objects.make_random_password()
+            user = User.objects.create_user(name,email,password)
+            Facebookid.objects.create(user=user)
+            login(request,user)
+            return HttpResponseRedirect(origin)
 
 
 def addbookmark(request):
@@ -2929,8 +2952,15 @@ def addbuyentry(request):
         ebook = Ebooks.objects.filter(id=ebookid)[0]
         duration = request.POST['duration']
         amount = int(request.POST['amount'])
-        s = str(ebookid) + ' ' + str(amount) + ' ' + str(request.user) + str(
-            int((datetime.utcnow() - datetime(1970, 1, 1)).total_seconds() * 1000))
-        buyid = int(hashlib.sha1(s.encode()).hexdigest(), 16) % (10 ** 32)
-        Buyentry.objects.create(buyid=buyid,user=request.user,ebook=ebook,duration=duration,amount=amount)
-        return HttpResponse(buyid)
+        if amount != 0:
+            s = str(ebookid) + ' ' + str(amount) + ' ' + str(request.user) + str(
+                int((datetime.utcnow() - datetime(1970, 1, 1)).total_seconds() * 1000))
+            buyid = int(hashlib.sha1(s.encode()).hexdigest(), 16) % (10 ** 32)
+            Buyentry.objects.create(buyid=buyid,user=request.user,ebook=ebook,duration=duration,amount=amount)
+            return HttpResponse(buyid)
+        else:
+            if Dashboard.objects.filter(user=request.user,ebook=ebook,active=True).exists():
+                return HttpResponse('/dashboard')
+            else:
+                Dashboard.objects.create(user=request.user,ebook=ebook,duration=duration,nprice=0,active=True)
+                return HttpResponse('/dashboard')

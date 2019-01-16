@@ -189,7 +189,7 @@ class Dashboard(models.Model):
     )
     duration = models.CharField(max_length=255, choices=CHOICES,default='1 month')
     nprice = models.FloatField(default=0)
-    itime = models.DateTimeField(default=datetime.now)
+    itime = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField()
 
     def __str__(self):
@@ -243,6 +243,13 @@ class Uploaded(models.Model):
 
 class Gmailid(models.Model):
     user = models.ForeignKey(User,on_delete=models.DO_NOTHING,default='')
+
+    def __str__(self):
+        return self.user.username
+
+
+class Facebookid(models.Model):
+    user = models.ForeignKey(User,on_delete=models.DO_NOTHING)
 
     def __str__(self):
         return self.user.username

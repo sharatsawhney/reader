@@ -22,6 +22,8 @@
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="18205974359-scm2ogghtt91dkgfb9id3lpprfnvd3f4.apps.googleusercontent.com">
     <style type="text/css">
       body{
          margin: 0px;
@@ -947,6 +949,54 @@
         #mainloaderpart{
           left: 45.9%;
         }
+        .g-signin2{
+          margin-left: 10.5% !important;
+        }
+        .fb-login-button{
+          -ms-transform: scale(1.05, 1.8) !important; /* IE 9 */
+          -webkit-transform: scale(1.05, 1.8) !important; /* Safari */
+          transform: scale(1.05, 1.8) !important;
+          left: 51.8% !important;
+        }
+        .fb-register-button{
+          -ms-transform: scale(1.05, 1.8) !important; /* IE 9 */
+          -webkit-transform: scale(1.05, 1.8) !important; /* Safari */
+          transform: scale(1.05, 1.8) !important;
+          left: 51.8% !important;
+        }
+      }
+
+      .g-signin2{
+            margin-left:10%;
+            margin-top: -20px;
+            position: absolute; 
+            opacity: 0; 
+      }
+      .logingoogle{
+        pointer-events: none;
+      }
+      .fb-login-button{
+        position: absolute !important;
+        bottom: 95px;
+        left: 49%;
+        -ms-transform: scale(0.9, 1.8); /* IE 9 */
+        -webkit-transform: scale(0.9, 1.8); /* Safari */
+        transform: scale(0.9, 1.8);
+        opacity: 0.01;
+        z-index: 2;  
+      }
+      .fb-register-button{
+        position: absolute !important;
+        bottom: 77px;
+        left: 49%;
+        -ms-transform: scale(0.9, 1.8); /* IE 9 */
+        -webkit-transform: scale(0.9, 1.8); /* Safari */
+        transform: scale(0.9, 1.8);
+        opacity: 0.01;
+        z-index: 2;  
+      }
+      .loginfacebook{
+        pointer-events: none;
       }
     </style>
 </head>
@@ -983,7 +1033,11 @@
             <i class="fa fa-google logingoogle" aria-hidden="true"></i>
             <i class="fa fa-facebook loginfacebook" aria-hidden="true"></i>
             <br>
-            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+            {% csrf_token %}
+            <div class="g-signin2 g-signinmain" data-onsuccess="onSignIn" data-width="133%"></div>
+            <div class="g-signin2 g-signinother" data-onsuccess="onSignIn" data-width="157%" style="display: none"></div>
+            {% csrf_token %}
+            <div class="fb-login-button" data-width="50px" data-max-rows="1" data-size="small" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" onlogin="checkLoginState();"></div>
             <button type="button" class="btn btn-default loginchangebtn other">Create an Account</button><br>
           </form>
         </div>
@@ -1022,6 +1076,11 @@
             <i class="fa fa-google logingoogle" aria-hidden="true"></i>
             <i class="fa fa-facebook loginfacebook" aria-hidden="true"></i>
             <br>
+            {% csrf_token %}
+            <div class="g-signin2" data-onsuccess="onSignIn" data-width="133%"></div>
+            <div class="g-signin2 g-signinother" data-onsuccess="onSignIn" data-width="157%" style="display: none"></div>
+            {% csrf_token %}
+            <div class="fb-login-button fb-register-button" data-width="50px" data-max-rows="1" data-size="small" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false" onlogin="checkLoginState();"></div>
             <button type="button" class="btn btn-default registerchangebtn other">Already have an Account</button>
           </form>
         </div>
@@ -1203,8 +1262,60 @@
     </div>
   </div>
 </div>
+
+<form action="{% url 'fbsignin' %}" method="post" style="display: none;" id="fbform">
+    {% csrf_token %}
+    <input id="fb-name" type="text" name="fb-name">
+    <input id="fb-email" type="text" name="fb-email">
+    <input id="fb-origin" type="text" name="fb-origin">
+    <input type="submit" value="OK">
+  </form>
   <script src="{% static 'js/jquery.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script>
+      // This is called with the results from from FB.getLoginStatus().
+    function statusChangeCallback(response) {
+      {% if user.is_authenticated %}
+      {% else %}
+      if (response.status === 'connected') {
+        testAPI();
+      } else {
+        testAPI();
+      }
+      {% endif %}
+    }
+    function checkLoginState() {
+      FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+      });
+    }
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId            : '1169374383214448',
+          autoLogAppEvents : true,
+          xfbml            : true,
+          version          : 'v3.2'
+        });
+      };
+      
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "https://connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+
+      function testAPI() {
+        FB.api("/me?fields=name,email&access_token", function(response) {
+            $("#fb-name").val(response.name);
+            $("#fb-email").val(response.email);
+            $("#fb-origin").val(window.location.href);
+
+            $("#fbform").submit();
+        });
+      }
+    </script>
   <script type="text/javascript">
 
     if(window.innerWidth < 768){
@@ -1219,7 +1330,10 @@
       $("#homefrontdata div:nth-child(1)").html('A Reading Experience like Never Before');
       $("#homefrontdata div:nth-child(2)").html('Get a personalized Reading Interface that is cultivated for all your needs.');
     }
-
+    if(window.innerWidth > 1450){
+      $(".g-signinother").show();
+      $(".g-signinmain").hide();
+    }
     $(".loginchangebtn").click(function(){
       $("#loginModal").animate({'opacity':0.0});
       $("#loginModal").hide();
@@ -1427,7 +1541,7 @@
       loadernum = loadernum + 1;
     }
     }else if(window.innerWidth > 1450){
-    var loaderinterval = setInterval(loaderanim,400);
+    var loaderinterval = setInterval(loaderanim,120);
     var loadernum = 2;
     function loaderanim(){
       if(loadernum == 2){
