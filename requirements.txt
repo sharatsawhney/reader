@@ -10,7 +10,7 @@ cffi==1.11.5
 chardet==3.0.4
 colorama==0.3.7
 configparser==3.5.0
-Django==1.11
+Django==1.11.23
 django-easy-pdf==0.1.1
 django-haystack==2.8.1
 django-multiselectfield==0.1.8
